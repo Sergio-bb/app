@@ -4,50 +4,40 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.SocketTimeoutException;
-import java.net.URL;
-
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManagerFactory;
-
 
 public class NetworkHelper {
 
-public  static  String direccion_ws ="";
-
     //PRODUCCION
-  /*public final static String  DIRECCION_WS = "https://servicios.presente.com.co/SolidAppService/rest/";//PRESENTEAPP
-    public final static String CONVENIOS_WS = "https://apps.presente.com.co/servicioconvenios/api/Convenios/"; //CONVENIOS
-    public final static String  ELECCIONES_WS = "https://servicios.presente.com.co/babel/";//ELECCIONES
-    public final static String NEQUI_WS = "https://apinq.presente.com.co/api/";//NEQUI*/
+//    public final static String URL_APIPRESENTEAPP = "https://servicios.presente.com.co/SolidAppService/rest/";//PRESENTEAPP
+//    public final static String URL_APICONVENIOS = "https://apps.presente.com.co/servicioconvenios/api/Convenios/"; //CONVENIOS
+//    public final static String URL_APIBABEL = "https://servicios.presente.com.co/babel/";//ELECCIONES
+//    public final static String URL_APINEQUI = "https://apinq.presente.com.co/api/";//NEQUI
+//    public final static String URL_APIMOVILEXITO = "https://einstenio.grupo-exito.com/";//RECARGAS MOVIL EXITO
+//    public final static String URL_APIPRESENTEMOVILEXITO = "https://apps.presente.com.co/PresenteME/api/";//PRESENTE-MOVILEXITO
+//    public final static String URL_ENDPOINTRECARGAS_APIMOVILEXITO = "apiew/api/v1/DFXRWFBFZM/Suscription/suscribirYrecargar";//ENDPOINT
+//    public final static int CERTIFICATE_BAN = 2;// VALOR = 2 INDICA PRODUCTIVO
 
-    public final static String  DIRECCION_WS = "https://servicios.presente.com.co/solidappservicepruebas/rest/";//PRESENTEAPP
-    public final static String CONVENIOS_WS = "https://apps.presente.com.co/servicioconvenios/api/Convenios/"; //CONVENIOS
-    public final static String  ELECCIONES_WS = "https://servicios.presente.com.co/babel/";//ELECCIONES
-    public final static String NEQUI_WS = "https://apinequipru.presente.com.co/api/";//NEQUI*/
-
-    public NetworkHelper(String url_ws){
-        direccion_ws = url_ws;
-    }
-
-    public NetworkHelper(){
-        direccion_ws = DIRECCION_WS;
-    }
+     //PRUEBAS
+    public final static String  URL_APIPRESENTEAPP = "https://servicios.presente.com.co/solidappservicepruebas/rest/";//PRESENTEAPP
+    public final static String URL_APICONVENIOS = "https://apps.presente.com.co/servicioconvenios/api/Convenios/"; //CONVENIOS
+    public final static String  URL_APIBABEL = "https://servicios.presente.com.co/babel/";//ELECCIONES
+    public final static String URL_APINEQUI = "https://apinequipru.presente.com.co/api/";//NEQUI
+    public final static String URL_APIMOVILEXITO = "https://kripton.grupo-exito.com/";//RECARGAS MOVIL EXITO
+    public final static String URL_APIPRESENTEMOVILEXITO = "https://apps.presente.com.co/PresenteME2/api/";//PRESENTE-MOVILEXITO*/
+    public final static String URL_ENDPOINTRECARGAS_APIMOVILEXITO = "apiew/api/v1/VLDEPA3X25J5/Suscription/suscribirYrecargar";//ENDPOINT
+    public final static int CERTIFICATE_BAN = 1;// VALOR = 1 INDICA PRUEBAS
 
     public static boolean isConnectionAvailable(Context context) {
+
         ConnectivityManager connectivityManager = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivityManager != null) {
             NetworkInfo netInfo = connectivityManager.getActiveNetworkInfo();
-            return netInfo != null && netInfo.isConnected()
+            if (netInfo != null && netInfo.isConnected()
                     && netInfo.isConnectedOrConnecting()
-                    && netInfo.isAvailable();
+                    && netInfo.isAvailable()) {
+                return true;
+            }
         }
         return false;
     }

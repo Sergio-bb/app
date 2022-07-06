@@ -47,7 +47,7 @@ public interface ActivityLocationsGmsContract {
     }
 
     interface Model{
-        void getLocationsAgencies(final ActivityLocationsGmsContract.APIListener listener);
+        void getLocationsAgencies(final APIListener listener);
     }
 
     interface APIListener{

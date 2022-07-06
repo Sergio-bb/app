@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -12,8 +10,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="#F5E61F"
-        android:orientation="horizontal"
-        android:paddingRight="12dp">
+        android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/header"
@@ -34,332 +31,41 @@
             android:padding="10dp"
             android:src="@drawable/btn_back" />
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbarSideBar"
-            android:layout_width="45dp"
+        <TextView
+            android:id="@+id/btnSalir"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_marginStart="152dp"
-            android:layout_marginEnd="-18dp"
-            android:layout_marginRight="-18dp"
-            android:layout_toEndOf="@+id/header"
-            android:gravity="center"
-            app:contentInsetStart="30dp"
-            app:navigationIcon="@drawable/icon_menu"/>
+            android:background="@null"
+            android:paddingEnd="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="19dp"
+            android:text="@string/salir"
+            android:textColor="#333"
+            android:textSize="19sp"
+            android:fontFamily="@font/roboto_light"/>
     </RelativeLayout>
 
-    <androidx.drawerlayout.widget.DrawerLayout
-        android:id="@+id/drawer_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:openDrawer="end">
+    <RelativeLayout
+        android:id="@+id/content"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/header_app"
+        android:layout_margin="0dp"
+        android:padding="0dp"
+        android:gravity="center"
+        android:background="#fff">
 
-        <LinearLayout
+        <FrameLayout
+            android:id="@+id/content_frame"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/header_app"
-            android:layout_margin="0dp"
-            android:padding="0dp"
-            android:gravity="center"
-            android:background="#fff"
-            android:orientation="vertical">
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true">
+        </FrameLayout>
 
-            <LinearLayout
-                android:id="@+id/layout_circular_progress_bar"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:background="#fff"
-                android:orientation="vertical"
-                android:visibility="gone">
-                <ProgressBar
-                    android:id="@+id/circular_progress_bar"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:indeterminateTint="#707070"
-                    android:visibility="visible"/>
-                <ImageView
-                    android:id="@+id/imageReferesh"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:src="@drawable/icon_refresh"
-                    android:visibility="gone"/>
-                <TextView
-                    android:id="@+id/text_circular_progress_Bar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:gravity="center"
-                    android:text="Intentar de nuevo"
-                    android:textSize="12sp"
-                    android:fontFamily="@font/roboto_light"
-                    android:visibility="visible"/>
-            </LinearLayout>
-
-            <FrameLayout
-                android:id="@+id/content_frame"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:visibility="gone">
-            </FrameLayout>
-        </LinearLayout>
-
-        <com.google.android.material.navigation.NavigationView
-            android:id="@+id/nav_view"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="right"
-            android:fitsSystemWindows="true"
-            android:background="#ffffff">
-
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fillViewport="true"
-                android:scrollbars="none">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:padding="20dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="bottom"
-                        android:orientation="vertical"
-                        android:paddingHorizontal="4dp"
-                        android:paddingBottom="14dp">
-                        <TextView
-                            android:id="@+id/nombreUsuario"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingTop="4dp"
-                            android:text="Usuario"
-                            android:textSize="19sp"
-                            android:textStyle="bold"
-                            android:fontFamily="@font/roboto_light" />
-                        <TextView
-                            android:id="@+id/textView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="18sp"
-                            android:text="¿Cómo podemos ayudarte?"
-                            android:fontFamily="@font/roboto_light"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="bottom"
-                        android:orientation="vertical"
-                        android:layout_marginVertical="16dp">
-
-                        <LinearLayout
-                            android:id="@+id/buttonInformacionPersonal"
-                            android:layout_width="match_parent"
-                            android:layout_height="50dp"
-                            android:weightSum="100"
-                            android:paddingVertical="8dp"
-                            android:layout_marginVertical="4dp"
-                            android:orientation="horizontal"
-                            android:background="@drawable/backgroun_border_radius">
-                            <ImageView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical"
-                                android:layout_weight="20"
-                                android:src="@drawable/icon_inf_personal"/>
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="80"
-                                android:layout_gravity="center_vertical"
-                                android:text="@string/informacion_personal_menu"
-                                android:fontFamily="@font/roboto_light"
-                                android:textSize="16sp"/>
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/buttonCentroDeAyuda"
-                            android:layout_width="match_parent"
-                            android:layout_height="50dp"
-                            android:weightSum="100"
-                            android:paddingVertical="8dp"
-                            android:layout_marginVertical="4dp"
-                            android:orientation="horizontal"
-                            android:background="@drawable/backgroun_border_radius">
-                            <ImageView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="20"
-                                android:layout_gravity="center_vertical"
-                                android:src="@drawable/icon_centro_ayuda"/>
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="80"
-                                android:layout_gravity="center_vertical"
-                                android:text="@string/centro_ayuda"
-                                android:fontFamily="@font/roboto_light"
-                                android:textSize="16sp"/>
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/buttonConoceTuGestor"
-                            android:layout_width="match_parent"
-                            android:layout_height="50dp"
-                            android:weightSum="100"
-                            android:paddingVertical="8dp"
-                            android:layout_marginVertical="4dp"
-                            android:orientation="horizontal"
-                            android:background="@drawable/backgroun_border_radius">
-                            <ImageView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="20"
-                                android:layout_gravity="center_vertical"
-                                android:src="@drawable/icon_gestor"/>
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="80"
-                                android:layout_gravity="center_vertical"
-                                android:text="@string/conoce_gestor"
-                                android:fontFamily="@font/roboto_light"
-                                android:textSize="16sp"/>
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/layout_buton_vincula"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:clipToPadding="false">
-
-                            <LinearLayout
-                                android:id="@+id/buttonVinculaCuentaNequi"
-                                android:layout_width="match_parent"
-                                android:layout_height="50dp"
-                                android:weightSum="100"
-                                android:paddingVertical="8dp"
-                                android:layout_marginVertical="4dp"
-                                android:orientation="horizontal"
-                                android:background="@drawable/backgroun_border_radius"
-                                android:visibility="gone">
-                                <ImageView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="20"
-                                    android:layout_gravity="center_vertical"
-                                    android:scaleType="centerInside"
-                                    android:padding="2dp"
-                                    android:src="@drawable/icon_nequi"/>
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="80"
-                                    android:layout_gravity="center_vertical"
-                                    android:text="@string/Vincular_cuenta"
-                                    android:fontFamily="@font/roboto_light"
-                                    android:textSize="16sp"/>
-                            </LinearLayout>
-                            <RelativeLayout
-                                android:id="@+id/warning_icon"
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:layout_gravity="top|right"
-                                android:layout_marginLeft="-21dip"
-                                android:background="@drawable/bg_icon_exclamacion_nequi"
-                                android:visibility="gone">
-
-                                <ImageView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:padding="5dp"
-                                    android:src="@drawable/ic_exclamacion_alerta"/>
-                            </RelativeLayout>
-
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginVertical="16dp"
-                        android:orientation="vertical">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentBottom="true"
-                            android:orientation="vertical">
-
-                            <Button
-                                android:id="@+id/btnCerrarSession"
-                                android:layout_width="150dp"
-                                android:layout_height="35dp"
-                                android:background="@drawable/backgroun_button_rounded"
-                                android:backgroundTint="@color/yellow"
-                                android:textAppearance="?android:attr/textAppearanceSmall"
-                                android:textStyle="bold"
-                                android:fontFamily="@font/roboto_light"
-                                android:textSize="16sp"
-                                android:text="Cerrar Sesión"
-                                android:layout_gravity="center"/>
-
-                            <LinearLayout
-                                android:id="@+id/sectionFechaIngreso"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical"
-                                android:paddingTop="10dp"
-                                android:paddingBottom="16dp"
-                                android:gravity="center">
-
-                                <TextView
-                                    android:text="@string/ultima_fecha_ingreso"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:gravity="center"
-                                    android:textSize="13sp"
-                                    android:textStyle="bold"
-                                    android:fontFamily="@font/roboto_light"/>
-
-                                <TextView
-                                    android:id="@+id/tvFechaIngreso"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:gravity="center"
-                                    android:textSize="13sp"
-                                    android:visibility="visible"
-                                    android:fontFamily="@font/roboto_light"/>
-
-                            </LinearLayout>
-                        </LinearLayout>
-                    </RelativeLayout>
-                </LinearLayout>
-            </ScrollView>
-        </com.google.android.material.navigation.NavigationView>
-
-    </androidx.drawerlayout.widget.DrawerLayout>
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" />
+    </RelativeLayout>
 
 </LinearLayout>

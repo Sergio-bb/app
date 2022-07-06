@@ -21,46 +21,10 @@ import solidappservice.cm.com.presenteapp.rest.retrofit.apipresente.ApiPresente;
 public class FragmentPresenteCardMenuModel implements FragmentPresenteCardMenuContract.Model{
 
     @Override
-    public void getButtonStateReplacementCard(FragmentPresenteCardMenuContract.APIListener listener) {
-        try {
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
-
-            ApiPresente service = retrofit.create(ApiPresente.class);
-            Call<BaseResponse<ResponseParametrosAPP>> call = service.getButtonStateReposicionTarjeta();
-            call.enqueue(new Callback<BaseResponse<ResponseParametrosAPP>>() {
-
-                @Override
-                public void onResponse(Call<BaseResponse<ResponseParametrosAPP>> call, Response<BaseResponse<ResponseParametrosAPP>> response) {
-                    if (response.isSuccessful()) {
-                        if(response.body().getErrorToken() != null && !response.body().getErrorToken().isEmpty()){
-                            listener.onExpiredToken(response);
-                        }else if(response.body().getMensajeErrorUsuario() != null && !response.body().getMensajeErrorUsuario().isEmpty()){
-                            listener.onErrorButtonStateReplacementCard(response);
-                        }else{
-                            listener.onSuccessButtonStateReplacementCard(response);
-                        }
-                    } else {
-                        listener.onErrorButtonStateReplacementCard(null);
-                    }
-                }
-                @Override
-                public void onFailure(Call<BaseResponse<ResponseParametrosAPP>> call, Throwable t) {
-                    listener.onErrorButtonStateReplacementCard(null);
-                }
-            });
-        } catch (Exception e) {
-            listener.onErrorButtonStateReplacementCard(null);
-        }
-    }
-
-    @Override
     public void getPresenteCards(BaseRequest body, final FragmentPresenteCardMenuContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -87,7 +51,7 @@ public class FragmentPresenteCardMenuModel implements FragmentPresenteCardMenuCo
                     if(t instanceof IOException){
                         listener.onFailure(t, true);
                     }else{
-                        listener.onFailure(t, false);
+                        listener.onError(null);
                     }
                 }
             });
@@ -96,5 +60,44 @@ public class FragmentPresenteCardMenuModel implements FragmentPresenteCardMenuCo
         }
     }
 
+    @Override
+    public void getButtonStateReplacementCard(FragmentPresenteCardMenuContract.APIListener listener) {
+        try {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+
+            ApiPresente service = retrofit.create(ApiPresente.class);
+            Call<BaseResponse<ResponseParametrosAPP>> call = service.getButtonStateReposicionTarjeta();
+            call.enqueue(new Callback<BaseResponse<ResponseParametrosAPP>>() {
+
+                @Override
+                public void onResponse(Call<BaseResponse<ResponseParametrosAPP>> call, Response<BaseResponse<ResponseParametrosAPP>> response) {
+                    if (response.isSuccessful()) {
+                        if(response.body().getErrorToken() != null && !response.body().getErrorToken().isEmpty()){
+                            listener.onExpiredToken(response);
+                        }else if(response.body().getMensajeErrorUsuario() != null && !response.body().getMensajeErrorUsuario().isEmpty()){
+                            listener.onError(response);
+                        }else{
+                            listener.onSuccessButtonStateReplacementCard(response);
+                        }
+                    } else {
+                        listener.onError(null);
+                    }
+                }
+                @Override
+                public void onFailure(Call<BaseResponse<ResponseParametrosAPP>> call, Throwable t) {
+                    if(t instanceof IOException){
+                        listener.onFailure(t, true);
+                    }else{
+                        listener.onError(null);
+                    }
+                }
+            });
+        } catch (Exception e) {
+            listener.onError(null);
+        }
+    }
 
 }

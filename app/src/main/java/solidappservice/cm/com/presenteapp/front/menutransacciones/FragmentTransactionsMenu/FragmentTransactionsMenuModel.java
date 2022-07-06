@@ -1,14 +1,17 @@
 package solidappservice.cm.com.presenteapp.front.menutransacciones.FragmentTransactionsMenu;
 
-import java.io.IOException;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import solidappservice.cm.com.presenteapp.entities.adelantonomina.response.ResponseMovimientos;
+import solidappservice.cm.com.presenteapp.entities.banercomercial.response.ResponseBanerComercial;
 import solidappservice.cm.com.presenteapp.entities.base.BaseRequest;
 import solidappservice.cm.com.presenteapp.entities.base.BaseResponse;
+import solidappservice.cm.com.presenteapp.entities.mensajes.response.ResponseObtenerMensajes;
 import solidappservice.cm.com.presenteapp.entities.parametrosemail.ResponseParametrosEmail;
 import solidappservice.cm.com.presenteapp.entities.parametrosgenerales.ResponseParametrosAPP;
 import solidappservice.cm.com.presenteapp.entities.tarjetapresente.response.ResponseDependenciasAsociado;
@@ -24,7 +27,7 @@ public class FragmentTransactionsMenuModel implements FragmentTransactionsMenuCo
     public void getButtonStateAdvanceSalary(final FragmentTransactionsMenuContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -48,11 +51,7 @@ public class FragmentTransactionsMenuModel implements FragmentTransactionsMenuCo
                 }
                 @Override
                 public void onFailure(Call<BaseResponse<ResponseParametrosEmail>> call, Throwable t) {
-                    if(t instanceof IOException){
-                        listener.onFailureStateAdvanceSalary(t, true);
-                    }else{
-                        listener.onFailureStateAdvanceSalary(t, false);
-                    }
+                    listener.onErrorStateAdvanceSalary(null);
                 }
             });
         } catch (Exception e) {
@@ -64,7 +63,7 @@ public class FragmentTransactionsMenuModel implements FragmentTransactionsMenuCo
     public void getButtonActionAdvanceSalary(final FragmentTransactionsMenuContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -88,11 +87,7 @@ public class FragmentTransactionsMenuModel implements FragmentTransactionsMenuCo
                 }
                 @Override
                 public void onFailure(Call<BaseResponse<ResponseParametrosEmail>> call, Throwable t) {
-                    if(t instanceof IOException){
-                        listener.onFailureActionAdvanceSalary(t, true);
-                    }else{
-                        listener.onFailureActionAdvanceSalary(t, false);
-                    }
+                    listener.onErrorActionAdvanceSalary(null);
                 }
             });
         } catch (Exception e) {
@@ -101,10 +96,46 @@ public class FragmentTransactionsMenuModel implements FragmentTransactionsMenuCo
     }
 
     @Override
+    public void getButtonStateResorts(final FragmentTransactionsMenuContract.APIListener listener) {
+        try {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+
+            ApiPresente service = retrofit.create(ApiPresente.class);
+            Call<BaseResponse<ResponseParametrosAPP>> call = service.getButtonStateResorts();
+            call.enqueue(new Callback<BaseResponse<ResponseParametrosAPP>>() {
+
+                @Override
+                public void onResponse(Call<BaseResponse<ResponseParametrosAPP>> call, Response<BaseResponse<ResponseParametrosAPP>> response) {
+                    if (response.isSuccessful()) {
+                        if(response.body().getErrorToken() != null && !response.body().getErrorToken().isEmpty()){
+                            listener.onExpiredToken(response);
+                        }else if(response.body().getMensajeErrorUsuario() != null && !response.body().getMensajeErrorUsuario().isEmpty()){
+                            listener.onErrorButtonStateResorts(response);
+                        }else{
+                            listener.onSuccessButtonStateResorts(response);
+                        }
+                    } else {
+                        listener.onErrorButtonStateResorts(null);
+                    }
+                }
+                @Override
+                public void onFailure(Call<BaseResponse<ResponseParametrosAPP>> call, Throwable t) {
+                    listener.onErrorButtonStateResorts(null);
+                }
+            });
+        } catch (Exception e) {
+            listener.onErrorButtonStateResorts(null);
+        }
+    }
+
+    @Override
     public void getAssociatedDependency(BaseRequest body, final FragmentTransactionsMenuContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -128,11 +159,7 @@ public class FragmentTransactionsMenuModel implements FragmentTransactionsMenuCo
                 }
                 @Override
                 public void onFailure(Call<BaseResponse<ResponseDependenciasAsociado>> call, Throwable t) {
-                    if(t instanceof IOException){
-                        listener.onFailureAssociatedDependency(t, true);
-                    }else{
-                        listener.onFailureAssociatedDependency(t, false);
-                    }
+                    listener.onErrorAssociatedDependency(null);
                 }
             });
         } catch (Exception e) {
@@ -140,12 +167,47 @@ public class FragmentTransactionsMenuModel implements FragmentTransactionsMenuCo
         }
     }
 
+    @Override
+    public void getPendingSalaryAdvance(BaseRequest body, final FragmentTransactionsMenuContract.APIListener listener) {
+        try {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+
+            ApiPresente service = retrofit.create(ApiPresente.class);
+            Call<BaseResponse<List<ResponseMovimientos>>> call = service.getMoves(body);
+            call.enqueue(new Callback<BaseResponse<List<ResponseMovimientos>>>() {
+
+                @Override
+                public void onResponse(Call<BaseResponse<List<ResponseMovimientos>>> call, Response<BaseResponse<List<ResponseMovimientos>>> response) {
+                    if (response.isSuccessful()) {
+                        if(response.body().getErrorToken() != null && !response.body().getErrorToken().isEmpty()){
+                            listener.onExpiredToken(response);
+                        }else if(response.body().getMensajeErrorUsuario() != null && !response.body().getMensajeErrorUsuario().isEmpty()){
+                            listener.onErrorPendingSalaryAdvance(response);
+                        }else{
+                            listener.onSuccessPendingSalaryAdvance(response);
+                        }
+                    } else {
+                        listener.onErrorPendingSalaryAdvance(null);
+                    }
+                }
+                @Override
+                public void onFailure(Call<BaseResponse<List<ResponseMovimientos>>> call, Throwable t) {
+                    listener.onErrorPendingSalaryAdvance(null);
+                }
+            });
+        } catch (Exception e) {
+            listener.onErrorPendingSalaryAdvance(null);
+        }
+    }
 
     @Override
     public void getButtonStateTransfers(FragmentTransactionsMenuContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -182,7 +244,7 @@ public class FragmentTransactionsMenuModel implements FragmentTransactionsMenuCo
     public void getButtonStateSavings(FragmentTransactionsMenuContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -218,7 +280,7 @@ public class FragmentTransactionsMenuModel implements FragmentTransactionsMenuCo
     public void getButtonStatePaymentCredits(FragmentTransactionsMenuContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -249,42 +311,5 @@ public class FragmentTransactionsMenuModel implements FragmentTransactionsMenuCo
             listener.onErrorButtonStatePaymentCredits(null);
         }
     }
-
-//    @Override
-//    public void getButtonStateResorts(final FragmentTransactionsMenuContract.APIListener listener) {
-//        try {
-//            Retrofit retrofit = new Retrofit.Builder()
-//                    .baseUrl(NetworkHelper.DIRECCION_WS)
-//                    .addConverterFactory(GsonConverterFactory.create())
-//                    .build();
-//
-//            ApiPresente service = retrofit.create(ApiPresente.class);
-//            Call<BaseResponse<ResponseParametrosAPP>> call = service.getButtonStateResorts();
-//            call.enqueue(new Callback<BaseResponse<ResponseParametrosAPP>>() {
-//
-//                @Override
-//                public void onResponse(Call<BaseResponse<ResponseParametrosAPP>> call, Response<BaseResponse<ResponseParametrosAPP>> response) {
-//                    if (response.isSuccessful()) {
-//                        if(response.body().getErrorToken() != null && !response.body().getErrorToken().isEmpty()){
-//                            listener.onExpiredToken(response);
-//                        }else if(response.body().getDescripcionError() != null && !response.body().getDescripcionError().isEmpty()){
-//                            listener.onError(response);
-//                        }else{
-//                            listener.onSuccessButtonStateResorts(response);
-//                        }
-//                    } else {
-//                        response.body().setDescripcionError("Error: "+response.code());
-//                        listener.onError(response);
-//                    }
-//                }
-//                @Override
-//                public void onFailure(Call<BaseResponse<ResponseParametrosAPP>> call, Throwable t) {
-//                    listener.onFailure(t);
-//                }
-//            });
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
 
 }

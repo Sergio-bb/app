@@ -8,12 +8,15 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import solidappservice.cm.com.presenteapp.entities.banercomercial.response.ResponseBanerComercial;
+import solidappservice.cm.com.presenteapp.entities.base.BaseRequest;
 import solidappservice.cm.com.presenteapp.entities.base.BaseResponse;
 import solidappservice.cm.com.presenteapp.entities.dispositivo.apirequest.Dispositivo;
 import solidappservice.cm.com.presenteapp.entities.dispositivo.apiresponse.ResponseValidarDispositivo;
 import solidappservice.cm.com.presenteapp.entities.imagelogin.ResponseImageLogin;
 import solidappservice.cm.com.presenteapp.entities.login.Request.RequestLogin;
 import solidappservice.cm.com.presenteapp.entities.login.Response.Usuario;
+import solidappservice.cm.com.presenteapp.entities.mensajes.response.ResponseObtenerMensajes;
 import solidappservice.cm.com.presenteapp.entities.mensajesbanner.ResponseMensajesBanner;
 import solidappservice.cm.com.presenteapp.rest.NetworkHelper;
 import solidappservice.cm.com.presenteapp.rest.retrofit.apipresente.ApiPresente;
@@ -27,7 +30,7 @@ public class FragmentLoginModel implements FragmentLoginContract.Model{
     public void validateLogin(RequestLogin body, final FragmentLoginContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -38,7 +41,7 @@ public class FragmentLoginModel implements FragmentLoginContract.Model{
                 @Override
                 public void onResponse(Call<BaseResponse<Usuario>> call, Response<BaseResponse<Usuario>> response) {
                     if (response.isSuccessful()) {
-                        if(response.body().getMensajeErrorUsuario() != null && !response.body().getMensajeErrorUsuario().isEmpty()){
+                        if(response.body().getDescripcionError() != null && !response.body().getDescripcionError().isEmpty()){
                             listener.onErrorValidateLogin(response);
                         }else{
                             listener.onSuccessValidateLogin(body, response);
@@ -52,9 +55,8 @@ public class FragmentLoginModel implements FragmentLoginContract.Model{
                     if(t instanceof IOException){
                         listener.onFailure(t, true);
                     }else{
-                        listener.onFailure(t, false);
+                        listener.onErrorValidateLogin(null);
                     }
-
                 }
             });
         } catch (Exception e) {
@@ -66,7 +68,7 @@ public class FragmentLoginModel implements FragmentLoginContract.Model{
     public void getBannerMessages(final FragmentLoginContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -91,7 +93,7 @@ public class FragmentLoginModel implements FragmentLoginContract.Model{
                     if(t instanceof IOException){
                         listener.onFailure(t, true);
                     }else{
-                        listener.onFailure(t, false);
+                        listener.onError(null);
                     }
                 }
             });
@@ -104,7 +106,7 @@ public class FragmentLoginModel implements FragmentLoginContract.Model{
     public void getLoginImage(final FragmentLoginContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -129,7 +131,7 @@ public class FragmentLoginModel implements FragmentLoginContract.Model{
                     if(t instanceof IOException){
                         listener.onFailure(t, true);
                     }else{
-                        listener.onFailure(t, false);
+                        listener.onError(null);
                     }
                 }
             });
@@ -142,7 +144,7 @@ public class FragmentLoginModel implements FragmentLoginContract.Model{
     public void validateRegisterDevice(Dispositivo body, final FragmentLoginContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -167,7 +169,7 @@ public class FragmentLoginModel implements FragmentLoginContract.Model{
                     if(t instanceof IOException){
                         listener.onFailure(t, true);
                     }else{
-                        listener.onFailure(t, false);
+                        listener.onError(null);
                     }
                 }
             });

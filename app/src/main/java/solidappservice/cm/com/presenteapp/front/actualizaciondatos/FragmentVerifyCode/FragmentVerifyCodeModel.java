@@ -5,7 +5,6 @@ import android.util.Base64;
 import java.io.IOException;
 import java.security.cert.CertificateException;
 import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
@@ -36,14 +35,9 @@ public class FragmentVerifyCodeModel implements FragmentVerifyCodeContract.Model
     @Override
     public void sendVerificationCodeEmail(RequestEnviarCodigo body, FragmentVerifyCodeContract.APIListener listener) {
         try {
-            OkHttpClient client = new OkHttpClient().newBuilder()
-                    .readTimeout(60, TimeUnit.SECONDS)
-                    .connectTimeout(60, TimeUnit.SECONDS)
-                    .build();
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
-                    .client(client)
                     .build();
 
             ApiPresente service = retrofit.create(ApiPresente.class);
@@ -69,7 +63,7 @@ public class FragmentVerifyCodeModel implements FragmentVerifyCodeContract.Model
                     if(t instanceof IOException){
                         listener.onFailure(t, true);
                     }else{
-                        listener.onFailure(t, false);
+                        listener.onError(null);
                     }
                 }
             });
@@ -83,7 +77,7 @@ public class FragmentVerifyCodeModel implements FragmentVerifyCodeContract.Model
     public void sendVerificationCodePhone(RequestEnviarCodigo body, FragmentVerifyCodeContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -109,7 +103,7 @@ public class FragmentVerifyCodeModel implements FragmentVerifyCodeContract.Model
                     if(t instanceof IOException){
                         listener.onFailure(t, true);
                     }else{
-                        listener.onFailure(t, false);
+                        listener.onError(null);
                     }
                 }
             });
@@ -122,7 +116,7 @@ public class FragmentVerifyCodeModel implements FragmentVerifyCodeContract.Model
     public void validateVerificationCode(RequestValidarCodigo body, FragmentVerifyCodeContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -149,7 +143,7 @@ public class FragmentVerifyCodeModel implements FragmentVerifyCodeContract.Model
                     if(t instanceof IOException){
                         listener.onFailure(t, true);
                     }else{
-                        listener.onFailure(t, false);
+                        listener.onError(null);
                     }
                 }
             });
@@ -163,7 +157,7 @@ public class FragmentVerifyCodeModel implements FragmentVerifyCodeContract.Model
     public void updatePersonalData(RequestActualizarDatos body, final FragmentVerifyCodeContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -190,7 +184,7 @@ public class FragmentVerifyCodeModel implements FragmentVerifyCodeContract.Model
                     if(t instanceof IOException){
                         listener.onFailure(t, true);
                     }else{
-                        listener.onFailure(t, false);
+                        listener.onError(null);
                     }
                 }
             });
@@ -205,7 +199,7 @@ public class FragmentVerifyCodeModel implements FragmentVerifyCodeContract.Model
     public void registerDevice(Dispositivo body, final FragmentVerifyCodeContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -232,7 +226,7 @@ public class FragmentVerifyCodeModel implements FragmentVerifyCodeContract.Model
                     if(t instanceof IOException){
                         listener.onFailure(t, true);
                     }else{
-                        listener.onFailure(t, false);
+                        listener.onError(null);
                     }
                 }
             });
@@ -275,7 +269,7 @@ public class FragmentVerifyCodeModel implements FragmentVerifyCodeContract.Model
                     if(t instanceof IOException){
                         listener.onFailure(t, true);
                     }else{
-                        listener.onFailure(t, false);
+                        listener.onError(null);
                     }
                 }
             });

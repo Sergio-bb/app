@@ -23,16 +23,10 @@ public interface FragmentRegisterAccountContract {
         void showResultRegisterAccount();
         void disabledRegisterAccountButton();
         void enabledRegisterAccountButton();
-        void showSectionRegisterAccount();
-        void hideSectionRegisterAccount();
-        void showCircularProgressBar(String message);
-        void hideCircularProgressBar();
-        void showErrorWithRefresh();
         void showProgressDialog(String message);
         void hideProgressDialog();
-        void showDialogError(String title, String message);
+        void showDataFetchError(String message);
         void showErrorTimeOut();
-        void showDataFetchError(String title, String message);
         void showExpiredToken(String message);
     }
 
@@ -50,9 +44,6 @@ public interface FragmentRegisterAccountContract {
 
     interface APIListener{
         <T> void onSuccessBanks(Response<BaseResponse<T>> response);
-        <T> void onErrorBanks(Response<BaseResponse<T>> response);
-        void onFailureBanks(Throwable t, boolean isErrorTimeOut);
-
         <T> void onSuccessRegisteredAccounts(Response<BaseResponse<T>> response);
         <T> void onSuccessRegisterAccount(Response<BaseResponse<T>> response);
         <T> void onExpiredToken(Response<BaseResponse<T>> response);

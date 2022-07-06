@@ -1,29 +1,19 @@
 package solidappservice.cm.com.presenteapp.front.tarjetapresente.FragmentPresenteCardMenu.MovementsCards.FragmentMovementsProductsCard;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
@@ -31,15 +21,12 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import solidappservice.cm.com.presenteapp.R;
 import solidappservice.cm.com.presenteapp.adapters.estadocuenta.MovimientoAdapter;
-import solidappservice.cm.com.presenteapp.entities.base.BaseRequest;
 import solidappservice.cm.com.presenteapp.entities.estadocuenta.response.ResponseMovimientoProducto;
-import solidappservice.cm.com.presenteapp.entities.estadocuenta.response.ResponseProducto;
+import solidappservice.cm.com.presenteapp.entities.estadocuenta.response.ResponseProductos;
 import solidappservice.cm.com.presenteapp.entities.estadocuenta.request.RequestMovimientosProducto;
 import solidappservice.cm.com.presenteapp.entities.parametrosgenerales.ResponseMensajesRespuesta;
-import solidappservice.cm.com.presenteapp.entities.tarjetapresente.response.ResponseTarjeta;
 import solidappservice.cm.com.presenteapp.front.base.ActivityBase;
 import solidappservice.cm.com.presenteapp.front.tabs.ActivityTabs.ActivityTabsView;
 import solidappservice.cm.com.presenteapp.tools.security.Encripcion;
@@ -53,6 +40,7 @@ public class FragmentMovementsProductsCardView extends Fragment implements Fragm
 
     private FragmentMovementsProductsCardPresenter presenter;
     private ActivityBase context;
+    private ProgressDialog pd;
     private GlobalState state;
     private FirebaseAnalytics firebaseAnalytics;
 
@@ -62,20 +50,6 @@ public class FragmentMovementsProductsCardView extends Fragment implements Fragm
     TextView lblSaldoValue;
     @BindView(R.id.list_movimientos)
     ListView list_movimientos;
-
-    @BindView(R.id.layout_circular_progress_bar)
-    LinearLayout layoutCircularProgressBar;
-    @BindView(R.id.circular_progress_bar)
-    ProgressBar circularProgressBar;
-    @BindView(R.id.text_circular_progress_Bar)
-    TextView textCircularProgressBar;
-    @BindView(R.id.imageReferesh)
-    ImageView buttonReferesh;
-    @BindView(R.id.pullToRefresh)
-    SwipeRefreshLayout pullToRefresh;
-
-    @BindView(R.id.contentMovementsProductsCard)
-    LinearLayout contentMovementsProductsCard;
 
     @Override
     public void onAttach(Context context) {
@@ -99,102 +73,21 @@ public class FragmentMovementsProductsCardView extends Fragment implements Fragm
         presenter = new FragmentMovementsProductsCardPresenter(this, new FragmentMovementsProductsCardModel());
         context = (ActivityBase) getActivity();
         state = context.getState();
-        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                fetchMovementsPresenteCards(state.getProductoSeleccionado());
-                pullToRefresh.setRefreshing(false);
-            }
-        });
+        pd = new ProgressDialog(context);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        fetchAccounts();
-    }
-
-    @OnClick(R.id.imageReferesh)
-    public void onClickRefresh(){
-        fetchMovementsPresenteCards(state.getProductoSeleccionado());
-    }
-
-    @Override
-    public void showTitleProductPresenteCards(){
-        try{
-            ResponseProducto producto = state.getProductoSeleccionado();
-            lblMovimientos.setText(String.format("%s:  %s", producto.getN_produc(), producto.getA_numdoc()));
-            lblSaldoValue.setText(context.getMoneda(producto.getV_saldo()));
-        }catch (Exception ex){
-            lblSaldoValue.setText("");
+        ResponseProductos producto = state.getProductoSeleccionado();
+        if(producto != null){
+//            mostrarproducto(producto);
+            fetchMovementsPresenteCards(producto);
         }
     }
 
     @Override
-    public void fetchAccounts(){
-        try{
-            if (state != null && state.getProductos() != null && state.getProductos().size() > 0) {
-                showAccountsPresenteCard(state.getProductos());
-            } else {
-                Encripcion encripcion = Encripcion.getInstance();
-                presenter.fetchAccounts(new BaseRequest(
-                        encripcion.encriptar(state.getUsuario().getCedula()),
-                        state.getUsuario().getToken()
-                ));
-            }
-        }catch (Exception ex){
-            showDialogError("Lo sentimos", "");
-            showErrorWithRefresh();
-        }
-    }
-
-    @Override
-    public void showAccountsPresenteCard(List<ResponseProducto> productos){
-        try{
-            state.setProductos(productos);
-            if (productos != null && productos.size() > 0) {
-                ResponseTarjeta tarjetaSeleccionada = state.getTarjetaSeleccionada();
-                ResponseProducto productoSeleccionado = null;
-                if(!tarjetaSeleccionada.getA_numcta().equalsIgnoreCase("X")){
-                    for (ResponseProducto producto : productos) {
-                        if (producto.getA_numdoc().equals(tarjetaSeleccionada.getA_numcta())) {
-                            productoSeleccionado = producto;
-                            break;
-                        }
-                    }
-                }else{
-                    for (ResponseProducto producto : productos) {
-                        if (producto.getA_tipodr().equals(tarjetaSeleccionada.getA_tipodr()) && producto.getA_numdoc().equals(tarjetaSeleccionada.getA_obliga())) {
-                            productoSeleccionado = producto;
-                            break;
-                        }
-                    }
-                }
-                if (productoSeleccionado == null) {
-                    pullToRefresh.setVisibility(View.GONE);
-                    layoutCircularProgressBar.setVisibility(View.VISIBLE);
-                    circularProgressBar.setVisibility(View.GONE);
-                    textCircularProgressBar.setText("No hay productos disponibles");
-                    buttonReferesh.setVisibility(View.VISIBLE);
-                } else {
-                    state.setProductoSeleccionado(productoSeleccionado);
-                    fetchMovementsPresenteCards(productoSeleccionado);
-                }
-            } else {
-                contentMovementsProductsCard.setVisibility(View.GONE);
-                layoutCircularProgressBar.setVisibility(View.VISIBLE);
-                circularProgressBar.setVisibility(View.GONE);
-                textCircularProgressBar.setText("No hay movimientos");
-                buttonReferesh.setVisibility(View.VISIBLE);
-            }
-        }catch (Exception ex){
-            showDialogError("Lo sentimos", "");
-            showErrorWithRefresh();
-        }
-    }
-
-    @Override
-    public void fetchMovementsPresenteCards(ResponseProducto producto){
+    public void fetchMovementsPresenteCards(ResponseProductos producto){
         try{
             Encripcion encripcion = Encripcion.getInstance();
             presenter.fetchMovementsPresenteCards(new RequestMovimientosProducto(
@@ -205,8 +98,18 @@ public class FragmentMovementsProductsCardView extends Fragment implements Fragm
                     producto.getA_numdoc()
             ));
         }catch (Exception ex){
-            showDialogError("Lo sentimos", "");
-            showErrorWithRefresh();
+            showDataFetchError("");
+        }
+    }
+
+    @Override
+    public void showTitleProductPresenteCards(){
+        try{
+            ResponseProductos producto = state.getProductoSeleccionado();
+            lblMovimientos.setText(String.format("%s:  %s", producto.getN_produc(), producto.getA_numdoc()));
+            lblSaldoValue.setText(context.getMoneda(producto.getV_saldo()));
+        }catch (Exception ex){
+            showDataFetchError("");
         }
     }
 
@@ -217,78 +120,37 @@ public class FragmentMovementsProductsCardView extends Fragment implements Fragm
                 MovimientoAdapter adapter = new MovimientoAdapter(context, movimientos);
                 list_movimientos.setAdapter(adapter);
             }else{
-                contentMovementsProductsCard.setVisibility(View.GONE);
-                layoutCircularProgressBar.setVisibility(View.VISIBLE);
-                circularProgressBar.setVisibility(View.GONE);
-                textCircularProgressBar.setText("No hay movimientos");
-                buttonReferesh.setVisibility(View.VISIBLE);
+                AlertDialog.Builder d = new AlertDialog.Builder(context);
+                d.setTitle(context.getResources().getString(R.string.app_name));
+                d.setIcon(R.mipmap.icon_presente);
+                d.setMessage("No hay ningún movimiento cargado para este producto");
+                d.setCancelable(false);
+                d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        context.getState().getmTabHost().setCurrentTab(ActivityTabsView.TAB_13_PRESENTE_CARD_PRODUCTS_TAG);
+                        dialog.dismiss();
+                    }
+                });
+                d.show();
             }
         }catch (Exception ex){
-            showDialogError("Lo sentimos", "");
-            showErrorWithRefresh();
+            showDataFetchError("");
         }
     }
 
     @Override
-    public void showSectionMovementsPresenteCards(){
-        contentMovementsProductsCard.setVisibility(View.VISIBLE);
-    }
-    @Override
-    public void hideSectionMovementsPresenteCards(){
-        contentMovementsProductsCard.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showCircularProgressBar(String textProgressBar) {
-        layoutCircularProgressBar.setVisibility(View.VISIBLE);
-        textCircularProgressBar.setText(textProgressBar);
+    public void showProgressDialog(String message) {
+        pd.setTitle(context.getResources().getString(R.string.app_name));
+        pd.setMessage(message);
+        pd.setIcon(R.mipmap.icon_presente);
+        pd.setCancelable(false);
+        pd.show();
     }
 
     @Override
-    public void hideCircularProgressBar() {
-        layoutCircularProgressBar.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showErrorWithRefresh(){
-        contentMovementsProductsCard.setVisibility(View.GONE);
-        layoutCircularProgressBar.setVisibility(View.VISIBLE);
-        circularProgressBar.setVisibility(View.GONE);
-        textCircularProgressBar.setText("Ha ocurrido un error, inténtalo de nuevo ");
-        buttonReferesh.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void showDialogError(String title, String message){
-        if(TextUtils.isEmpty(message)){
-            message = "Ha ocurrido un error. Intenta de nuevo y si el error persiste, contacta a PRESENTE.";
-            if(state != null && state.getMensajesRespuesta() != null && state.getMensajesRespuesta().size()>0){
-                for(ResponseMensajesRespuesta rm : state.getMensajesRespuesta()){
-                    if(rm.getIdMensaje() == 7){
-                        message = rm.getMensaje();
-                    }
-                }
-            }
-        }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText(title);
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-                state.getmTabHost().setCurrentTab(ActivityTabsView.TAB_2_PRESENTE_CARD_MENU_TAG);
-            }
-        });
-        dialog.show();
+    public void hideProgressDialog() {
+        pd.dismiss();
     }
 
     @Override
@@ -301,29 +163,23 @@ public class FragmentMovementsProductsCardView extends Fragment implements Fragm
                 }
             }
         }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText("Lo sentimos");
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(DialogInterface dialog, int which) {
                 state.getmTabHost().setCurrentTab(ActivityTabsView.TAB_2_PRESENTE_CARD_MENU_TAG);
                 dialog.dismiss();
             }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
-    public void showDataFetchError(String title, String message){
+    public void showDataFetchError(String message) {
         if(TextUtils.isEmpty(message)){
             message = "Ha ocurrido un error. Intenta de nuevo y si el error persiste, contacta a PRESENTE.";
             if(state != null && state.getMensajesRespuesta() != null && state.getMensajesRespuesta().size()>0){
@@ -334,45 +190,34 @@ public class FragmentMovementsProductsCardView extends Fragment implements Fragm
                 }
             }
         }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText(title);
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(DialogInterface dialog, int which) {
                 state.getmTabHost().setCurrentTab(ActivityTabsView.TAB_2_PRESENTE_CARD_MENU_TAG);
                 dialog.dismiss();
             }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
     public void showExpiredToken(String message) {
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_closedsession);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        Button buttonClosedSession = (Button) dialog.findViewById(R.id.btnVolverAIngresar);
-        buttonClosedSession.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle("Sesión finalizada");
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
                 context.salir();
             }
         });
-        dialog.show();
-
+        d.show();
     }
 
 

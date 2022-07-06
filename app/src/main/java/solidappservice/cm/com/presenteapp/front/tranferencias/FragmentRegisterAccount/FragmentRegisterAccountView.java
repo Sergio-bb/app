@@ -1,26 +1,20 @@
 package solidappservice.cm.com.presenteapp.front.tranferencias.FragmentRegisterAccount;
 
-import android.app.Dialog;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
@@ -33,14 +27,14 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import solidappservice.cm.com.presenteapp.R;
-import solidappservice.cm.com.presenteapp.entities.base.BaseRequest;
-import solidappservice.cm.com.presenteapp.entities.base.GlobalState;
 import solidappservice.cm.com.presenteapp.entities.parametrosgenerales.ResponseMensajesRespuesta;
-import solidappservice.cm.com.presenteapp.entities.transferencias.request.RequestRegisterAccount;
 import solidappservice.cm.com.presenteapp.entities.transferencias.response.ResponseBanco;
 import solidappservice.cm.com.presenteapp.entities.transferencias.response.ResponseCuentasInscritas;
+import solidappservice.cm.com.presenteapp.entities.base.BaseRequest;
+import solidappservice.cm.com.presenteapp.entities.transferencias.request.RequestRegisterAccount;
 import solidappservice.cm.com.presenteapp.front.tabs.ActivityTabs.ActivityTabsView;
 import solidappservice.cm.com.presenteapp.tools.security.Encripcion;
+import solidappservice.cm.com.presenteapp.entities.base.GlobalState;
 
 /**
  * CREADO POR JORGE ANDRÉS DAVID CARDONA EL 20/05/2016.
@@ -51,7 +45,7 @@ public class FragmentRegisterAccountView extends Fragment implements FragmentReg
     private FragmentRegisterAccountPresenter presenter;
     private ActivityTabsView context;
     private GlobalState state;
-    private Dialog pd;
+    private ProgressDialog pd;
     private FirebaseAnalytics firebaseAnalytics;
 
     @BindView(R.id.spBancoDestino)
@@ -64,18 +58,6 @@ public class FragmentRegisterAccountView extends Fragment implements FragmentReg
     EditText txtNombreCuentaDestinatario;
     @BindView(R.id.btnInscribirCuenta)
     Button btnInscribirCuenta;
-
-    @BindView(R.id.contentRegistrarCuenta)
-    ScrollView contentRegistrarCuenta;
-
-    @BindView(R.id.layout_circular_progress_bar)
-    LinearLayout layoutCircularProgressBar;
-    @BindView(R.id.circular_progress_bar)
-    ProgressBar circularProgressBar;
-    @BindView(R.id.text_circular_progress_Bar)
-    TextView textCircularProgressBar;
-    @BindView(R.id.imageReferesh)
-    ImageView buttonReferesh;
 
     @Override
     public void onAttach(Context context) {
@@ -105,7 +87,7 @@ public class FragmentRegisterAccountView extends Fragment implements FragmentReg
         presenter = new FragmentRegisterAccountPresenter(this, new FragmentRegisterAccountModel());
         context = (ActivityTabsView) getActivity();
         state = context.getState();
-        fetchBanks();
+        pd = new ProgressDialog(context);
     }
 
     @Override
@@ -114,6 +96,15 @@ public class FragmentRegisterAccountView extends Fragment implements FragmentReg
         GlobalState state = context.getState();
         if(state == null || state.getUsuario() == null){
             context.salir();
+        }else {
+            List<ResponseBanco> responseBancos = state.getBancos();
+            if(responseBancos != null && responseBancos.size() > 0){
+//                cargarBancos(bancos);
+                showBanks(responseBancos);
+            }else{
+//                new ConsultarCuentasTask().execute();
+                fetchBanks();
+            }
         }
     }
 
@@ -124,6 +115,7 @@ public class FragmentRegisterAccountView extends Fragment implements FragmentReg
 
     @OnClick(R.id.btnInscribirCuenta)
     public void onClickRegisterAccount(){
+//        InscribirCuenta();
         if(!TextUtils.isEmpty(txtCedulaDestinatario.getText()) &&
                 txtCedulaDestinatario.getText().toString().equals(state.getUsuario().getCedula())){
             txtCedulaDestinatario.setError("No es posible inscribir tu propia cuenta");
@@ -132,41 +124,20 @@ public class FragmentRegisterAccountView extends Fragment implements FragmentReg
         }
     }
 
-    @OnClick(R.id.imageReferesh)
-    public void onClickRefresh(){
-        state.setBancos(null);
-        fetchBanks();
-    }
-
-
     @Override
     public void fetchBanks(){
         try{
-            if(state.getBancos() != null && state.getBancos().size() > 0){
-                hideCircularProgressBar();
-                showSectionRegisterAccount();
-                showBanks(state.getBancos());
-            }else{
-                presenter.fetchBanks();
-            }
+            presenter.fetchBanks();
         }catch (Exception ex){
-            showDialogError("Lo sentimos", "");
-            showErrorWithRefresh();
+            showDataFetchError("");
         }
     }
 
     @Override
     public void showBanks(List<ResponseBanco> listaResponseBancos){
-        try{
-            if(listaResponseBancos != null && listaResponseBancos.size() > 0){
-                state.setBancos(listaResponseBancos);
-                ArrayAdapter<ResponseBanco> adapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, android.R.id.text1, listaResponseBancos);
-                spBancoDestino.setAdapter(adapter);
-            }
-        }catch (Exception ex){
-            showDialogError("Lo sentimos", "");
-            showErrorWithRefresh();
-        }
+        state.setBancos(listaResponseBancos);
+        ArrayAdapter<ResponseBanco> adapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, android.R.id.text1, listaResponseBancos);
+        spBancoDestino.setAdapter(adapter);
     }
 
     @Override
@@ -178,7 +149,7 @@ public class FragmentRegisterAccountView extends Fragment implements FragmentReg
                     state.getUsuario().getToken()
             ));
         }catch (Exception ex){
-            showDataFetchError("Lo sentimos", "");
+            showDataFetchError("");
         }
     }
 
@@ -192,9 +163,10 @@ public class FragmentRegisterAccountView extends Fragment implements FragmentReg
                 }
             }
             if(!isCuentaRepetida){
+//                new InscribirCuentaTask().execute(jsonInscribirCuentas);
                 registerAccount();
             } else{
-                showDialogError("Lo sentimos", "Esta cuenta ya se encuentra inscrita.");
+                context.makeErrorDialog("Esta cuenta ya se encuentra inscrita");
             }
         }
     }
@@ -210,7 +182,7 @@ public class FragmentRegisterAccountView extends Fragment implements FragmentReg
             if(TextUtils.isEmpty(idDispositivo)
                     || TextUtils.isEmpty(nombreCuenta)
                     || TextUtils.isEmpty(cedulaInscripcion)){
-                showDialogError("Datos incompletos", "Todos los campos son obligatorios, por favor verifica los datos ingresados");
+                context.makeDialog("Todos los campos son obligatorios, por favor verifica los datos ingresados");
                 return;
             }
             presenter.registerAccount(new RequestRegisterAccount(
@@ -224,32 +196,34 @@ public class FragmentRegisterAccountView extends Fragment implements FragmentReg
                     encripcion.encriptar(cedulaInscripcion)
             ));
         }catch (Exception ex){
-            showDataFetchError("Lo sentimos", "");
             enabledRegisterAccountButton();
+            showDataFetchError("");
         }
     }
 
     @Override
     public void showResultRegisterAccount(){
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_success);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.titleSuccess);
-        titleMessage.setText("Solicitud Enviada");
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.contentSuccess);
-        contentMessage.setText("La solicitud para registrar la cuenta se ha realizado correctamente.");
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.buttonClose);
-        buttonClose.setOnClickListener(view -> {
-            txtCedulaDestinatario.setText("");
-            txtCuentaDestinatario.setText("");
-            txtNombreCuentaDestinatario.setText("");
-            state.getmTabHost().setCurrentTab(ActivityTabsView.TAB_23_NEQUI_MENU_SEND_MONEY_TAG);
-            dialog.dismiss();
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        View view = context.getCurrentFocus();
+        if(view!=null){
+            InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+        }
+        d.setMessage("Tu solicitud se envió con éxito");
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                context.onBackPressed();
+            }
         });
-        dialog.show();
+        txtCedulaDestinatario.setText("");
+        txtCuentaDestinatario.setText("");
+        txtNombreCuentaDestinatario.setText("");
+        d.show();
     }
 
     @Override
@@ -259,95 +233,21 @@ public class FragmentRegisterAccountView extends Fragment implements FragmentReg
 
     @Override
     public void enabledRegisterAccountButton(){
-        if (btnInscribirCuenta != null) {
-            btnInscribirCuenta.setEnabled(true);
-        }
-    }
-
-    @Override
-    public void showSectionRegisterAccount(){
-        contentRegistrarCuenta.setVisibility(View.VISIBLE);
-    }
-    @Override
-    public void hideSectionRegisterAccount(){
-        if (contentRegistrarCuenta.getVisibility() == View.VISIBLE && contentRegistrarCuenta != null)  {
-            contentRegistrarCuenta.setVisibility(View.GONE);
-        }
-    }
-
-    @Override
-    public void showCircularProgressBar(String textProgressBar) {
-        if (layoutCircularProgressBar.getVisibility() == View.GONE && layoutCircularProgressBar != null) {
-            layoutCircularProgressBar.setVisibility(View.VISIBLE);
-            textCircularProgressBar.setText(textProgressBar);
-        }
-    }
-
-    @Override
-    public void hideCircularProgressBar() {
-        if (layoutCircularProgressBar.getVisibility() == View.VISIBLE && layoutCircularProgressBar != null) {
-            layoutCircularProgressBar.setVisibility(View.GONE);
-        }
-    }
-
-    @Override
-    public void showErrorWithRefresh(){
-        try {
-            contentRegistrarCuenta.setVisibility(View.GONE);
-            layoutCircularProgressBar.setVisibility(View.VISIBLE);
-            circularProgressBar.setVisibility(View.GONE);
-            textCircularProgressBar.setText("Ha ocurrido un error, inténtalo de nuevo ");
-            buttonReferesh.setVisibility(View.VISIBLE);
-        }catch (Exception ex){
-            showDataFetchError("Lo sentimos", "");
-        }
+        btnInscribirCuenta.setEnabled(true);
     }
 
     @Override
     public void showProgressDialog(String message) {
-        pd = new Dialog(context);
-        pd.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        pd.setCanceledOnTouchOutside(false);
-        pd.setContentView(R.layout.pop_up_loading);
+        pd.setTitle(context.getResources().getString(R.string.app_name));
+        pd.setMessage(message);
+        pd.setIcon(R.mipmap.icon_presente);
         pd.setCancelable(false);
-        pd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView contentMessage = (TextView) pd.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
         pd.show();
     }
 
     @Override
     public void hideProgressDialog() {
-        if(pd != null){
-            pd.dismiss();
-        }
-    }
-
-    @Override
-    public void showDialogError(String title, String message){
-        if(TextUtils.isEmpty(message)){
-            message = "Ha ocurrido un error. Intenta de nuevo y si el error persiste, contacta a PRESENTE.";
-            if(state != null && state.getMensajesRespuesta() != null && state.getMensajesRespuesta().size()>0){
-                for(ResponseMensajesRespuesta rm : state.getMensajesRespuesta()){
-                    if(rm.getIdMensaje() == 7){
-                        message = rm.getMensaje();
-                    }
-                }
-            }
-        }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText(title);
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(view -> dialog.dismiss());
-        dialog.show();
+        pd.dismiss();
     }
 
     @Override
@@ -360,28 +260,23 @@ public class FragmentRegisterAccountView extends Fragment implements FragmentReg
                 }
             }
         }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText("Lo sentimos");
-        TextView contentMessage = dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(view -> {
-            txtCedulaDestinatario.setText("");
-            txtNombreCuentaDestinatario.setText("");
-            dialog.dismiss();
-            state.getmTabHost().setCurrentTab(ActivityTabsView.TAB_17_TRANSFERS_MENU_TAG);
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                state.getmTabHost().setCurrentTab(ActivityTabsView.TAB_17_TRANSFERS_MENU_TAG);
+                dialog.dismiss();
+            }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
-    public void showDataFetchError(String title, String message){
+    public void showDataFetchError(String message) {
         if(TextUtils.isEmpty(message)){
             message = "Ha ocurrido un error. Intenta de nuevo y si el error persiste, contacta a PRESENTE.";
             if(state != null && state.getMensajesRespuesta() != null && state.getMensajesRespuesta().size()>0){
@@ -392,39 +287,286 @@ public class FragmentRegisterAccountView extends Fragment implements FragmentReg
                 }
             }
         }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText(title);
-        TextView contentMessage = dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(view -> {
-            txtCedulaDestinatario.setText("");
-            txtNombreCuentaDestinatario.setText("");
-            dialog.dismiss();
-            state.getmTabHost().setCurrentTab(ActivityTabsView.TAB_17_TRANSFERS_MENU_TAG);
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                state.getmTabHost().setCurrentTab(ActivityTabsView.TAB_17_TRANSFERS_MENU_TAG);
+                dialog.dismiss();
+            }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
     public void showExpiredToken(String message) {
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_closedsession);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        Button buttonClosedSession = dialog.findViewById(R.id.btnVolverAIngresar);
-        buttonClosedSession.setOnClickListener(view -> {
-            dialog.dismiss();
-            context.salir();
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle("Sesión finalizada");
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                context.salir();
+            }
         });
-        dialog.show();
+        d.show();
     }
+
+//    @Override
+//    public void onClick(View v) {
+//        int id = v.getId();
+//
+//        switch (id) {
+//            case R.id.btnInscribirCuenta:
+//                InscribirCuenta();
+//                break;
+//        }
+//    }
+//
+//    public void cargarBancos(ArrayList<Banco> lista){
+//        ArrayAdapter<Banco> adapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, android.R.id.text1, lista);
+//        spBancoDestino.setAdapter(adapter);
+//    }
+//
+//    private class ConsultarCuentasTask extends AsyncTask<String, String, String> {
+//
+//        String jsonBancos;
+//
+//        @Override
+//        protected void onPreExecute() {
+//            pd.setTitle(context.getResources().getString(R.string.app_name));
+//            pd.setIcon(R.mipmap.icon_presente);
+//            pd.setMessage("Consultando cuentas...");
+//            pd.setCancelable(false);
+//            pd.show();
+//        }
+//
+//        @Override
+//        protected String doInBackground(String... params) {
+//            try {
+//                NetworkHelper networkHelper = new NetworkHelper(context.obtenerConfiguracionSecureUrl());
+//                jsonBancos =  networkHelper.readService(SincroHelper.CONSULTA_BANCOS);
+//                return "";
+//            } catch (Exception e) {
+//                return e.getMessage();
+//            }
+//        }
+//
+//        @Override
+//        protected void onProgressUpdate(String... values) {
+//            pd.setMessage(values[0]);
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            super.onPostExecute(result);
+//            pd.dismiss();
+//            procesarJsonRespuesta(jsonBancos);
+//        }
+//    }
+//
+//    private void procesarJsonRespuesta(String jsonBancos) {
+//        try {
+//            ArrayList<Banco> listadoBancos = SincroHelper.procesarJsonBancos(jsonBancos);
+//            cargarBancos(listadoBancos);
+//            context.getState().setBancos(listadoBancos);
+//        }  catch (Exception e) {
+//            context.makeErrorDialog(e.getMessage());
+//        }
+//    }
+//
+//
+//
+//    private void InscribirCuenta() {
+//
+//        try {
+//            GlobalState state = context.getState();
+//            Usuario usuario = state.getUsuario();
+//            if (usuario == null) {
+//                return;
+//            }
+//
+//            String idDispositivo = context.obtenerIdDispositivo();
+//            String cedulaInscripcion = txtCedulaDestinatario.getText().toString();
+//            String nombreCuenta = txtNombreCuentaDestinatario.getText().toString();
+//
+//            if(TextUtils.isEmpty(idDispositivo)
+//                    || TextUtils.isEmpty(nombreCuenta)
+//                    || TextUtils.isEmpty(cedulaInscripcion)){
+//                context.makeDialog("Todos los campos son obligatorios, por favor verifica los datos ingresados");
+//                return;
+//            }
+//
+//            JSONObject param = new JSONObject();
+//            param.put("cedula", Encripcion.getInstance().encriptar(usuario.cedula));
+//            param.put("token", usuario.token);
+//            param.put("idDispositivo", idDispositivo);
+//            param.put("tipoCuenta", "A");
+//            param.put("nombreCuenta", nombreCuenta);
+//            param.put("codigoBanco", Encripcion.getInstance().encriptar(((Banco)spBancoDestino.getSelectedItem()).Codigo));
+//            param.put("numeroCuenta", "0");
+//            param.put("cedulaInscripcion", Encripcion.getInstance().encriptar(cedulaInscripcion));
+//            new ConsultarCuentasInscritasTask().execute(param);
+//
+//        } catch (Exception e) {
+//            context.makeErrorDialog("Se produjo un error en la inscripción de la cuenta, por favor intenta nuevamente");
+//        }
+//    }
+//
+//
+//    private class ConsultarCuentasInscritasTask extends AsyncTask<JSONObject, String, String> {
+//
+//        String jsonCuentasInscritas;
+//        JSONObject jsonInscribirCuentas;
+//
+//        @Override
+//        protected void onPreExecute() {
+//            pd.setTitle(context.getResources().getString(R.string.app_name));
+//            pd.setIcon(R.mipmap.icon_presente);
+//            pd.setMessage("Consultando cuenta...");
+//            pd.setCancelable(false);
+//            pd.show();
+//        }
+//
+//        @Override
+//        protected String doInBackground(JSONObject... params) {
+//            try {
+//                NetworkHelper networkHelper = new NetworkHelper(context.obtenerConfiguracionSecureUrl());
+//                jsonInscribirCuentas = params[0];
+//
+//                JSONObject param = new JSONObject();
+//                param.put("cedula", jsonInscribirCuentas.get("cedula").toString());
+//                param.put("token", jsonInscribirCuentas.get("token").toString());
+//                jsonCuentasInscritas = networkHelper.writeService(param, SincroHelper.CONSULTA_CUENTAS_INSCRITAS);
+//                return "OK";
+//
+//            } catch (Exception e) {
+//                return e.getMessage();
+//            }
+//        }
+//
+//        @Override
+//        protected void onProgressUpdate(String... values) {
+//            pd.setMessage(values[0]);
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            super.onPostExecute(result);
+//            pd.dismiss();
+//            procesarJsonProductos(jsonCuentasInscritas, jsonInscribirCuentas);
+//        }
+//    }
+//
+//    private void procesarJsonProductos(String jsonCuentasInscritas, JSONObject jsonInscribirCuentas) {
+//        try {
+//            ArrayList<CuentasInscritas> listado_cuentas_inscritas = SincroHelper.procesarJsonCuentasInscritas(jsonCuentasInscritas);
+//            boolean validarCuentasRepetidas = false;
+//
+//            if(listado_cuentas_inscritas != null){
+//
+//                for (CuentasInscritas ci: listado_cuentas_inscritas) {
+//                    if (ci.getAanumnit().equals(txtCedulaDestinatario.getText().toString())) {
+//                        validarCuentasRepetidas = true;
+//                    }
+//                }
+//
+//                if(!validarCuentasRepetidas){
+//                    new InscribirCuentaTask().execute(jsonInscribirCuentas);
+//                } else{
+//                    context.makeErrorDialog("Esta cuenta ya se encuentra inscrita");
+//                }
+//            }
+//
+//        }  catch (Exception e) {
+//            context.makeErrorDialog(e.getMessage());
+//        }
+//    }
+//
+//
+////    Tarea que inscribe las cuentas
+//    private class InscribirCuentaTask extends AsyncTask<JSONObject, String, String> {
+//
+//        @Override
+//        protected void onPreExecute() {
+//            pd.setTitle(context.getResources().getString(R.string.app_name));
+//            pd.setIcon(R.mipmap.icon_presente);
+//            pd.setMessage("Inscribiendo cuenta...");
+//            pd.setCancelable(false);
+//            pd.show();
+//        }
+//
+//        @Override
+//        protected String doInBackground(JSONObject... params) {
+//            try {
+//                NetworkHelper networkHelper = new NetworkHelper(context.obtenerConfiguracionSecureUrl());
+//                return networkHelper.writeService(params[0], SincroHelper.INSCRIBIR_CUENTA);
+//            } catch (Exception e) {
+//                return e.getMessage();
+//            }
+//        }
+//
+//        @Override
+//        protected void onProgressUpdate(String... values) {
+//            pd.setMessage(values[0]);
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            super.onPostExecute(result);
+//            pd.dismiss();
+//            procesarJsonRespuestaInscripcion(result);
+//        }
+//    }
+//
+//
+//    private void procesarJsonRespuestaInscripcion(String jsonRespuesta) {
+//
+//        try {
+//            String result = SincroHelper.procesarJsonCrearSolicitudAhorro(jsonRespuesta);
+//            AlertDialog.Builder d = new AlertDialog.Builder(context);
+//            d.setTitle(context.getResources().getString(R.string.app_name));
+//            d.setIcon(R.mipmap.icon_presente);
+//
+//            if(result.equalsIgnoreCase("OK"))
+//            {
+//                View view = context.getCurrentFocus();
+//                if(view!=null){
+//                    InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+//                    if (imm != null) {
+//                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+//                    }
+//                }
+//                d.setMessage("Tu solicitud se envió con éxito");
+//                d.setCancelable(false);
+//                d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int id) {
+//                        context.onBackPressed();
+//                    }
+//                });
+//
+//                txtCedulaDestinatario.setText("");
+//                txtCuentaDestinatario.setText("");
+//                txtNombreCuentaDestinatario.setText("");
+//            }else{
+//                d.setMessage(result);
+//                d.setCancelable(false);
+//                d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int id) {
+//
+//                    }
+//                });
+//            }
+//            d.show();
+//
+//        }  catch (Exception e) {
+//            context.makeErrorDialog(e.getMessage());
+//        }
+//    }
+
 }

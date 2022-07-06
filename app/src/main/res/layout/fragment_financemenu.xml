@@ -3,11 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:weightSum="100"
     android:background="#fff">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="90"
         android:orientation="vertical">
 
         <TextView
@@ -188,165 +190,165 @@
         </ScrollView>
     </LinearLayout>
 
-<!--    <LinearLayout-->
-<!--        android:layout_width="fill_parent"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:layout_weight="10"-->
-<!--        android:layout_alignParentBottom="true"-->
-<!--        android:layout_marginTop="0dp"-->
-<!--        android:background="@color/yellow"-->
-<!--        android:baselineAligned="false"-->
-<!--        android:orientation="horizontal">-->
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="10"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="0dp"
+        android:background="@color/yellow"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
 
-<!--        <LinearLayout-->
-<!--            android:layout_width="fill_parent"-->
-<!--            android:layout_height="fill_parent"-->
-<!--            android:weightSum="100"-->
-<!--            android:gravity="center"-->
-<!--            android:orientation="horizontal">-->
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:weightSum="100"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-<!--            <View-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="fill_parent"-->
-<!--                android:layout_weight="10"/>-->
+            <View
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="2"/>
 
-<!--            <LinearLayout-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="fill_parent"-->
-<!--                android:layout_weight="20"-->
-<!--                android:weightSum="100"-->
-<!--                android:gravity="center"-->
-<!--                android:orientation="vertical">-->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="24"
+                android:weightSum="100"
+                android:gravity="center"
+                android:orientation="vertical">
 
-<!--                <ImageButton-->
-<!--                    android:id="@+id/btnPortafolio"-->
-<!--                    android:layout_width="fill_parent"-->
-<!--                    android:layout_height="0dp"-->
-<!--                    android:layout_weight="70"-->
-<!--                    android:gravity="top|center|center_horizontal"-->
-<!--                    android:background="@android:color/transparent"-->
-<!--                    android:scaleType="fitCenter"-->
-<!--                    android:src="@drawable/ic_portafolio" />-->
+                <ImageButton
+                    android:id="@+id/btnPortafolio"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="70"
+                    android:gravity="top|center|center_horizontal"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_portafolio" />
 
-<!--                <TextView-->
-<!--                    android:id="@+id/tv_productos"-->
-<!--                    android:layout_width="fill_parent"-->
-<!--                    android:layout_height="0dp"-->
-<!--                    android:layout_weight="30"-->
-<!--                    android:gravity="top|center|center_horizontal"-->
-<!--                    android:layout_below="@+id/btnPortafolio"-->
-<!--                    android:background="@android:color/transparent"-->
-<!--                    android:text="Productos"-->
-<!--                    android:textSize="12sp" />-->
+                <TextView
+                    android:id="@+id/tv_productos"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="30"
+                    android:gravity="top|center|center_horizontal"
+                    android:layout_below="@+id/btnPortafolio"
+                    android:background="@android:color/transparent"
+                    android:text="Productos"
+                    android:textSize="12sp" />
 
-<!--            </LinearLayout>-->
+            </LinearLayout>
 
-<!--            <LinearLayout-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="fill_parent"-->
-<!--                android:layout_weight="20"-->
-<!--                android:weightSum="100"-->
-<!--                android:gravity="center"-->
-<!--                android:orientation="vertical">-->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="24"
+                android:weightSum="100"
+                android:gravity="center"
+                android:orientation="vertical">
 
-<!--                <ImageButton-->
-<!--                    android:id="@+id/btnDirectorio"-->
-<!--                    android:layout_width="fill_parent"-->
-<!--                    android:layout_height="0dp"-->
-<!--                    android:layout_weight="70"-->
-<!--                    android:layout_toRightOf="@+id/btnPreguntasFrecuentes"-->
-<!--                    android:background="@android:color/transparent"-->
-<!--                    android:scaleType="fitCenter"-->
-<!--                    android:src="@drawable/ic_directorio"-->
-<!--                    android:visibility="visible" />-->
+                <ImageButton
+                    android:id="@+id/btnDirectorio"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="70"
+                    android:layout_toRightOf="@+id/btnPreguntasFrecuentes"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_directorio"
+                    android:visibility="visible" />
 
-<!--                <TextView-->
-<!--                    android:id="@+id/tv_directorio"-->
-<!--                    android:layout_width="fill_parent"-->
-<!--                    android:layout_height="0dp"-->
-<!--                    android:layout_weight="30"-->
-<!--                    android:gravity="top|center|center_horizontal"-->
-<!--                    android:layout_below="@+id/btnDirectorio"-->
-<!--                    android:layout_toRightOf="@+id/tv_ayuda"-->
-<!--                    android:background="@android:color/transparent"-->
-<!--                    android:text="Directorio"-->
-<!--                    android:textSize="12sp"-->
-<!--                    android:visibility="visible" />-->
+                <TextView
+                    android:id="@+id/tv_directorio"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="30"
+                    android:gravity="top|center|center_horizontal"
+                    android:layout_below="@+id/btnDirectorio"
+                    android:layout_toRightOf="@+id/tv_ayuda"
+                    android:background="@android:color/transparent"
+                    android:text="Directorio"
+                    android:textSize="12sp"
+                    android:visibility="visible" />
 
-<!--            </LinearLayout>-->
+            </LinearLayout>
 
-<!--            <LinearLayout-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="fill_parent"-->
-<!--                android:layout_weight="20"-->
-<!--                android:weightSum="100"-->
-<!--                android:gravity="center"-->
-<!--                android:orientation="vertical">-->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="24"
+                android:weightSum="100"
+                android:gravity="center"
+                android:orientation="vertical">
 
-<!--                <ImageButton-->
-<!--                    android:id="@+id/btnEncuentranos"-->
-<!--                    android:layout_width="fill_parent"-->
-<!--                    android:layout_height="0dp"-->
-<!--                    android:layout_weight="70"-->
-<!--                    android:layout_toRightOf="@+id/btnDirectorio"-->
-<!--                    android:background="@android:color/transparent"-->
-<!--                    android:scaleType="fitCenter"-->
-<!--                    android:src="@drawable/ic_encuentranos"-->
-<!--                    android:visibility="visible" />-->
+                <ImageButton
+                    android:id="@+id/btnEncuentranos"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="70"
+                    android:layout_toRightOf="@+id/btnDirectorio"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_encuentranos"
+                    android:visibility="visible" />
 
-<!--                <TextView-->
-<!--                    android:layout_width="fill_parent"-->
-<!--                    android:layout_height="0dp"-->
-<!--                    android:layout_weight="30"-->
-<!--                    android:gravity="top|center|center_horizontal"-->
-<!--                    android:layout_below="@+id/btnEncuentranos"-->
-<!--                    android:layout_toRightOf="@+id/tv_directorio"-->
-<!--                    android:background="@android:color/transparent"-->
-<!--                    android:text="Encuéntranos"-->
-<!--                    android:textSize="12sp"-->
-<!--                    android:visibility="visible" />-->
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="30"
+                    android:gravity="top|center|center_horizontal"
+                    android:layout_below="@+id/btnEncuentranos"
+                    android:layout_toRightOf="@+id/tv_directorio"
+                    android:background="@android:color/transparent"
+                    android:text="Encuéntranos"
+                    android:textSize="12sp"
+                    android:visibility="visible" />
 
-<!--            </LinearLayout>-->
+            </LinearLayout>
 
-<!--            <LinearLayout-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="fill_parent"-->
-<!--                android:layout_weight="20"-->
-<!--                android:weightSum="100"-->
-<!--                android:gravity="center"-->
-<!--                android:orientation="vertical">-->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="24"
+                android:weightSum="100"
+                android:gravity="center"
+                android:orientation="vertical">
 
-<!--                <ImageButton-->
-<!--                    android:id="@+id/btnPreguntasFrecuentes"-->
-<!--                    android:layout_width="fill_parent"-->
-<!--                    android:layout_height="0dp"-->
-<!--                    android:layout_weight="70"-->
-<!--                    android:layout_toRightOf="@+id/btnPortafolio"-->
-<!--                    android:background="@android:color/transparent"-->
-<!--                    android:scaleType="fitCenter"-->
-<!--                    android:src="@drawable/ic_mas"-->
-<!--                    android:visibility="visible" />-->
+                <ImageButton
+                    android:id="@+id/btnPreguntasFrecuentes"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="70"
+                    android:layout_toRightOf="@+id/btnPortafolio"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_mas"
+                    android:visibility="visible" />
 
-<!--                <TextView-->
-<!--                    android:id="@+id/tv_ayuda"-->
-<!--                    android:layout_width="fill_parent"-->
-<!--                    android:layout_height="0dp"-->
-<!--                    android:layout_weight="30"-->
-<!--                    android:gravity="top|center|center_horizontal"-->
-<!--                    android:layout_below="@+id/btnPreguntasFrecuentes"-->
-<!--                    android:layout_toRightOf="@+id/tv_productos"-->
-<!--                    android:background="@android:color/transparent"-->
-<!--                    android:text="Más"-->
-<!--                    android:textSize="12sp"-->
-<!--                    android:visibility="visible" />-->
+                <TextView
+                    android:id="@+id/tv_ayuda"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="30"
+                    android:gravity="top|center|center_horizontal"
+                    android:layout_below="@+id/btnPreguntasFrecuentes"
+                    android:layout_toRightOf="@+id/tv_productos"
+                    android:background="@android:color/transparent"
+                    android:text="Más"
+                    android:textSize="12sp"
+                    android:visibility="visible" />
 
-<!--            </LinearLayout>-->
+            </LinearLayout>
 
-<!--            <View-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="fill_parent"-->
-<!--                android:layout_weight="10"/>-->
-<!--        </LinearLayout>-->
+            <View
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="2"/>
+        </LinearLayout>
 
-<!--    </LinearLayout>-->
+    </LinearLayout>
 </LinearLayout>

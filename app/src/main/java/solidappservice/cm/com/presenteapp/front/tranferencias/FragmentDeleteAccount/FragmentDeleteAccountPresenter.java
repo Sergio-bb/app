@@ -28,43 +28,9 @@ public class FragmentDeleteAccountPresenter implements FragmentDeleteAccountCont
 
     @Override
     public void fetchRegisteredAccounts(BaseRequest baseRequest) {
-        view.hideSectionDeleteAccount();
-        view.showCircularProgressBar("Consultando cuentas...");
+        view.showProgressDialog("Consultando cuentas...");
         model.getRegisteredAccounts(baseRequest, this);
     }
-    @Override
-    public <T> void onSuccessRegisteredAccounts(Response<BaseResponse<T>> response) {
-        view.hideCircularProgressBar();
-        try{
-            List<ResponseCuentasInscritas> responseCuentasInscritas = (List<ResponseCuentasInscritas>) response.body().getResultado();
-            view.showSectionDeleteAccount();
-            view.showRegisteredAccounts(responseCuentasInscritas);
-        }catch (Exception ex){
-            view.showDialogError("Lo sentimos", "");
-            view.showErrorWithRefresh();
-        }
-    }
-    @Override
-    public <T> void onErrorRegisteredAccounts(Response<BaseResponse<T>> response) {
-        view.hideCircularProgressBar();
-        if(response != null){
-            view.showDialogError("Lo sentimos", response.body().getMensajeErrorUsuario());
-        }else{
-            view.showDialogError("Lo sentimos", "");
-        }
-        view.showErrorWithRefresh();
-    }
-    @Override
-    public void onFailureRegisteredAccounts(Throwable t, boolean isErrorTimeOut) {
-        view.hideCircularProgressBar();
-        if(isErrorTimeOut){
-            view.showErrorTimeOut();
-        }else{
-            view.showDataFetchError("Lo sentimos", "");
-        }
-        view.showErrorWithRefresh();
-    }
-
 
     @Override
     public void deleteSelectedAccounts(List<RequestDeleteAccount> request) {
@@ -78,6 +44,22 @@ public class FragmentDeleteAccountPresenter implements FragmentDeleteAccountCont
             }
         }
     }
+
+    @Override
+    public <T> void onSuccessRegisteredAccounts(Response<BaseResponse<T>> response) {
+        view.hideProgressDialog();
+        try{
+            List<ResponseCuentasInscritas> responseCuentasInscritas = (List<ResponseCuentasInscritas>) response.body().getResultado();
+            if(responseCuentasInscritas != null && responseCuentasInscritas.size()>0){
+                view.showRegisteredAccounts(responseCuentasInscritas);
+            }else{
+                view.showDataFetchError("No se encontraron cuentas inscritas");
+            }
+        }catch (Exception ex){
+            view.showDataFetchError("");
+        }
+    }
+
     @Override
     public <T> void onSuccessDeleteSelectedAccounts(Response<BaseResponse<T>> response) {
         view.hideProgressDialog();
@@ -90,7 +72,7 @@ public class FragmentDeleteAccountPresenter implements FragmentDeleteAccountCont
             }
         }catch (Exception ex){
             view.enabledDeleteAccountButton();
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
     }
 
@@ -105,9 +87,9 @@ public class FragmentDeleteAccountPresenter implements FragmentDeleteAccountCont
         view.hideProgressDialog();
         view.enabledDeleteAccountButton();
         if(response != null){
-            view.showDataFetchError("Lo sentimos", response.body().getMensajeErrorUsuario());
+            view.showDataFetchError(response.body().getMensajeErrorUsuario());
         }else{
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
     }
 
@@ -118,9 +100,8 @@ public class FragmentDeleteAccountPresenter implements FragmentDeleteAccountCont
         if(isErrorTimeOut){
             view.showErrorTimeOut();
         }else{
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
-
     }
 
 }

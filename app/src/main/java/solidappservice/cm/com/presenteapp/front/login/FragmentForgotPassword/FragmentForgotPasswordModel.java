@@ -21,7 +21,7 @@ public class FragmentForgotPasswordModel implements FragmentForgotPasswordContra
     public void recoverPassword(RequestForgotPassword body, final FragmentForgotPasswordContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -46,7 +46,7 @@ public class FragmentForgotPasswordModel implements FragmentForgotPasswordContra
                     if(t instanceof IOException){
                         listener.onFailure(t, true);
                     }else{
-                        listener.onFailure(t, false);
+                        listener.onError(null);
                     }
                 }
             });

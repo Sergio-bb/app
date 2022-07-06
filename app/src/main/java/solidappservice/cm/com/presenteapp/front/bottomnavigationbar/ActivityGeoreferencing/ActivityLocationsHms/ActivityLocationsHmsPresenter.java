@@ -1,7 +1,5 @@
 package solidappservice.cm.com.presenteapp.front.bottomnavigationbar.ActivityGeoreferencing.ActivityLocationsHms;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
 import java.util.List;

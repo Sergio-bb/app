@@ -15,9 +15,19 @@
         android:background="@color/gris"
         android:text="@string/buzon_de_mensajes"
         android:gravity="center"
-        android:textSize="16sp"
+        android:textSize="17sp"
         android:fontFamily="@font/roboto_light"/>
 
+    <TextView
+        android:id="@+id/text_expanded_fragment"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:text="No hay mensajes"
+        android:textSize="17sp"
+        android:visibility="gone"
+        android:fontFamily="@font/roboto_light"/>
 
     <LinearLayout
         android:id="@+id/layout_circular_progress_bar"
@@ -28,38 +38,26 @@
         android:visibility="gone">
         <ProgressBar
             android:id="@+id/circular_progress_bar"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:indeterminateTint="#707070"
-            android:visibility="visible"/>
-        <ImageView
-            android:id="@+id/imageReferesh"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:src="@drawable/icon_refresh"
-            android:visibility="gone"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminateTint="#707070"/>
         <TextView
             android:id="@+id/text_circular_progress_Bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:gravity="center"
-            android:text="Intentar de nuevo"
-            android:textSize="12sp"
-            android:fontFamily="@font/roboto_light"
-            android:visibility="visible"/>
+            android:text="Un momento..."
+            android:textSize="17sp"
+            android:fontFamily="@font/roboto_light"/>
     </LinearLayout>
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/pullToRefresh"
+
+    <ListView
+        android:id="@+id/list_mensajes"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:visibility="gone">
-        <ListView
-            android:id="@+id/list_mensajes"
-            android:layout_width="match_parent"
-            android:layout_height="fill_parent"
-            android:scrollbars="none"/>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        android:scrollbars="none"
+        android:visibility="gone"/>
 
 </LinearLayout>

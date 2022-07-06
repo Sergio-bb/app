@@ -12,7 +12,7 @@ import java.util.List;
 
 import solidappservice.cm.com.presenteapp.R;
 import solidappservice.cm.com.presenteapp.entities.mensajesbanner.ResponseMensajesBanner;
-import solidappservice.cm.com.presenteapp.front.base.main.ActivityMainView;
+import solidappservice.cm.com.presenteapp.front.base.ActivityMainView;
 
 
 public class ImageSlideAdapter extends PagerAdapter {

@@ -5,320 +5,326 @@
     android:layout_height="fill_parent"
     android:background="#fff">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="none"
-        android:fillViewport="true">
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:weightSum="100"
+        android:orientation="vertical"
+        android:baselineAligned="false">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:orientation="vertical">
-
-            <ImageButton
-                android:id="@+id/imgBannerLogin"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:background="@null"
-                android:contentDescription="@string/app_name"
-                android:gravity="center_horizontal"
-                android:src="@drawable/imagen_loggin_app" />
+            android:layout_height="0dp"
+            android:layout_weight="90"
+            android:scrollbars="none"
+            android:fillViewport="true">
 
             <LinearLayout
-                android:id="@+id/layout_main"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="15dp"
-                android:layout_marginTop="15dp"
+                android:layout_height="fill_parent"
                 android:orientation="vertical">
 
-                <EditText
-                    android:id="@+id/txtUsuario"
+                <ImageButton
+                    android:id="@+id/imgBannerLogin"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/backgroun_border_radius"
-                    android:hint="Usuario"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:padding="12dp"
-                    android:textColor="#666"
-                    android:inputType="number"
-                    android:maxLength="10"
-                    android:fontFamily="@font/roboto_light"/>
-                <EditText
-                    android:id="@+id/txtPassword"
+                    android:adjustViewBounds="true"
+                    android:background="@null"
+                    android:contentDescription="@string/app_name"
+                    android:gravity="center_horizontal"
+                    android:src="@drawable/imagen_loggin_app" />
+
+                <LinearLayout
+                    android:id="@+id/layout_main"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/backgroun_border_radius"
-                    android:gravity="center_vertical"
-                    android:hint="Contraseña"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:padding="12dp"
-                    android:inputType="numberPassword"
-                    android:maxLength="20"
-                    android:textColor="#666"
-                    android:fontFamily="@font/roboto_light"/>
+                    android:paddingHorizontal="15dp"
+                    android:layout_marginTop="15dp"
+                    android:orientation="vertical">
+
+                    <EditText
+                        android:id="@+id/txtUsuario"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/backgroun_border_radius"
+                        android:hint="Usuario"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:padding="12dp"
+                        android:textColor="#666"
+                        android:inputType="number"
+                        android:maxLength="10"/>
+                    <EditText
+                        android:id="@+id/txtPassword"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/backgroun_border_radius"
+                        android:gravity="center_vertical"
+                        android:hint="Contraseña"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:padding="12dp"
+                        android:inputType="numberPassword"
+                        android:maxLength="20"
+                        android:textColor="#666" />
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="10dp"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:id="@+id/lblRecuperarContrasena"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="60"
+                            android:gravity="start"
+                            android:text="¿Olvidaste tu contraseña?"
+                            android:textColor="#444" />
+                        <TextView
+                            android:id="@+id/lblTerminos"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="40"
+                            android:gravity="end"
+                            android:padding="1dp"
+                            android:text="Términos de uso"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textColor="#444" />
+                    </LinearLayout>
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="10dp"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:id="@+id/lblRecuperarContrasena"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="60"
-                        android:gravity="start"
-                        android:text="¿Olvidaste tu contraseña?"
-                        android:textColor="#444"
-                        android:fontFamily="@font/roboto_light"/>
-                    <TextView
-                        android:id="@+id/lblTerminos"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="40"
-                        android:gravity="end"
-                        android:padding="1dp"
-                        android:text="Términos de uso"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="#444"
-                        android:fontFamily="@font/roboto_light"/>
+                    android:layout_marginTop="25dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
+                    <Button
+                        android:id="@+id/btnLogin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="Ingresar"
+                        android:textStyle="bold"
+                        android:background="@drawable/btn_yellow_internal"
+                        android:fontFamily="@font/roboto"/>
                 </LinearLayout>
+
+                <RelativeLayout
+                    android:id="@+id/img_slideshow_layout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingHorizontal="10dp">
+
+                    <androidx.viewpager.widget.ViewPager
+                        android:id="@+id/view_pager"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:layout_alignParentBottom="true"
+                        android:foregroundGravity="center_horizontal|center_vertical"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center_vertical"
+                        android:minHeight="55dp"
+                        android:paddingLeft="25dp"
+                        android:paddingRight="25dp" />
+
+                    <ImageView
+                        android:id="@+id/img_arrow_left"
+                        android:layout_width="wrap_content"
+                        android:layout_height="70dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginTop="10dp"
+                        android:contentDescription="@string/app_name"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="15dp"
+                        android:src="@drawable/btn_arrow_left" />
+
+                    <ImageView
+                        android:id="@+id/img_arrow_right"
+                        android:layout_width="wrap_content"
+                        android:layout_height="70dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginTop="10dp"
+                        android:contentDescription="@string/app_name"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="5dp"
+                        android:src="@drawable/btn_arrow_right" />
+
+                    <solidappservice.cm.com.presenteapp.tools.CirclePageIndicator
+                        android:id="@+id/indicator"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/view_pager"
+                        />
+
+                </RelativeLayout>
             </LinearLayout>
+        </ScrollView>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="10"
+            android:layout_alignParentBottom="true"
+            android:background="@color/yellow"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
+                android:layout_height="fill_parent"
+                android:weightSum="100"
                 android:gravity="center"
-                android:orientation="vertical">
-                <Button
-                    android:id="@+id/btnLogin"
-                    android:paddingHorizontal="80dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="Ingresar"
-                    android:textStyle="bold"
-                    android:background="@drawable/backgroun_button_rounded"
-                    android:backgroundTint="@color/yellow"
-                    android:fontFamily="@font/roboto_light"/>
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="2"/>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="24"
+                    android:weightSum="100"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageButton
+                        android:id="@+id/btnPortafolio"
+                        android:layout_width="fill_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="70"
+                        android:gravity="top|center|center_horizontal"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_portafolio" />
+
+                    <TextView
+                        android:id="@+id/tv_productos"
+                        android:layout_width="fill_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="30"
+                        android:gravity="top|center|center_horizontal"
+                        android:layout_below="@+id/btnPortafolio"
+                        android:background="@android:color/transparent"
+                        android:text="Productos"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="24"
+                    android:weightSum="100"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageButton
+                        android:id="@+id/btnDirectorio"
+                        android:layout_width="fill_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="70"
+                        android:layout_toRightOf="@+id/btnPreguntasFrecuentes"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_directorio"
+                        android:visibility="visible" />
+
+                    <TextView
+                        android:id="@+id/tv_directorio"
+                        android:layout_width="fill_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="30"
+                        android:gravity="top|center|center_horizontal"
+                        android:layout_below="@+id/btnDirectorio"
+                        android:layout_toRightOf="@+id/tv_ayuda"
+                        android:background="@android:color/transparent"
+                        android:text="Directorio"
+                        android:textSize="12sp"
+                        android:visibility="visible" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="24"
+                    android:weightSum="100"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageButton
+                        android:id="@+id/btnEncuentranos"
+                        android:layout_width="fill_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="70"
+                        android:layout_toRightOf="@+id/btnDirectorio"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_encuentranos"
+                        android:visibility="visible" />
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="30"
+                        android:gravity="top|center|center_horizontal"
+                        android:layout_below="@+id/btnEncuentranos"
+                        android:layout_toRightOf="@+id/tv_directorio"
+                        android:background="@android:color/transparent"
+                        android:text="Encuéntranos"
+                        android:textSize="12sp"
+                        android:visibility="visible" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="24"
+                    android:weightSum="100"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageButton
+                        android:id="@+id/btnPreguntasFrecuentes"
+                        android:layout_width="fill_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="70"
+                        android:layout_toRightOf="@+id/btnPortafolio"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_mas"
+                        android:visibility="visible" />
+
+                    <TextView
+                        android:id="@+id/tv_ayuda"
+                        android:layout_width="fill_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="30"
+                        android:gravity="top|center|center_horizontal"
+                        android:layout_below="@+id/btnPreguntasFrecuentes"
+                        android:layout_toRightOf="@+id/tv_productos"
+                        android:background="@android:color/transparent"
+                        android:text="Más"
+                        android:textSize="12sp"
+                        android:visibility="visible" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="2"/>
             </LinearLayout>
 
-            <RelativeLayout
-                android:id="@+id/img_slideshow_layout"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingHorizontal="10dp">
-
-                <androidx.viewpager.widget.ViewPager
-                    android:id="@+id/view_pager"
-                    android:layout_width="match_parent"
-                    android:layout_height="70dp"
-                    android:layout_alignParentBottom="true"
-                    android:foregroundGravity="center_horizontal"
-                    android:minHeight="55dp"
-                    android:paddingLeft="25dp"
-                    android:paddingRight="25dp" />
-
-                <ImageView
-                    android:id="@+id/img_arrow_left"
-                    android:layout_width="wrap_content"
-                    android:layout_height="50dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginTop="10dp"
-                    android:contentDescription="@string/app_name"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="15dp"
-                    android:src="@drawable/btn_arrow_left" />
-
-                <ImageView
-                    android:id="@+id/img_arrow_right"
-                    android:layout_width="wrap_content"
-                    android:layout_height="50dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginTop="10dp"
-                    android:contentDescription="@string/app_name"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="5dp"
-                    android:src="@drawable/btn_arrow_right" />
-
-                <solidappservice.cm.com.presenteapp.tools.CirclePageIndicator
-                    android:id="@+id/indicator"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/view_pager"
-                    />
-
-            </RelativeLayout>
         </LinearLayout>
-    </ScrollView>
+    </LinearLayout>
 </RelativeLayout>
-<!--        <LinearLayout-->
-<!--            android:layout_width="fill_parent"-->
-<!--            android:layout_height="0dp"-->
-<!--            android:layout_weight="10"-->
-<!--            android:layout_alignParentBottom="true"-->
-<!--            android:background="@color/yellow"-->
-<!--            android:baselineAligned="false"-->
-<!--            android:orientation="horizontal">-->
-
-<!--            <LinearLayout-->
-<!--                android:layout_width="fill_parent"-->
-<!--                android:layout_height="fill_parent"-->
-<!--                android:weightSum="100"-->
-<!--                android:gravity="center"-->
-<!--                android:orientation="horizontal">-->
-
-<!--                <View-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="fill_parent"-->
-<!--                    android:layout_weight="10"/>-->
-
-<!--                <LinearLayout-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="fill_parent"-->
-<!--                    android:layout_weight="20"-->
-<!--                    android:weightSum="100"-->
-<!--                    android:gravity="center"-->
-<!--                    android:orientation="vertical">-->
-
-<!--                    <ImageButton-->
-<!--                        android:id="@+id/btnPortafolio"-->
-<!--                        android:layout_width="fill_parent"-->
-<!--                        android:layout_height="0dp"-->
-<!--                        android:layout_weight="70"-->
-<!--                        android:gravity="top|center|center_horizontal"-->
-<!--                        android:background="@android:color/transparent"-->
-<!--                        android:scaleType="fitCenter"-->
-<!--                        android:src="@drawable/ic_portafolio" />-->
-
-<!--                    <TextView-->
-<!--                        android:id="@+id/tv_productos"-->
-<!--                        android:layout_width="fill_parent"-->
-<!--                        android:layout_height="0dp"-->
-<!--                        android:layout_weight="30"-->
-<!--                        android:gravity="top|center|center_horizontal"-->
-<!--                        android:layout_below="@+id/btnPortafolio"-->
-<!--                        android:background="@android:color/transparent"-->
-<!--                        android:text="Productos"-->
-<!--                        android:textSize="12sp" />-->
-
-<!--                </LinearLayout>-->
-
-<!--                <LinearLayout-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="fill_parent"-->
-<!--                    android:layout_weight="20"-->
-<!--                    android:weightSum="100"-->
-<!--                    android:gravity="center"-->
-<!--                    android:orientation="vertical">-->
-
-<!--                    <ImageButton-->
-<!--                        android:id="@+id/btnDirectorio"-->
-<!--                        android:layout_width="fill_parent"-->
-<!--                        android:layout_height="0dp"-->
-<!--                        android:layout_weight="70"-->
-<!--                        android:layout_toRightOf="@+id/btnPreguntasFrecuentes"-->
-<!--                        android:background="@android:color/transparent"-->
-<!--                        android:scaleType="fitCenter"-->
-<!--                        android:src="@drawable/ic_directorio"-->
-<!--                        android:visibility="visible" />-->
-
-<!--                    <TextView-->
-<!--                        android:id="@+id/tv_directorio"-->
-<!--                        android:layout_width="fill_parent"-->
-<!--                        android:layout_height="0dp"-->
-<!--                        android:layout_weight="30"-->
-<!--                        android:gravity="top|center|center_horizontal"-->
-<!--                        android:layout_below="@+id/btnDirectorio"-->
-<!--                        android:layout_toRightOf="@+id/tv_ayuda"-->
-<!--                        android:background="@android:color/transparent"-->
-<!--                        android:text="Directorio"-->
-<!--                        android:textSize="12sp"-->
-<!--                        android:visibility="visible" />-->
-
-<!--                </LinearLayout>-->
-
-<!--                <LinearLayout-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="fill_parent"-->
-<!--                    android:layout_weight="20"-->
-<!--                    android:weightSum="100"-->
-<!--                    android:gravity="center"-->
-<!--                    android:orientation="vertical">-->
-
-<!--                    <ImageButton-->
-<!--                        android:id="@+id/btnEncuentranos"-->
-<!--                        android:layout_width="fill_parent"-->
-<!--                        android:layout_height="0dp"-->
-<!--                        android:layout_weight="70"-->
-<!--                        android:layout_toRightOf="@+id/btnDirectorio"-->
-<!--                        android:background="@android:color/transparent"-->
-<!--                        android:scaleType="fitCenter"-->
-<!--                        android:src="@drawable/ic_encuentranos"-->
-<!--                        android:visibility="visible" />-->
-
-<!--                    <TextView-->
-<!--                        android:layout_width="fill_parent"-->
-<!--                        android:layout_height="0dp"-->
-<!--                        android:layout_weight="30"-->
-<!--                        android:gravity="top|center|center_horizontal"-->
-<!--                        android:layout_below="@+id/btnEncuentranos"-->
-<!--                        android:layout_toRightOf="@+id/tv_directorio"-->
-<!--                        android:background="@android:color/transparent"-->
-<!--                        android:text="Encuéntranos"-->
-<!--                        android:textSize="12sp"-->
-<!--                        android:visibility="visible" />-->
-
-<!--                </LinearLayout>-->
-
-<!--                <LinearLayout-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="fill_parent"-->
-<!--                    android:layout_weight="20"-->
-<!--                    android:weightSum="100"-->
-<!--                    android:gravity="center"-->
-<!--                    android:orientation="vertical">-->
-
-<!--                    <ImageButton-->
-<!--                        android:id="@+id/btnPreguntasFrecuentes"-->
-<!--                        android:layout_width="fill_parent"-->
-<!--                        android:layout_height="0dp"-->
-<!--                        android:layout_weight="70"-->
-<!--                        android:layout_toRightOf="@+id/btnPortafolio"-->
-<!--                        android:background="@android:color/transparent"-->
-<!--                        android:scaleType="fitCenter"-->
-<!--                        android:src="@drawable/ic_mas"-->
-<!--                        android:visibility="visible" />-->
-
-<!--                    <TextView-->
-<!--                        android:id="@+id/tv_ayuda"-->
-<!--                        android:layout_width="fill_parent"-->
-<!--                        android:layout_height="0dp"-->
-<!--                        android:layout_weight="30"-->
-<!--                        android:gravity="top|center|center_horizontal"-->
-<!--                        android:layout_below="@+id/btnPreguntasFrecuentes"-->
-<!--                        android:layout_toRightOf="@+id/tv_productos"-->
-<!--                        android:background="@android:color/transparent"-->
-<!--                        android:text="Más"-->
-<!--                        android:textSize="12sp"-->
-<!--                        android:visibility="visible" />-->
-
-<!--                </LinearLayout>-->
-
-<!--                <View-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="fill_parent"-->
-<!--                    android:layout_weight="10"/>-->
-<!--            </LinearLayout>-->
-
-<!--        </LinearLayout>-->

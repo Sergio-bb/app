@@ -32,8 +32,8 @@ public interface ActivityValidateCodeContract {
         void hideBoxCodeFields();
         void showCircularProgressBar(String textProgressBar);
         void hideCircularProgressBar();
+        void showDataFetchError(String message);
         void showErrorTimeOut();
-        void showDataFetchError(String title, String message);
         void showExpiredToken(String message);
     }
 

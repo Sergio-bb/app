@@ -2,6 +2,7 @@ package solidappservice.cm.com.presenteapp.adapters.adelantonomina;
 
 import android.app.Activity;
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,7 +56,11 @@ public class MovimientosAdelantoNominaAdapter extends BaseAdapter {
         TextView tv2 = (TextView) view.findViewById(R.id.lblFechaSolicitud);
 
         tv.setText("$"+formato.format(item.getV_solicitado()));
-        tv2.setText(format.format(item.getF_solictud()));
+        try{
+            tv2.setText(format.format(item.getF_solictud()));
+        }catch(Exception e){
+            tv2.setText("");
+        }
 
         return view;
     }

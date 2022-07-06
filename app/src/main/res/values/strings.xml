@@ -1,7 +1,5 @@
 <resources>
-    <string name="app_name">Presente</string>
-    <string name="cerrar_sesion"><b>Cerrar sesión</b></string>
-
+    <string name="app_name">PRESENTE</string>
 
     <array name="mes_solicitud_producto">
         <item>Enero</item>
@@ -18,18 +16,15 @@
         <item>Diciembre</item>
     </array>
 
-    <string name="app_version">2022.06.21 V4.0.2</string>
+    <string name="app_version">2022.01.27 V3.5.7</string>
     <string name="app_splash">Preparando la aplicación&#8230;</string>
 
     <!--Menu principal-->
-    <string name="encuentra_servicios"><b>Hola #usuario#,</b> encuentra servicios en:</string>
+    <string name="encuentra_servicios"><b>Encuentra</b> servicios en:</string>
     <string name="te_interesa"><b>Te puede</b> interesar:</string>
-    <string name="ultima_fecha_ingreso"><b>Última fecha ingreso:</b></string>
+    <string name="ultima_actualizacion"><b>Última actualización:</b></string>
     <string name="menu_finanzass"><b>Mis finanzas</b></string>
-    <string name="menu_centros_vacacionales"><b>Centros Vacacionales</b></string>
     <string name="menu_convenios"><b>Convenios</b></string>
-    <string name="opciones_que_te"><b>Opciones</b> que te pueden ser útiles:</string>
-
 
     <!--Terminos y condiciones-->
     <string name="title_terminos_uso"><b>TÉRMINOS DE USO</b></string>
@@ -105,7 +100,7 @@
     <string name="segun_terminos">Este valor se calcula según los términos y condiciones del
     producto. Consúltalos <a href="https://www.presente.com.co/wp-content/uploads/2020/08/Terminos-y-condiciones-adelanto-de-nomina.pdf">aquí</a>.</string>
 
-    <string name="acepto_que_se">Acepto que se lleve a cabo el movimiento financiero “Adelanto de
+    <string name="terminos_adelantonomina">Acepto que se lleve a cabo el movimiento financiero “Adelanto de
     Nomina” y entiendo sus condiciones de uso. Autorizo a debitar de
     mi cuenta de ahorros Nómina de PRESENTE, en la quincena
     inmediatamente posterior al desembolso de Adelanto de Nómina
@@ -121,6 +116,7 @@
         <item>No se verá afectada tu capacidad de pago</item>
         <item>Cupo sujeto a cambios de acuerdo con las condiciones delproducto</item>
     </array>
+
 
 
     <!--Actualizaciçon Datos-->
@@ -187,84 +183,61 @@
     <!--Registrar nuevo dispositivo-->
     <string name="este_no_es">Este no es el equipo con el que ingresas regularmente, por tu seguridad enviaremos un código de verificación.</string>
 
-
-    <!--popup informativo nequi-->
-    <string name="Bienvenido">Bienvenido a un mundo \nlleno de soluciones</string>
-    <string name="Nueva_experiencia">Entre PRESENTE y Nequi,hemos creado toda una \n nueva experiencia
-    para ti.Ahora desde nuestra app encontraras sservicios en:</string>
-    <string name="Trasfiere_entreCuentas">Transfiere entre cuentas PRESENTE \n a cuentas Nequi</string>
-    <string name="pagos_comercios">Realiza pagos en cualquier comercio \n territorio Bancolombia</string>
-    <string name="pagos_cuentaNequi">Realiza pagos de tus cuentas de servicios \n desde Nequi</string>
-    <string name="Administra_tuDinero">Administra tu dinero entre cuentas, con toda \n la seguridad de Nequi</string>
-    <string name="descarga_app">Comienza por descargarla app de Nequi \n y crea tu cuenta</string>
-    <string name="no_hemos_podido">No hemos podido procesar tu pago, por favor intenta de nuevo en unos instantes</string>
-
-    <!--menu transacciones-->
-    <string name="apertura_ahorro"><b>Apertura</b> <br></br> de ahorros</string>
-    <string name="enviar_dinero"><b>Transfiere</b> <br></br> dinero</string>
-    <string name="adelanto_nomina"><b>Adelanto de</b> <br></br> nómina</string>
-    <string name="abono_deudas"><b>Abono</b> <br></br> a tus deudas</string>
-
-    <!--Suscripcion  nequi-->
-    <string name="desde_hoy_comienza"><b>Desde hoy</b> comienza<br></br> una nueva manera de administrar tu dinero</string>
-    <string name="vincula_tu_cuenta"><b>Vincula tu cuenta PRESENTE a Nequi</b> y accede a un mundo de soluciones</string>
-    <string name="ten_en_cuenta"><b>Ten en cuenta</b></string>
-    <string name="recuerda_tener_una"><font fgcolor="#ffb600">• </font>Recuerda tener una cuenta activa en Nequi</string>
-    <string name="tu_numero_celular"><font fgcolor="#ffb600">• </font>Tú número de celular deberá coincidir con el registrado en Nequi</string>
-    <string name="podras_vincular_tu">Podrás vincular tu propia cuenta Nequi</string>
-    <string name="vamos_muy_bien"><b>¡Vamos muy bien!</b><br></br> Falta poco para finalizar el proceso de vinculación:</string>
-    <string name="a_continuacion_conoce">A continuación conoce el paso a paso para realizar el proceso de vinculación:</string>
-    <string name="recuerda_que"><b>Recuerda que:</b> <br></br> tu número de celular, debe ser el mismo que tienes registrado en Nequi</string>
-    <string name="numero_celular"><b>Número celular:</b></string>
-    <string name="este_es_el">Este es el número que tienes registrado en PRESENTE, debe coincidir con el registrado en Nequi:</string>
+    <!--Mensajes de jpzm-->
+<!--    Movil Exito-->
+    <string name="antes_de_realizar">Antes de realizar tu compra, confirma los siguentes datos</string>
+    <string name="resumen_de_tu"><b>Resumen<br></br> de tu compra:</b></string>
+    <string name="paquete">Paquete $00000 /</string>
+    <string name="plu">PLU:00000</string>
+    <string name="pago_recurrente">Pago recurrente:</string>
+    <string name="debitaremos_automaticamente_el">Debitaremos automaticamente el valor del paquete del bolsillo que selecciones</string>
+    <string name="forma_de_pago"><b>Forma de pago:</b></string>
     <string name="informacion_personal"><b>Información personal:</b></string>
-    <string name="verifica_que_tu">Verifica que tu información este correcta, en caso de no estarlo contacta con tu Gestor.</string>
-    <string name="nombre_completo_nequi"><b>Nombre completo:</b></string>
-    <string name="dato_cedula"><b>Número de identificación:</b></string>
-    <string name="dato_celular"><b>Número celular:</b></string>
-    <string name="ahora_continua_en"><font fgcolor="#ffb600">¡</font>Ahora continúa en Nequi<font fgcolor="#ffb600">!</font></string>
-    <string name="hemos_enviado_con">Hemos enviado con éxito tu solicitud. Es importante que <b>ingreses a Nequi</b> para finalizar el proceso de vinculación.</string>
+    <string name="terminos_y_condiciones">Términos y condiciones</string>
 
-    <string name="manejo_datos">Conoce aquí nuestra política de manejo de datos</string>
-    <string name="modificar_numero">Si no lo es, <u>lo puedes modificar aquí</u></string>
-    <string name="mensaje_header_final">Para finalizar el proceso\nde vinculación...</string>
-    <string name="lo_puedes_modificar"><u>lo puedes modificar aquí</u></string>
+    <string name="transaccion_exitosa">Tu transaccion ha sido exitosa, en los proximos minutos recibiras un mensaje de texto confirmando la recarga</string>
+    <string name="confirmar_terminos">Para continuar debes aceptar los terminos y condiciones</string>
+    <string name="sub_title_resumen">De tu compra:</string>
+    <string name="acepto_terminos">Acepto</string>
+    <string name="mensajeError">Ocurrio un error, estamos trabajando en ello. Intentalo de nuevo mas tarde</string>
 
 
-    <string name="al_momento_de"><b>1.</b> Al momento de ingresar a Nequi, dirígete a la opción "Notificaciones".</string>
-    <string name="revisa_tu_perfil"><b>2.</b> Autoriza la vinculación.</string>
+    <string name="texto_one_paquete">Min y datos ilimintados</string>
+    <string name="texto_two_paquete">Vigencia 30 dias</string>
+    <string name="texto_forma_pagoR">Forma de pago: Recurrente</string>
+    <string name="texto_forma_pagoU">Forma de pago: Unica</string>
+    <string name="txt_ejemplo_pago">Nómina - Saldo: $456.000</string>
+    <!--Spinner-->
+    <string-array name="spiner_bolsillos">
+        <item>Nómina - Saldo: $456.000</item>
+        <item>Disponible - Saldo: $456.000</item>
+    </string-array>
 
-    <string name="error_cuenta_origenP">Para realizar la transacción debes seleccionar la cuenta de origen</string>
 
-    <string name="mensaje_dispersion">Desde tu cuenta de PRESENTE envía dinero a Nequi para disfrutar de un mundo de soluciones</string>
-    <string name="validar_transfer">Verifica la información <br></br> antes de realizar tu pago</string>
-    <string name="tranfer_exitosa">Se ha enviado tu dinero de manera correcta.<br></br><br></br></string>
-    <string name="tranfer_pendiente">Es posible que la transacción tarde en verse reflejada, revisa en unos minutos tu estado de cuenta antes de intentar hacerla de nuevo.</string>
-
-    <string name="mensaje_suscripcion">De manera ágil y segura, transfiere dinero de Nequi a PRESENTE</string>
-    <string name="mensaje_consulta_saldo">Para leer el saldo general de tu cuenta Nequi, es importante tener tu autorización, ¿Estás de acuerdo?</string>
-    <string name="haz_clic_aqui"><u>Haz clic aquí</u>, si deseas consultar tu saldo Nequi</string>
-    <string name="no_tenemos_tu">No tenemos tu autorización para consultar tu saldo nequi</string>
-
-    <string name="first_fragment_label">fir_fragment_label</string>
-    <string name="second_fragment_label">second_fragment_label</string>
-
-    <!--Menu lateral-->
-    <string name="informacion_personal_menu"> Mi información personal</string>
-    <string name="centro_ayuda">Ir al Centro de ayuda</string>
-    <string name="conoce_gestor">Conoce tu Gestor</string>
-    <string name="Vincular_cuenta">Vincula tu cuenta a Nequi</string>
-    <string name="seguridad">Seguridad</string>
-    <string name="vincular_cuenta">Vincular tu cuenta a Nequi</string>
-    <string name="open">open</string>
-    <string name="close">close</string>
-
-    <!-- Pago QR -->
-    <string name="informacion_pago">Información de tu pago</string>
-    <string name="verificar_campos">Verifica los campos antes de realizar el pago</string>
-    <string name="en_este_momento">En este momento no podemos leer tu codigo, inténtalo más tarde</string>
-    <string name="no_identificamos">No identificamos el código que intentas escanear</string>
-    <string name="verificar_pago">Verifica la información\nantes de realizar tus pagos</string>
-    <string name="mas_opciones_para_ti">¡Mas opciones para ti!</string>
+<!--    <string name="texto_terminos_y_condiciones">Acepto la compra y/o presentación de servicio del presente convenio,-->
+<!--    sus requisitos y condiciones de uso, así como el pago mediante bolsillos de disponible para la cancelación del mismo.-->
+<!--    así mismo, menifiesto que conozco y acepto las politicas y reglamentos que tiene PRESENTE para asiciados en materia.</string>-->
+    <string name="texto_terminos_y_condiciones">Acepto la compra y/o prestación del servicio, sus requisitos y condiciones de uso,
+        así como el pago mediante los bolsillos disponibles para la cancelación del mismo. De esta forma manifiesto que conozco
+        y acepto las políticas y reglamentos que tiene PRESENTE para sus asociados</string>
+    <string name="title_confirmar_compra"><b>Tú compra será: </b></string>
+    <string name="title_bolsillo_resumen"><b>Bolsillo:</b></string>
+    <string name="ejemplo_bolsillo_resumen">Nómina</string>
+    <string name="question_confirmar_compra"><b>¿Es correcta la información?</b> </string>
+    <string name="title_compra_exitosa"><b>Compra exitosa</b></string>
+    <string name="txt_compra_exitosa">Disfruta de tu plan Móvil Éxito</string>
+    <string name="title_compra_fallida"><b>Algo salió mal</b></string>
+    <string name="txt_compra_fallida">No hemos logrado procesar tu pago, intenta de nuevo en unos instantes</string>
+    <string name="title_mensaje_final"><b>Transacción exitosa</b></string>
+    <string name="txt_mensaje_final">Tu transacción ha sido exitosa, en los próximos minutos recibirás un mensjae de texto confirmando la recarga</string>
+    <string name="txt_asunto_email">Error en Api Suscripciones MovilExito (Presente).</string>
+    <string name="txt_intro_email">Hola,</string>
+    <string name="txt_contenido_email">Se acaba de presentar un error consumiendo la Api de Suscripciones de Movil Exito desde la App PRESENTE. Los datos de la transacción son los siguientes, por favor validar:</string>
+    <string name="txt_contenidoFecha_email">FechaHora :</string>
+    <string name="txt_contenidoOperacion_email">Operación :</string>
+    <string name="txt_contenidoError_email">Error :</string>
+    <string name="txt_cadenafin_email">Este correo es generado automáticamente, por favor no responder.</string>
+    <string name="txt_mensaje_suscribir">Suscribir</string>
+    <string name="txt_mensaje_recargar">Recargar</string>
 
 </resources>

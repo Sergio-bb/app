@@ -6,9 +6,10 @@
     <color name="grisoscuro">#CECDCF</color>
     <color name="dark">#CC555555</color>
     <color name="white">#FFF</color>
+    <color name="grey_button">#ededed</color>
     <color name="orange">#FD8A21</color>
-    <color name="grey_button">#E9E8E8</color>
-    <color name="green">#1bc44b</color>
-    <color name="transparent_dark">#FFFFFCFC</color>
-
+    <color name="purple">#731586</color>#D6D6D6
+    <color name="gris_medio">#C9C9C9</color>
+    <color name="negro">#666666</color>
+    <color name="dark_fuerte">#CC434343</color>
 </resources>

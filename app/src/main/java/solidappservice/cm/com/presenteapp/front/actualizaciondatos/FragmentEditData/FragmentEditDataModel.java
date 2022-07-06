@@ -22,7 +22,7 @@ public class FragmentEditDataModel implements FragmentEditDataContract.Model{
     public void getPersonalData(BaseRequest body, final FragmentEditDataContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -49,12 +49,12 @@ public class FragmentEditDataModel implements FragmentEditDataContract.Model{
                     if(t instanceof IOException){
                         listener.onFailure(t, true);
                     }else{
-                        listener.onFailure(t, false);
+                        listener.onError(null);
                     }
                 }
             });
         } catch (Exception e) {
-            listener.onFailure(null, false);
+            listener.onError(null);
         }
     }
 
@@ -62,7 +62,7 @@ public class FragmentEditDataModel implements FragmentEditDataContract.Model{
     public void getLocations(final FragmentEditDataContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -89,13 +89,13 @@ public class FragmentEditDataModel implements FragmentEditDataContract.Model{
                     if(t instanceof IOException){
                         listener.onFailure(t, true);
                     }else{
-                        listener.onFailure(t, false);
+                        listener.onError(null);
                     }
                 }
             });
 
         } catch (Exception e) {
-            listener.onFailure(null, false);
+            listener.onError(null);
         }
     }
 
@@ -103,7 +103,7 @@ public class FragmentEditDataModel implements FragmentEditDataContract.Model{
     public void getAddressFormat(final FragmentEditDataContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -129,12 +129,12 @@ public class FragmentEditDataModel implements FragmentEditDataContract.Model{
                     if(t instanceof IOException){
                         listener.onFailure(t, true);
                     }else{
-                        listener.onFailure(t, false);
+                        listener.onError(null);
                     }
                 }
             });
         } catch (Exception e) {
-            listener.onFailure(null, false);
+            listener.onError(null);
         }
     }
 

@@ -21,7 +21,7 @@ public class FragmentReadMessageModel implements FragmentReadMessageContract.Mod
     public void updateStatusMessage(RequestActualizarMensaje body, final FragmentReadMessageContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -48,7 +48,7 @@ public class FragmentReadMessageModel implements FragmentReadMessageContract.Mod
                     if(t instanceof IOException){
                         listener.onFailure(t, true);
                     }else{
-                        listener.onFailure(t, false);
+                        listener.onError(null);
                     }
                 }
             });

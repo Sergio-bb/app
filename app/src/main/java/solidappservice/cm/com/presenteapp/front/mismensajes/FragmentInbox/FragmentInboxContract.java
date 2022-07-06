@@ -15,14 +15,15 @@ public interface FragmentInboxContract {
     interface View{
         void fetchMessages();
         void showMessages(List<ResponseObtenerMensajes> inbox);
-        void showUnreadMessages(ResponseObtenerMensajes inboxMessage);
-        void showSectionMessages();
-        void hideSectionMessages();
+        void hideMessages();
+        void showTextFragmentExpanded();
+        void hideTextFragmentExpanded();
+        void showProgressDialog(String message);
+        void hideProgressDialog();
         void showCircularProgressBar(String message);
         void hideCircularProgressBar();
-        void showErrorWithRefresh();
+        void showDataFetchError(String message);
         void showErrorTimeOut();
-        void showDataFetchError(String title, String message);
         void showExpiredToken(String message);
     }
 

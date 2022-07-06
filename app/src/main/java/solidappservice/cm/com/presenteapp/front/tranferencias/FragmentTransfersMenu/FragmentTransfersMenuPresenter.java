@@ -34,7 +34,7 @@ public class FragmentTransfersMenuPresenter implements FragmentTransfersMenuCont
     }
 
     @Override
-    public void onFailure(Throwable t, boolean isErrorTimeOut) {
+    public void onFailure(Throwable t) {
 
     }
 

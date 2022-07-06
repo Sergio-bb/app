@@ -1,8 +1,9 @@
 package solidappservice.cm.com.presenteapp.front.bottomnavigationbar.ActivityGeoreferencing.ActivityLocationsHms;
 
-import android.Manifest;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -30,10 +31,7 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresPermission;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.huawei.hms.maps.CameraUpdate;
 import com.huawei.hms.maps.CameraUpdateFactory;
@@ -59,13 +57,9 @@ import solidappservice.cm.com.presenteapp.entities.bottomnavigationbar.dto.Filtr
 import solidappservice.cm.com.presenteapp.entities.bottomnavigationbar.response.ResponseLocationsAgencies;
 import solidappservice.cm.com.presenteapp.entities.parametrosgenerales.ResponseMensajesRespuesta;
 import solidappservice.cm.com.presenteapp.front.base.ActivityBase;
-import solidappservice.cm.com.presenteapp.front.bottomnavigationbar.ActivityGeoreferencing.ActivityLocationsGms.ActivityLocationsGmsView;
 import solidappservice.cm.com.presenteapp.front.bottomnavigationbar.ActivityGeoreferencing.ActivityPointsAttention.ActivityPointsAttentionView;
-import solidappservice.cm.com.presenteapp.front.popups.PopUp;
 import solidappservice.cm.com.presenteapp.rest.NetworkHelper;
-import solidappservice.cm.com.presenteapp.tools.PopUpWindow;
 import solidappservice.cm.com.presenteapp.tools.PopUpWindowHms;
-import solidappservice.cm.com.presenteapp.tools.helpers.DialogHelpers;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -153,7 +147,6 @@ public class ActivityLocationsHmsView extends ActivityBase implements ActivityLo
         super.onResume();
     }
 
-
     @Override
     public void onBackPressed() {
         finish();
@@ -216,8 +209,8 @@ public class ActivityLocationsHmsView extends ActivityBase implements ActivityLo
             listFiltroAlmacen.add(0, "TODO");
             adapter_almacen.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinnerFiltroAlmacen.setSelection(0);
-            drawPoints();
 
+            drawPoints();
         }
     }
 
@@ -287,9 +280,10 @@ public class ActivityLocationsHmsView extends ActivityBase implements ActivityLo
     public void showFilters(List<ResponseLocationsAgencies> agencias) {
         state.setAgencias(agencias);
         this.listAgencias = agencias;
+
         FiltroMapa filtro = new FiltroMapa();
         filtro.setI_tipage("TODO");
-        filtro.setDescripcion("Seleccionar");
+        filtro.setDescripcion("TODO");
         listFiltros.clear();
         listFiltros.add(filtro);
         for (ResponseLocationsAgencies a : agencias) {
@@ -323,6 +317,7 @@ public class ActivityLocationsHmsView extends ActivityBase implements ActivityLo
         spinnerFiltroAlmacen.setAdapter(adapter_almacen);
 
         validatePermissionsLocation();
+//        showAgencies(listAgencias, view.getZoomDesiredByKilometros(7));
     }
 
     @Override
@@ -354,7 +349,11 @@ public class ActivityLocationsHmsView extends ActivityBase implements ActivityLo
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if(requestCode == GlobalState.PERMISSION_LOCATION){
-            isLocationEnabled = grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED;
+            if(grantResults[0]==PackageManager.PERMISSION_GRANTED && grantResults[1]==PackageManager.PERMISSION_GRANTED){
+                isLocationEnabled = true;
+            }else{
+                isLocationEnabled = false;
+            }
             showMap();
             drawPoints();
         }
@@ -367,61 +366,64 @@ public class ActivityLocationsHmsView extends ActivityBase implements ActivityLo
                 MapFragment mapContainer = null;
                 mapContainerHuaweiLayout.setVisibility(View.VISIBLE);
                 mapContainer = ((MapFragment) context.getFragmentManager().findFragmentById(R.id.mapHuawei));
-                mapContainer.getMapAsync(huaweiMap -> {
-                    ActivityLocationsHmsView.this.huaweiMap = huaweiMap;
+                mapContainer.getMapAsync(new com.huawei.hms.maps.OnMapReadyCallback() {
+                    @Override
+                    public void onMapReady(HuaweiMap huaweiMap) {
+                        ActivityLocationsHmsView.this.huaweiMap = huaweiMap;
+                        if (ActivityLocationsHmsView.this.huaweiMap != null) {
+                            try{
+                                ActivityLocationsHmsView.this.huaweiMap.setMapType(huaweiMap.MAP_TYPE_NORMAL);
+                                ActivityLocationsHmsView.this.huaweiMap.setMyLocationEnabled(true);
+                                ActivityLocationsHmsView.this.huaweiMap.setOnMarkerClickListener(ActivityLocationsHmsView.this);
+                                ActivityLocationsHmsView.this.huaweiMap.getUiSettings().setZoomControlsEnabled(true);
+                                ActivityLocationsHmsView.this.huaweiMap.getUiSettings().setCompassEnabled(true);
+                                ActivityLocationsHmsView.this.huaweiMap.getUiSettings().setMapToolbarEnabled(true);
+                                ActivityLocationsHmsView.this.huaweiMap.getUiSettings().setTiltGesturesEnabled(true);
+                                ActivityLocationsHmsView.this.huaweiMap.getUiSettings().setRotateGesturesEnabled(true);
 
-                    if (ActivityLocationsHmsView.this.huaweiMap != null) {
-                        try{
-                            ActivityLocationsHmsView.this.huaweiMap.setMapType(HuaweiMap.MAP_TYPE_NORMAL);
-                            ActivityLocationsHmsView.this.huaweiMap.setMyLocationEnabled(true);
-                            ActivityLocationsHmsView.this.huaweiMap.setOnMarkerClickListener(ActivityLocationsHmsView.this);
-                            ActivityLocationsHmsView.this.huaweiMap.getUiSettings().setZoomControlsEnabled(true);
-                            ActivityLocationsHmsView.this.huaweiMap.getUiSettings().setCompassEnabled(true);
-                            ActivityLocationsHmsView.this.huaweiMap.getUiSettings().setMapToolbarEnabled(true);
-                            ActivityLocationsHmsView.this.huaweiMap.getUiSettings().setTiltGesturesEnabled(true);
-                            ActivityLocationsHmsView.this.huaweiMap.getUiSettings().setRotateGesturesEnabled(true);
-
-                            View toolbarButton = mapView.findViewWithTag(HUAWEIMAP_TOOLBAR);
-                            if(toolbarButton != null){
-                                if(toolbarButton.getParent() != null) {
-                                    ((ViewGroup)toolbarButton.getParent()).removeView(toolbarButton); // <- fix
-                                }
-                                toolbarButton.setPadding(0,0,0,10);
-                                controlsButtons.addView(toolbarButton);
-                            }
-
-                            View compassButton = mapView.findViewWithTag(HUAWEIMAP_COMPASS);
-                            if(compassButton!= null){
-                                if(compassButton.getParent() != null) {
-                                    ((ViewGroup)compassButton.getParent()).removeView(compassButton); // <- fix
-                                }
-                                compassButton.setPadding(0,0,0,10);
-                                controlsButtons.addView(compassButton);
-                            }
-
-                            View locationButton = mapView.findViewWithTag(HUAWEIMAP_MYLOCATION_BUTTON);
-                            if(locationButton != null){
-                                if(locationButton.getParent() != null) {
-                                    ((ViewGroup)locationButton.getParent()).removeView(locationButton); // <- fix
-                                }
-                                locationButton.setPadding(0,0,0,10);
-                                controlsButtons.addView(locationButton);
-                            }
-
-                            View zoomIn = mapView.findViewWithTag(HUAWEIMAP_ZOOMIN_BUTTON);
-                            if(zoomIn != null){
-                                View zoomButtonInOut = (View) zoomIn.getParent();
-                                if(zoomButtonInOut != null){
-                                    if(zoomButtonInOut.getParent() != null) {
-                                        ((ViewGroup)zoomButtonInOut.getParent()).removeView(zoomButtonInOut); // <- fix
+                                if (huaweiMap != null) {
+                                    View toolbarButton = mapView.findViewWithTag(HUAWEIMAP_TOOLBAR);
+                                    if(toolbarButton != null){
+                                        if(toolbarButton.getParent() != null) {
+                                            ((ViewGroup)toolbarButton.getParent()).removeView(toolbarButton); // <- fix
+                                        }
+                                        toolbarButton.setPadding(0,0,0,10);
+                                        controlsButtons.addView(toolbarButton);
                                     }
-                                    zoomButtonInOut.setPadding(0,0,0,10);
-                                    controlsButtons.addView(zoomButtonInOut);
-                                }
-                            }
 
-                        }catch (SecurityException e){
-                            Log.d("GeoReferenciacion", e.getMessage());
+                                    View compassButton = mapView.findViewWithTag(HUAWEIMAP_COMPASS);
+                                    if(compassButton!= null){
+                                        if(compassButton.getParent() != null) {
+                                            ((ViewGroup)compassButton.getParent()).removeView(compassButton); // <- fix
+                                        }
+                                        compassButton.setPadding(0,0,0,10);
+                                        controlsButtons.addView(compassButton);
+                                    }
+
+                                    View locationButton = mapView.findViewWithTag(HUAWEIMAP_MYLOCATION_BUTTON);
+                                    if(locationButton != null){
+                                        if(locationButton.getParent() != null) {
+                                            ((ViewGroup)locationButton.getParent()).removeView(locationButton); // <- fix
+                                        }
+                                        locationButton.setPadding(0,0,0,10);
+                                        controlsButtons.addView(locationButton);
+                                    }
+
+                                    View zoomIn = mapView.findViewWithTag(HUAWEIMAP_ZOOMIN_BUTTON);
+                                    if(zoomIn != null){
+                                        View zoomButtonInOut = (View) zoomIn.getParent();
+                                        if(zoomButtonInOut != null){
+                                            if(zoomButtonInOut.getParent() != null) {
+                                                ((ViewGroup)zoomButtonInOut.getParent()).removeView(zoomButtonInOut); // <- fix
+                                            }
+                                            zoomButtonInOut.setPadding(0,0,0,10);
+                                            controlsButtons.addView(zoomButtonInOut);
+                                        }
+                                    }
+                                }
+                            }catch (SecurityException e){
+                                Log.d("GeoReferenciacion", e.getMessage());
+                            }
                         }
                     }
                 });
@@ -484,11 +486,11 @@ public class ActivityLocationsHmsView extends ActivityBase implements ActivityLo
         if (!agencia.getN_latitu().equals("0") && !agencia.getN_longit().equals("0")) {
             try {
                 MarkerOptions markerOptions = new MarkerOptions();
-                markerOptions.position(new LatLng(Double.parseDouble(agencia.getN_latitu().trim()), Double.parseDouble(agencia.getN_longit().trim())));
+                markerOptions.position(new LatLng(Double.valueOf(agencia.getN_latitu().trim()), Double.valueOf(agencia.getN_longit().trim())));
                 markerOptions.title(agencia.getN_sucurs());
                 markerOptions.icon(BitmapDescriptorFactory.fromResource(getIdDrawableByAgency(agencia)));
                 markerOptions.snippet(agencia.toString());
-                if(huaweiMap == null) return;
+                if(markerOptions==null || huaweiMap ==null) return;
                 huaweiMap.addMarker(markerOptions).setVisible(true);
             } catch (Exception e) {
                 Log.d("Error", e.getMessage());
@@ -518,17 +520,18 @@ public class ActivityLocationsHmsView extends ActivityBase implements ActivityLo
             if (huaweiMap == null) return;
 
             if(actual == null ){
-                huaweiMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(4.6832, -74.1479), 10));
-            }else{
-                CameraPosition camPos = new CameraPosition.Builder()
-                        .target(actual) // Centramos el mapa
-                        .zoom(zoomCamera) // Establecemos el zoom
-                        .bearing(0) // Establecemos la orientación con el
-                        .build();
-
-                CameraUpdate camUpd = CameraUpdateFactory.newCameraPosition(camPos);
-                huaweiMap.animateCamera(camUpd);
+                actual = new LatLng(4.0830360, -73.6636180);
+                zoomCamera = 10;
             }
+
+            CameraPosition camPos = new CameraPosition.Builder()
+                    .target(actual) // Centramos el mapa
+                    .zoom(zoomCamera) // Establecemos el zoom
+                    .bearing(45) // Establecemos la orientación con el
+                    .build();
+
+            CameraUpdate camUpd = CameraUpdateFactory.newCameraPosition(camPos);
+            huaweiMap.animateCamera(camUpd);
             huaweiMap.setInfoWindowAdapter(new PopUpWindowHms(context));
         } catch (Exception e) {
             showDataFetchError("Lo sentimos", "");
@@ -564,44 +567,31 @@ public class ActivityLocationsHmsView extends ActivityBase implements ActivityLo
 
     @Override
     public void showDialogPermissions(int requestCode){
-        final ActivityBase context = this;
-
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText("Permisos desactivados");
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText("Debes aceptar los permisos para el corrego funcionamiento de la APP");
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(view -> {
-            ActivityCompat.requestPermissions(context, new String[]{ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION}, requestCode);
-            dialog.dismiss();
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle("Permisos desactivados");
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage("Debes aceptar los permisos para el corrego funcionamiento de la APP");
+        d.setCancelable(true);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ActivityCompat.requestPermissions(context, new String[]{ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION}, requestCode);
+                dialog.dismiss();
+            }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
     public void requestLocationPermits(){
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_confirm);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText("Permisos desactivados");
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText("Desea configurar los permisos de forma manual");
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.buttonClose);
-        buttonClose.setOnClickListener(view -> dialog.dismiss());
-        Button buttonAceptar = (Button) dialog.findViewById(R.id.btnAceptar);
-        buttonAceptar.setOnClickListener(new View.OnClickListener() {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle("Permisos desactivados");
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage("Desea configurar los permisos de forma manual");
+        d.setCancelable(true);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent();
                 intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                 Uri uri = Uri.fromParts("package", getPackageName(),null);
@@ -610,7 +600,7 @@ public class ActivityLocationsHmsView extends ActivityBase implements ActivityLo
                 dialog.dismiss();
             }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
@@ -627,27 +617,14 @@ public class ActivityLocationsHmsView extends ActivityBase implements ActivityLo
             fetchLocationsAgencies();
             return;
         } else {
-            final Dialog dialog = new Dialog(context);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.setContentView(R.layout.pop_up_confirm);
-            dialog.setCancelable(false);
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-            titleMessage.setText("Permisos desactivados");
-            TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-            contentMessage.setText("Para poder acceder a las sucursales debe habilitar los servicios de Internet y GPS, ¿Desea configurar los permisos de forma manual?");
-            ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.buttonClose);
-            buttonClose.setOnClickListener(new View.OnClickListener() {
+            AlertDialog.Builder d = new AlertDialog.Builder(context);
+            d.setTitle("Permisos desactivados");
+            d.setIcon(R.mipmap.icon_presente);
+            d.setMessage("Para poder acceder a las sucursales debe habilitar los servicios de Internet y GPS, ¿Desea configurar los permisos de forma manual?");
+            d.setCancelable(true);
+            d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                 @Override
-                public void onClick(View view) {
-                    dialog.dismiss();
-                }
-            });
-            Button buttonAceptar = (Button) dialog.findViewById(R.id.btnAceptar);
-            buttonAceptar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+                public void onClick(DialogInterface dialog, int which) {
                     Intent intent = new Intent();
                     intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                     Uri uri = Uri.fromParts("package", getPackageName(),null);
@@ -656,7 +633,7 @@ public class ActivityLocationsHmsView extends ActivityBase implements ActivityLo
                     dialog.dismiss();
                 }
             });
-            dialog.show();
+            d.show();
             return;
         }
 
@@ -678,6 +655,7 @@ public class ActivityLocationsHmsView extends ActivityBase implements ActivityLo
                     listadoFiltrado.add(a);
                 }
             }
+
         }
 
         if (listadoFiltrado.size() > 0) {
@@ -798,24 +776,18 @@ public class ActivityLocationsHmsView extends ActivityBase implements ActivityLo
                 }
             }
         }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText("Lo sentimos");
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
@@ -830,43 +802,32 @@ public class ActivityLocationsHmsView extends ActivityBase implements ActivityLo
                 }
             }
         }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText(title);
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(title);
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
     public void showExpiredToken(String message) {
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_closedsession);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        Button buttonClosedSession = (Button) dialog.findViewById(R.id.btnVolverAIngresar);
-        buttonClosedSession.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle("Sesión finalizada");
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
                 context.salir();
             }
         });
-        dialog.show();
-
+        d.show();
     }
 }

@@ -26,13 +26,19 @@ public class FragmentValidateDataPresenter implements FragmentValidateDataContra
 
     @Override
     public void fetchPersonalData(BaseRequest base) {
-        view.hideSectionValidateData();
-        view.showCircularProgressBar("Un momento...");
+        view.showProgressDialog("Un momento...");
         model.getPersonalData(base, this);
     }
+
+    @Override
+    public void updatePersonalData(RequestActualizarDatos datosAsociado) {
+        view.showProgressDialog("Actualizando datos...");
+        model.updatePersonalData(datosAsociado,this);
+    }
+
     @Override
     public <T> void onSuccessPersonalData(Response<BaseResponse<T>> response) {
-        view.hideCircularProgressBar();
+        view.hideProgressDialog();
         try {
             ResponseConsultarDatosAsociado datos = (ResponseConsultarDatosAsociado) response.body().getResultado();
             DatosAsociado datosAsociado = new DatosAsociado(datos.getNombreCompleto(),
@@ -102,25 +108,20 @@ public class FragmentValidateDataPresenter implements FragmentValidateDataContra
                 }
             }
             view.showPersonalData(datosAsociado);
-            view.hideCircularProgressBar();
-            view.showSectionValidateData();
         }catch(Exception ex){
-            view.showDataFetchError("Lo sentimos", "");
+            Log.d("Error",ex.getMessage());
+            view.showDataFetchError("");
         }
     }
 
-    @Override
-    public void updatePersonalData(RequestActualizarDatos datosAsociado) {
-        view.showProgressDialog("Actualizando datos...");
-        model.updatePersonalData(datosAsociado,this);
-    }
     @Override
     public <T> void onSuccessUpdatePersonalData(Response<BaseResponse<T>> response) {
         view.hideProgressDialog();
         try {
             view.resultUpdatePersonalData();
         }catch(Exception ex){
-            view.showDataFetchError("Lo sentimos", "");
+            Log.d("Error",ex.getMessage());
+            view.showDataFetchError("");
         }
     }
 
@@ -134,16 +135,20 @@ public class FragmentValidateDataPresenter implements FragmentValidateDataContra
     public <T> void onError(Response<BaseResponse<T>> response) {
         view.hideProgressDialog();
         if(response != null){
-            view.showDataFetchError("Lo sentimos", response.body().getMensajeErrorUsuario());
+            view.showDataFetchError(response.body().getMensajeErrorUsuario());
         }else{
-            view.showDataFetchError("Lo sentimos","");
+            view.showDataFetchError("");
         }
     }
 
     @Override
     public void onFailure(Throwable t, boolean isErrorTimeOut) {
         view.hideProgressDialog();
-        view.showDataFetchError("Lo sentimos", "");
+        if(isErrorTimeOut){
+            view.showErrorTimeOut();
+        }else{
+            view.showDataFetchError("");
+        }
     }
 
     public boolean tryParseInt(String value) {

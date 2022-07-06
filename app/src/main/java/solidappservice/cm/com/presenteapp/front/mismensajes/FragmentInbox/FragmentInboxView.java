@@ -1,20 +1,15 @@
 package solidappservice.cm.com.presenteapp.front.mismensajes.FragmentInbox;
 
-import android.app.Dialog;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -22,8 +17,6 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTabHost;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
@@ -31,7 +24,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.OnItemClick;
 import solidappservice.cm.com.presenteapp.R;
 import solidappservice.cm.com.presenteapp.adapters.mensajes.MensajesBuzonAdapter;
@@ -52,22 +44,21 @@ public class FragmentInboxView extends Fragment implements FragmentInboxContract
     private FragmentInboxPresenter presenter;
     private ActivityBase context;
     private GlobalState state;
+    private ProgressDialog pd;
     private FirebaseAnalytics firebaseAnalytics;
     private List<ResponseObtenerMensajes> mensajesBuzon;
 
     @BindView(R.id.list_mensajes)
     ListView listMensajes;
 
-    @BindView(R.id.layout_circular_progress_bar)
-    LinearLayout layoutCircularProgressBar;
     @BindView(R.id.circular_progress_bar)
     ProgressBar circularProgressBar;
     @BindView(R.id.text_circular_progress_Bar)
     TextView textCircularProgressBar;
-    @BindView(R.id.imageReferesh)
-    ImageView buttonReferesh;
-    @BindView(R.id.pullToRefresh)
-    SwipeRefreshLayout pullToRefresh;
+    @BindView(R.id.layout_circular_progress_bar)
+    LinearLayout layoutCircularProgressBar;
+    @BindView(R.id.text_expanded_fragment)
+    TextView textFragment;
 
     @Override
     public void onAttach(Context context) {
@@ -91,24 +82,7 @@ public class FragmentInboxView extends Fragment implements FragmentInboxContract
         presenter = new FragmentInboxPresenter(this, new FragmentInboxModel());
         context = (ActivityBase) getActivity();
         state = context.getState();
-        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                fetchMessages();
-                pullToRefresh.setRefreshing(false);
-            }
-        });
-        fetchMessages();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        showUnreadMessages(null);
-        GlobalState state = context.getState();
-        if (state == null || state.getUsuario() == null) {
-            context.salir();
-        }
+        pd = new ProgressDialog(context);
     }
 
     @OnItemClick(R.id.list_mensajes)
@@ -120,9 +94,19 @@ public class FragmentInboxView extends Fragment implements FragmentInboxContract
         }
     }
 
-    @OnClick(R.id.imageReferesh)
-    public void onClickRefresh(){
-        fetchMessages();
+    @Override
+    public void onResume() {
+        super.onResume();
+        //Contamos y mostramos los mensajes sin leer
+        context.showUnreadMessages(null);
+        GlobalState state = context.getState();
+        if (state == null || state.getUsuario() == null) {
+            context.salir();
+        } else {
+            fetchMessages();
+//            Usuario usuario = state.getUsuario();
+//            new BuzonTask().execute(usuario.cedula, usuario.token);
+        }
     }
 
     @Override
@@ -134,79 +118,50 @@ public class FragmentInboxView extends Fragment implements FragmentInboxContract
                     state.getUsuario().getToken()
             ));
         }catch (Exception ex){
-            showDataFetchError("Lo sentimos", "");
-            showErrorWithRefresh();
+            showDataFetchError("");
         }
     }
 
     @Override
     public void showMessages(List<ResponseObtenerMensajes> inbox){
         try{
-            if(inbox!= null && inbox.size()>0){
-                listMensajes.setVisibility(View.VISIBLE);
-                MensajesBuzonAdapter adapter = new MensajesBuzonAdapter(context, inbox);
-                this.mensajesBuzon = inbox;
-                listMensajes.setAdapter(adapter);
-            }else{
-                layoutCircularProgressBar.setVisibility(View.VISIBLE);
-                pullToRefresh.setVisibility(View.GONE);
-                circularProgressBar.setVisibility(View.GONE);
-                buttonReferesh.setVisibility(View.VISIBLE);
-                textCircularProgressBar.setVisibility(View.VISIBLE);
-                textCircularProgressBar.setText("No hay mensajes");
-            }
-            showUnreadMessages(null);
+            listMensajes.setVisibility(View.VISIBLE);
+            MensajesBuzonAdapter adapter = new MensajesBuzonAdapter(context, inbox);
+            this.mensajesBuzon = inbox;
+            listMensajes.setAdapter(adapter);
+            context.showUnreadMessages(null);
         }catch (Exception e){
-            showDataFetchError("Lo sentimos", "");
-            showErrorWithRefresh();
+            showDataFetchError("");
         }
     }
 
     @Override
-    public void showUnreadMessages(ResponseObtenerMensajes inboxMessage){
-        try{
-            if(state != null){
-                FragmentTabHost mTabHost = state.getmTabHost();
-                if(mTabHost != null){
-                    int numberOfUnReadMessages = 0;
-                    if(state.getMensajesBuzon() != null && state.getMensajesBuzon().size() > 0){
-                        int counter = 0;
-                        for(ResponseObtenerMensajes m : state.getMensajesBuzon()){
-                            if(m.getLeido().equals("N")){
-                                counter++;
-                            }
-                        }
-                        numberOfUnReadMessages = counter;
-                    }
-
-                    int currentTab = mTabHost.getCurrentTab();
-                    if(currentTab == 3) {
-                        View view_tab = mTabHost.getCurrentTabView();
-                        if(view_tab == null) return;
-                        TextView c = view_tab.findViewById(R.id.cantMessages);
-                        if(c == null) return;
-                        if (numberOfUnReadMessages > 0) {
-                            c.setText((numberOfUnReadMessages > 9 ? String.valueOf(numberOfUnReadMessages):" "+String.valueOf(numberOfUnReadMessages)+" "));
-                            c.setVisibility(View.VISIBLE);
-                        } else {
-                            c.setText("");
-                            c.setVisibility(View.GONE);
-                        }
-                    }
-                }
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+    public void hideMessages(){
+        listMensajes.setVisibility(View.GONE);
     }
 
     @Override
-    public void showSectionMessages(){
-        pullToRefresh.setVisibility(View.VISIBLE);
+    public void showTextFragmentExpanded(){
+        textFragment.setVisibility(View.VISIBLE);
     }
+
     @Override
-    public void hideSectionMessages(){
-        pullToRefresh.setVisibility(View.GONE);
+    public void hideTextFragmentExpanded(){
+        textFragment.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showProgressDialog(String message) {
+        pd.setTitle(context.getResources().getString(R.string.app_name));
+        pd.setMessage(message);
+        pd.setIcon(R.mipmap.icon_presente);
+        pd.setCancelable(false);
+        pd.show();
+    }
+
+    @Override
+    public void hideProgressDialog() {
+        pd.dismiss();
     }
 
     @Override
@@ -221,15 +176,6 @@ public class FragmentInboxView extends Fragment implements FragmentInboxContract
     }
 
     @Override
-    public void showErrorWithRefresh(){
-        pullToRefresh.setVisibility(View.GONE);
-        layoutCircularProgressBar.setVisibility(View.VISIBLE);
-        circularProgressBar.setVisibility(View.GONE);
-        textCircularProgressBar.setText("Ha ocurrido un error, inténtalo de nuevo ");
-        buttonReferesh.setVisibility(View.VISIBLE);
-    }
-
-    @Override
     public void showErrorTimeOut() {
         String message = "Ha ocurrido un error. Intenta de nuevo y si el error persiste, contacta a PRESENTE.";
         if(state != null && state.getMensajesRespuesta() != null && state.getMensajesRespuesta().size()>0){
@@ -239,30 +185,23 @@ public class FragmentInboxView extends Fragment implements FragmentInboxContract
                 }
             }
         }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText("Lo sentimos");
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                context.finish();
+            public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
+                context.finish();
             }
         });
-        dialog.show();
+        d.show();
     }
 
-
     @Override
-    public void showDataFetchError(String title, String message) {
+    public void showDataFetchError(String message) {
         if(TextUtils.isEmpty(message)){
             message = "Ha ocurrido un error. Intenta de nuevo y si el error persiste, contacta a PRESENTE.";
             if(state != null && state.getMensajesRespuesta() != null && state.getMensajesRespuesta().size()>0){
@@ -273,45 +212,35 @@ public class FragmentInboxView extends Fragment implements FragmentInboxContract
                 }
             }
         }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText(title);
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
+//                state.getmTabHost().setCurrentTab(2);
                 context.finish();
             }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
     public void showExpiredToken(String message) {
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_closedsession);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        Button buttonClosedSession = (Button) dialog.findViewById(R.id.btnVolverAIngresar);
-        buttonClosedSession.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle("Sesión finalizada");
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
                 context.salir();
             }
         });
-        dialog.show();
-
+        d.show();
     }
 
 //

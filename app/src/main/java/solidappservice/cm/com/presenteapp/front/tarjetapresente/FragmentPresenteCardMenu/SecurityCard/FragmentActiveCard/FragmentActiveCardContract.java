@@ -17,12 +17,10 @@ public interface FragmentActiveCardContract {
         void confirmActivateCard(ResponseTarjeta tarjeta);
         void activateCard(ResponseTarjeta tarjeta);
         void showResultActivateCard(String result);
-        void updateStatePresenteCard(ResponseTarjeta card, boolean isBlock);
         void showProgressDialog(String message);
         void hideProgressDialog();
-        void showDialogError(String title, String message);
+        void showDataFetchError(String message);
         void showErrorTimeOut();
-        void showDataFetchError(String title, String message);
         void showExpiredToken(String message);
     }
 

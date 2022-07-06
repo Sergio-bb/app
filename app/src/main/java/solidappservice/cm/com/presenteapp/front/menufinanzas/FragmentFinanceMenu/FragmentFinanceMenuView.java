@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,7 +22,12 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import solidappservice.cm.com.presenteapp.R;
 import solidappservice.cm.com.presenteapp.entities.login.Response.Usuario;
-import solidappservice.cm.com.presenteapp.front.base.main.ActivityMainView;
+import solidappservice.cm.com.presenteapp.front.base.ActivityMainView;
+import solidappservice.cm.com.presenteapp.front.bottomnavigationbar.ActivityDirectory.ActivityDirectoryView;
+import solidappservice.cm.com.presenteapp.front.bottomnavigationbar.ActivityGeoreferencing.ActivityLocationsGms.ActivityLocationsGmsView;
+import solidappservice.cm.com.presenteapp.front.bottomnavigationbar.ActivityGeoreferencing.ActivityLocationsHms.ActivityLocationsHmsView;
+import solidappservice.cm.com.presenteapp.front.bottomnavigationbar.ActivityPortfolio.ActivityPortfolioProducts.ActivityPortfolioProductsView;
+import solidappservice.cm.com.presenteapp.front.bottomnavigationbar.ActivityServices.ActivityServicesView;
 import solidappservice.cm.com.presenteapp.front.convenios.ActivityAgreements.ActivityAgreementsView;
 import solidappservice.cm.com.presenteapp.entities.base.GlobalState;
 import solidappservice.cm.com.presenteapp.tools.IFragmentCoordinator;
@@ -47,8 +53,22 @@ public class FragmentFinanceMenuView extends Fragment implements FragmentFinance
     Button btnMisMensajes;
     @BindView(R.id.btnConvenios)
     Button btnConvenios;
+    @BindView(R.id.btnGeoReferenciacion)
+    Button btnGeoReferenciacion;
+    @BindView(R.id.btnPortafolio)
+    ImageButton btnPortafolio;
+    @BindView(R.id.btnPreguntasFrecuentes)
+    ImageButton btnPreguntasFrecuentes;
+    @BindView(R.id.btnDirectorio)
+    ImageButton btnDirectorio;
+    @BindView(R.id.btnEncuentranos)
+    ImageButton btnEncuentranos;
     @BindView(R.id.lblHolaUsuario)
     TextView lblHolaUsuario;
+
+    //@BindView(R.id.btnElecciones)
+    //Button btnElecciones;
+
 
     @Override
     public void onAttach(Context context) {
@@ -81,6 +101,7 @@ public class FragmentFinanceMenuView extends Fragment implements FragmentFinance
         if (context != null) {
             context.btn_back.setVisibility(View.VISIBLE);
             context.header.setImageResource(R.drawable.logo_internal);
+            context.btnSalir.setVisibility(View.VISIBLE);
         }
     }
 
@@ -94,23 +115,112 @@ public class FragmentFinanceMenuView extends Fragment implements FragmentFinance
             context.setFragment(IFragmentCoordinator.Pantalla.Ingreso);
             return;
         }
-        String user = "Hola " + usuario.getNombreAsociado() +", ";
+        String user = "Hola " + usuario.getNombreAsociado();
         if (lblHolaUsuario != null) lblHolaUsuario.setText(user);
+        //new EleccionesTask().execute();
     }
 
     @OnClick(R.id.btnEstadoCuenta)
-    public void onClickEstadoCuenta(View v) {context.showScreenStatusAccount();}
+    public void onClickEstadoCuenta(View v) {context.verEstadoCuenta();}
 
     @OnClick(R.id.btnTransacciones)
-    public void onClickTransacciones(View v) {context.showScreenTransactionsMenu();}
+    public void onClickTransacciones(View v) {context.verTransacciones();}
 
     @OnClick(R.id.btnTarjetaPte)
-    public void onClickTarjetaPresente(View v) {context.showScreenPresenteCard();}
+    public void onClickTarjetaPresente(View v) {context.verTarjetaPresente();}
+
+    @OnClick(R.id.btnMisMensajes)
+    public void onClickMisMensajes(View v) {context.verMisMensajes();}
 
     @OnClick(R.id.btnConvenios)
     public void onClickConvenios(View v) {
         Intent intent_convenios = new Intent(context, ActivityAgreementsView.class);
         startActivity(intent_convenios);
     }
+
+    @OnClick(R.id.btnGeoReferenciacion)
+    public void onClickGeoreferenciacion(View v) {context.verGeoReferenciacion();}
+
+    @OnClick(R.id.btnPortafolio)
+    public void onClickPortafolio(View v) {
+        Intent intent_p = new Intent(context, ActivityPortfolioProductsView.class);
+        startActivity(intent_p);
+    }
+
+    @OnClick(R.id.btnPreguntasFrecuentes)
+    public void onClickPreguntasFrecuentes(View v) {
+        Intent intent_s = new Intent(context, ActivityServicesView.class);
+        startActivity(intent_s);
+    }
+
+    @OnClick(R.id.btnDirectorio)
+    public void onClickDirectorio(View v) {
+        Intent intent_dir = new Intent(context, ActivityDirectoryView.class);
+        startActivity(intent_dir);
+    }
+
+    @OnClick(R.id.btnEncuentranos)
+    public void onClickEncuentranos(View v) {
+        if(state != null && state.isHmsSystem()){
+            Intent intent = new Intent(context, ActivityLocationsHmsView.class);
+            startActivity(intent);
+        }else{
+            Intent intent = new Intent(context, ActivityLocationsGmsView.class);
+            startActivity(intent);
+        }
+    }
+
+//    @OnClick(R.id.btnElecciones);
+//    public void onClickEleccioes(View v) {context.verCandidatos();}
+
+
+
+
+    /*private class EleccionesTask extends AsyncTask<String, String, String> {
+
+        String cedula = null;
+        String token = null;
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                NetworkHelper networkHelper = new NetworkHelper(NetworkHelper.ELECCIONES_WS);
+                String request = "MostrarEleccion.php";
+                return networkHelper.readService(request);
+            } catch (Exception e) {
+                return e.getMessage();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            procesarResultJSONMostrarElecciones(result);
+        }
+    }
+
+    private void procesarResultJSONMostrarElecciones(String result){
+        try {
+            String estado = SincroHelper.procesarJsonMostrarElecciones(result);
+
+            if(estado.equals("1")){
+                btnElecciones.setVisibility(View.VISIBLE);
+            }
+        } catch (ErrorTokenException e) {
+                AlertDialog.Builder d = new AlertDialog.Builder(context);
+                d.setTitle("Sesión finalizada");
+                d.setIcon(R.mipmap.icon_presente);
+                d.setMessage(e.getMessage());
+                d.setCancelable(false);
+                d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        context.salir();
+                    }
+                });
+                d.show();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+    }*/
 
 }

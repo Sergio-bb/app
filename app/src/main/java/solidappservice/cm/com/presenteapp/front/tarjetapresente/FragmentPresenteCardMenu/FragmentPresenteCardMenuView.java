@@ -1,19 +1,15 @@
 package solidappservice.cm.com.presenteapp.front.tarjetapresente.FragmentPresenteCardMenu;
 
-import android.app.Dialog;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
@@ -47,12 +43,12 @@ public class FragmentPresenteCardMenuView extends Fragment implements FragmentPr
 
     private FragmentPresenteCardMenuPresenter presenter;
     private ActivityBase context;
-    private ActivityTabsView tabsContext;
     private GlobalState state;
+    private ProgressDialog pd;
     private FirebaseAnalytics firebaseAnalytics;
 
-    @BindView(R.id.contentMenuPresenteCard)
-    ScrollView contentMenuPresenteCard;
+    @BindView(R.id.scrollview_menu_presentecard)
+    ScrollView scrollViewMenuPresenteCard;
     @BindView(R.id.layoutActivar)
     LinearLayout layoutActivar;
     @BindView(R.id.layoutMovimientos)
@@ -68,8 +64,6 @@ public class FragmentPresenteCardMenuView extends Fragment implements FragmentPr
     ProgressBar circularProgressBar;
     @BindView(R.id.text_circular_progress_Bar)
     TextView textCircularProgressBar;
-    @BindView(R.id.imageReferesh)
-    ImageView buttonReferesh;
 
     @Override
     public void onAttach(Context context) {
@@ -98,8 +92,8 @@ public class FragmentPresenteCardMenuView extends Fragment implements FragmentPr
     protected void setControls() {
         presenter = new FragmentPresenteCardMenuPresenter(this, new FragmentPresenteCardMenuModel());
         context = (ActivityBase) getActivity();
-        tabsContext = (ActivityTabsView) getActivity();
         state = context.getState();
+        pd = new ProgressDialog(context);
     }
 
     @Override
@@ -109,7 +103,10 @@ public class FragmentPresenteCardMenuView extends Fragment implements FragmentPr
         if(state == null || state.getUsuario() == null){
             context.salir();
         }else {
+//            Usuario usuario = state.getUsuario();
+//            new TarjetaTask().execute(usuario.cedula, usuario.token);
             fetchButtonStateReplacementCard();
+            fetchPresenteCards();
         }
     }
 
@@ -131,10 +128,26 @@ public class FragmentPresenteCardMenuView extends Fragment implements FragmentPr
         context.getState().getmTabHost().setCurrentTab(ActivityTabsView.TAB_21_PRESENTE_CARD_REPLACEMENT_TAG);
     }
 
-    @OnClick(R.id.imageReferesh)
-    public void onClickRefresh(){
-        state.setTarjetas(null);
-        fetchButtonStateReplacementCard();
+    @Override
+    public void fetchPresenteCards(){
+        try{
+            Encripcion encripcion = Encripcion.getInstance();
+            presenter.fetchPresenteCards(new BaseRequest(
+                    encripcion.encriptar(state.getUsuario().getCedula()),
+                    state.getUsuario().getToken()
+            ));
+        }catch (Exception ex){
+            showDataFetchError("");
+        }
+    }
+
+    @Override
+    public void showNumberPresenteCards(List<ResponseTarjeta> tarjetas){
+        state.setTarjetas(tarjetas);
+        scrollViewMenuPresenteCard.setVisibility(View.VISIBLE);
+        if(txtCantProducts != null){
+            txtCantProducts.setText("Producto(s) " + tarjetas.size());
+        }
     }
 
     @Override
@@ -142,7 +155,7 @@ public class FragmentPresenteCardMenuView extends Fragment implements FragmentPr
         try {
             presenter.fetchButtonStateReplacementCard();
         } catch (Exception ex) {
-            hideButtonReplacementCard();
+            showDataFetchError("");
         }
     }
 
@@ -157,41 +170,22 @@ public class FragmentPresenteCardMenuView extends Fragment implements FragmentPr
     }
 
     @Override
-    public void fetchPresenteCards(){
-        try{
-            if(state != null && state.getTarjetas()!= null){
-                hideCircularProgressBar();
-                showSectionMenuPresenteCards();
-                showNumberPresenteCards(state.getTarjetas());
-            }else{
-                Encripcion encripcion = Encripcion.getInstance();
-                presenter.fetchPresenteCards(new BaseRequest(
-                        encripcion.encriptar(state.getUsuario().getCedula()),
-                        state.getUsuario().getToken()
-                ));
-            }
-        }catch (Exception ex){
-            showDataFetchError("Lo sentimos", "");
-            showErrorWithRefresh();
-        }
+    public void hideNumberPresenteCards(){
+        scrollViewMenuPresenteCard.setVisibility(View.GONE);
     }
 
     @Override
-    public void showNumberPresenteCards(List<ResponseTarjeta> tarjetas){
-        state.setTarjetas(tarjetas);
-        contentMenuPresenteCard.setVisibility(View.VISIBLE);
-        if(txtCantProducts != null){
-            txtCantProducts.setText("Producto(s) " + tarjetas.size());
-        }
+    public void showProgressDialog(String message) {
+        pd.setTitle(context.getResources().getString(R.string.app_name));
+        pd.setMessage(message);
+        pd.setIcon(R.mipmap.icon_presente);
+        pd.setCancelable(false);
+        pd.show();
     }
 
     @Override
-    public void showSectionMenuPresenteCards() {
-        contentMenuPresenteCard.setVisibility(View.VISIBLE);
-    }
-    @Override
-    public void hideSectionMenuPresenteCards(){
-        contentMenuPresenteCard.setVisibility(View.GONE);
+    public void hideProgressDialog() {
+        pd.dismiss();
     }
 
     @Override
@@ -206,15 +200,6 @@ public class FragmentPresenteCardMenuView extends Fragment implements FragmentPr
     }
 
     @Override
-    public void showErrorWithRefresh(){
-        contentMenuPresenteCard.setVisibility(View.GONE);
-        layoutCircularProgressBar.setVisibility(View.VISIBLE);
-        circularProgressBar.setVisibility(View.GONE);
-        textCircularProgressBar.setText("Ha ocurrido un error, inténtalo de nuevo ");
-        buttonReferesh.setVisibility(View.VISIBLE);
-    }
-
-    @Override
     public void showErrorTimeOut() {
         String message = "Ha ocurrido un error. Intenta de nuevo y si el error persiste, contacta a PRESENTE.";
         if(state != null && state.getMensajesRespuesta() != null && state.getMensajesRespuesta().size()>0){
@@ -224,28 +209,23 @@ public class FragmentPresenteCardMenuView extends Fragment implements FragmentPr
                 }
             }
         }
-        final Dialog dialog = new Dialog(tabsContext);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText("Lo sentimos");
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(DialogInterface dialog, int which) {
+                state.getmTabHost().setCurrentTab(ActivityTabsView.TAB_1_TRANSACTIONS_MENU_TAG);
                 dialog.dismiss();
             }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
-    public void showDataFetchError(String title, String message){
+    public void showDataFetchError(String message) {
         if(TextUtils.isEmpty(message)){
             message = "Ha ocurrido un error. Intenta de nuevo y si el error persiste, contacta a PRESENTE.";
             if(state != null && state.getMensajesRespuesta() != null && state.getMensajesRespuesta().size()>0){
@@ -256,42 +236,101 @@ public class FragmentPresenteCardMenuView extends Fragment implements FragmentPr
                 }
             }
         }
-        final Dialog dialog = new Dialog(tabsContext);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText(title);
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(DialogInterface dialog, int which) {
+                state.getmTabHost().setCurrentTab(ActivityTabsView.TAB_1_TRANSACTIONS_MENU_TAG);
                 dialog.dismiss();
             }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
     public void showExpiredToken(String message) {
-        final Dialog dialog = new Dialog(tabsContext);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_closedsession);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        Button buttonClosedSession = (Button) dialog.findViewById(R.id.btnVolverAIngresar);
-        buttonClosedSession.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle("Sesión finalizada");
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
                 context.salir();
             }
         });
-        dialog.show();
+        d.show();
     }
+
+//    class TarjetaTask extends AsyncTask<String, String, String> {
+//
+//        String cedula = null;
+//        String token = null;
+//        @Override
+//        protected void onPreExecute() {
+//            pd.setTitle(context.getResources().getString(R.string.app_name));
+//            pd.setMessage("Obteniendo tarjetas...");
+//            pd.setIcon(R.mipmap.icon_presente);
+//            pd.setCancelable(false);
+//            pd.show();
+//        }
+//
+//        @Override
+//        protected String doInBackground(String... params) {
+//            try {
+//                NetworkHelper networkHelper = new NetworkHelper();
+//                Encripcion encripcion = Encripcion.getInstance();
+//                JSONObject param = new JSONObject();
+//                param.put("cedula", cedula = encripcion.encriptar(params[0]));
+//                param.put("token", token = params[1]);
+//                return networkHelper.writeService(param, SincroHelper.TARJETAS);
+//            } catch (Exception e) {
+//                return e.getMessage();
+//            }
+//        }
+//
+//        @Override
+//        protected void onProgressUpdate(String... values) {
+//            pd.setMessage(values[0]);
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            super.onPostExecute(result);
+//            pd.dismiss();
+//            procesarJsonTarjetas(result);
+//        }
+//    }
+//
+//    private void procesarJsonTarjetas(String jsonRespuesta){
+//        try{
+//            ArrayList<Tarjeta> tarjetas = SincroHelper.procesarJsonTarjetas(jsonRespuesta);
+//            mostrarTarjetasCant(tarjetas.size());
+//            context.getState().setTarjetas(tarjetas);
+//        }catch (ErrorTokenException e){
+//            AlertDialog.Builder d = new AlertDialog.Builder(context);
+//            d.setTitle("Sesión finalizada");
+//            d.setIcon(R.mipmap.icon_presente);
+//            d.setMessage(e.getMessage());
+//            d.setCancelable(false);
+//            d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface dialog, int id) {
+//                    context.salir();
+//                }
+//            });
+//            d.show();
+//        }catch (Exception e){
+//            context.makeErrorDialog(e.getMessage());
+//        }
+//    }
+//
+//    private void mostrarTarjetasCant(int cant){
+//        if(txtCantProducts != null){
+//            txtCantProducts.setText("Producto(s) " + cant);
+//        }
+//    }
 }

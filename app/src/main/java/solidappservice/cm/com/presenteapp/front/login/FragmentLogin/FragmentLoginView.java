@@ -1,14 +1,14 @@
 package solidappservice.cm.com.presenteapp.front.login.FragmentLogin;
 
-import android.app.Dialog;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -22,7 +22,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -34,6 +33,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.squareup.picasso.Picasso;
@@ -46,10 +47,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTouch;
-import solidappservice.cm.com.presenteapp.BuildConfig;
 import solidappservice.cm.com.presenteapp.R;
-import solidappservice.cm.com.presenteapp.adapters.login.ImageSlideAdapter;
-import solidappservice.cm.com.presenteapp.entities.base.GlobalState;
 import solidappservice.cm.com.presenteapp.entities.dispositivo.apirequest.Dispositivo;
 import solidappservice.cm.com.presenteapp.entities.dispositivo.apiresponse.ResponseValidarDispositivo;
 import solidappservice.cm.com.presenteapp.entities.login.Request.RequestLogin;
@@ -57,12 +55,19 @@ import solidappservice.cm.com.presenteapp.entities.login.Response.Usuario;
 import solidappservice.cm.com.presenteapp.entities.mensajesbanner.ResponseMensajesBanner;
 import solidappservice.cm.com.presenteapp.entities.parametrosgenerales.ResponseMensajesRespuesta;
 import solidappservice.cm.com.presenteapp.front.actualizaciondatos.ActivityUpdatePersonalData.ActivityUpdatePersonalDataView;
-import solidappservice.cm.com.presenteapp.front.base.main.ActivityMainView;
+import solidappservice.cm.com.presenteapp.front.bottomnavigationbar.ActivityDirectory.ActivityDirectoryView;
+import solidappservice.cm.com.presenteapp.front.base.ActivityMainView;
+import solidappservice.cm.com.presenteapp.front.bottomnavigationbar.ActivityGeoreferencing.ActivityLocationsGms.ActivityLocationsGmsView;
+import solidappservice.cm.com.presenteapp.front.bottomnavigationbar.ActivityGeoreferencing.ActivityLocationsHms.ActivityLocationsHmsView;
+import solidappservice.cm.com.presenteapp.front.bottomnavigationbar.ActivityPortfolio.ActivityPortfolioProducts.ActivityPortfolioProductsView;
+import solidappservice.cm.com.presenteapp.front.bottomnavigationbar.ActivityServices.ActivityServicesView;
 import solidappservice.cm.com.presenteapp.front.terminosycondiciones.ActivityTermsAndConditions.ActivityTermsAndConditionsView;
-import solidappservice.cm.com.presenteapp.tools.IFragmentCoordinator;
-import solidappservice.cm.com.presenteapp.tools.PageIndicator;
-import solidappservice.cm.com.presenteapp.tools.helpers.DialogHelpers;
 import solidappservice.cm.com.presenteapp.tools.security.Encripcion;
+import solidappservice.cm.com.presenteapp.entities.base.GlobalState;
+import solidappservice.cm.com.presenteapp.tools.IFragmentCoordinator;
+import solidappservice.cm.com.presenteapp.adapters.login.ImageSlideAdapter;
+import solidappservice.cm.com.presenteapp.tools.PageIndicator;
+import solidappservice.cm.com.presenteapp.BuildConfig;
 
 /**
  * CREADO POR JORGE ANDRÉS DAVID CARDONA EL 23/11/2015.
@@ -73,13 +78,14 @@ public class FragmentLoginView extends Fragment implements FragmentLoginContract
     private FragmentLoginPresenter presenter;
     private ActivityMainView context;
     private GlobalState state;
-    private Dialog pd;
+    private ProgressDialog pd;
     private List<ResponseMensajesBanner> mensajes;
     private FirebaseAnalytics firebaseAnalytics;
 
     private boolean stopSliding = false;
     private static final long ANIM_VIEWPAGER_DELAY = 5000;
     private static final long ANIM_VIEWPAGER_DELAY_USER_VIEW = 10000;
+    private final int MY_REQUEST_CODE = 100;
 
     private Runnable animateViewPager;
     private Handler handler;
@@ -100,9 +106,17 @@ public class FragmentLoginView extends Fragment implements FragmentLoginContract
     @BindView(R.id.lblTerminos)
     TextView lblTerminos;
     @BindView(R.id.img_arrow_left)
-    ImageView img_arrow_left ;
+    ImageView img_arrow_left;
     @BindView(R.id.img_arrow_right)
     ImageView img_arrow_right;
+    @BindView(R.id.btnPortafolio)
+    ImageButton btnPortafolio;
+    @BindView(R.id.btnPreguntasFrecuentes)
+    ImageButton btnPreguntasFrecuentes;
+    @BindView(R.id.btnDirectorio)
+    ImageButton btnDirectorio;
+    @BindView(R.id.btnEncuentranos)
+    ImageButton btnEncuentranos;
 
     @Override
     public void onAttach(Context context) {
@@ -127,10 +141,11 @@ public class FragmentLoginView extends Fragment implements FragmentLoginContract
     }
 
     protected void setControls() {
-
         presenter = new FragmentLoginPresenter(this, new FragmentLoginModel());
         context = (ActivityMainView) getActivity();
         state = context.getState();
+        pd = new ProgressDialog(context);
+
         txtPassword.setTypeface(Typeface.DEFAULT);
         txtPassword.setTransformationMethod(new PasswordTransformationMethod());
         mensajes = new ArrayList<>();
@@ -138,6 +153,7 @@ public class FragmentLoginView extends Fragment implements FragmentLoginContract
         if(context != null){
             context.header.setImageResource(R.drawable.logo_login);
             context.btn_back.setVisibility(View.GONE);
+            context.btnSalir.setVisibility(View.GONE);
         }
     }
 
@@ -145,23 +161,28 @@ public class FragmentLoginView extends Fragment implements FragmentLoginContract
     public void onStart() {
         super.onStart();
         FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
-        firebaseRemoteConfig.fetchAndActivate().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                String versionCodeFirebase ;
-                if(state.isHmsSystem()){
-                    versionCodeFirebase = firebaseRemoteConfig.getString("versionCodeHms");
-                }else{
-                    versionCodeFirebase = firebaseRemoteConfig.getString("versionCode");
+        firebaseRemoteConfig.fetchAndActivate().addOnCompleteListener(new OnCompleteListener<Boolean>(){
+            @Override
+            public void onComplete(@NonNull Task<Boolean> task) {
+                if (task.isSuccessful()) {
+                    String versionCodeFirebase = "";
+                    if(state.isHmsSystem()){
+                        versionCodeFirebase = firebaseRemoteConfig.getString("versionCodeHms");
+                    }else{
+                        versionCodeFirebase = firebaseRemoteConfig.getString("versionCode");
+                    }
+                    //mensajeActualizar(codigoVersionFirebase);
+                    showMessageUpdateApp(versionCodeFirebase);
+                } else {
+                    String versionCodeFirebase = "";
+                    if(state.isHmsSystem()){
+                        versionCodeFirebase = firebaseRemoteConfig.getString("versionCodeHms");
+                    }else{
+                        versionCodeFirebase = firebaseRemoteConfig.getString("versionCode");
+                    }
+                    //mensajeActualizar(codigoVersionFirebase);
+                    showMessageUpdateApp(versionCodeFirebase);
                 }
-                showMessageUpdateApp(versionCodeFirebase);
-            } else {
-                String versionCodeFirebase ;
-                if(state.isHmsSystem()){
-                    versionCodeFirebase = firebaseRemoteConfig.getString("versionCodeHms");
-                }else{
-                    versionCodeFirebase = firebaseRemoteConfig.getString("versionCode");
-                }
-                showMessageUpdateApp(versionCodeFirebase);
             }
         });
     }
@@ -173,6 +194,7 @@ public class FragmentLoginView extends Fragment implements FragmentLoginContract
         if (state != null && state.getMensajes() != null  && state.getMensajes().size() > 0) {
             setPageAdapter();
         } else {
+//            new MensajesBannerTask().execute();
             fetchBannerMessages();
         }
 
@@ -187,10 +209,21 @@ public class FragmentLoginView extends Fragment implements FragmentLoginContract
             }
             _imgBannerLogin.setImageDrawable(drawable);
         }else{
+//            new ImageBannerTask().execute();
             fetchLoginImage();
         }
     }
 
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == ActivityMainView.TERMS_AND_CONDITIONS) {
+//            if(resultCode != RESULT_OK){
+//                context.reiniciarEstado();
+//                context.finish();
+//            }
+//        }
+//    }
 
     @OnTouch(R.id.view_pager)
     public boolean onTouchViewPager(View v, MotionEvent event) {
@@ -200,6 +233,7 @@ public class FragmentLoginView extends Fragment implements FragmentLoginContract
             case MotionEvent.ACTION_CANCEL:
                 break;
             case MotionEvent.ACTION_UP:
+                // calls when touch release on ViewPager
                 if (mensajes != null && mensajes.size() != 0) {
                     stopSliding = false;
                     runnable(mensajes.size());
@@ -207,6 +241,7 @@ public class FragmentLoginView extends Fragment implements FragmentLoginContract
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
+                // calls when ViewPager touch
                 if (handler != null && !stopSliding) {
                     stopSliding = true;
                     handler.removeCallbacks(animateViewPager);
@@ -215,8 +250,6 @@ public class FragmentLoginView extends Fragment implements FragmentLoginContract
         }
         return false;
     }
-
-
 
     @OnClick(R.id.btnLogin)
     public void onClickLoginButton(View v) {
@@ -230,6 +263,7 @@ public class FragmentLoginView extends Fragment implements FragmentLoginContract
             txtPassword.setError("Campo requerido");
             return;
         }
+//        new LoginTask().execute(usuario.toString(), password.toString());
         validateLogin(usuario.toString(), password.toString());
     }
 
@@ -241,7 +275,7 @@ public class FragmentLoginView extends Fragment implements FragmentLoginContract
     @OnClick(R.id.lblTerminos)
     public void onClickTyC(View v){
         Intent i = new Intent(context, ActivityTermsAndConditionsView.class);
-        context.startActivityForResult(i, GlobalState.TERMS_AND_CONDITIONS);
+        context.startActivityForResult(i, ActivityMainView.TERMS_AND_CONDITIONS);
     }
 
     @OnClick(R.id.img_arrow_left)
@@ -263,6 +297,41 @@ public class FragmentLoginView extends Fragment implements FragmentLoginContract
         }
     }
 
+    @OnClick(R.id.btnPortafolio)
+    public void onClickPortfolio(View v){
+        Intent intent_p = new Intent(context, ActivityPortfolioProductsView.class);
+        startActivity(intent_p);
+    }
+
+    @OnClick(R.id.btnPreguntasFrecuentes)
+    public void onClickFrequentQuestions(View v){
+        //Intent intent_pr = new Intent(context, ActivityPreguntasFrecuentes.class);
+        //startActivity(intent_pr);
+//                String url = "https://www.presente.com.co/contactenos";
+//                Intent intent_pr = new Intent(Intent.ACTION_VIEW);
+//                intent_pr.setData(Uri.parse(url));
+//                startActivity(intent_pr);
+        Intent intent_s = new Intent(context, ActivityServicesView.class);
+        startActivity(intent_s);
+    }
+
+    @OnClick(R.id.btnDirectorio)
+    public void onClickDirectory(View v){
+        Intent intent_dir = new Intent(context, ActivityDirectoryView.class);
+        startActivity(intent_dir);
+    }
+
+    @OnClick(R.id.btnEncuentranos)
+    public void onClickLocations(View v){
+        Intent intent;
+        if(state != null && state.isHmsSystem()){
+            intent = new Intent(context, ActivityLocationsHmsView.class);
+        }else{
+            intent = new Intent(context, ActivityLocationsGmsView.class);
+        }
+        startActivity(intent);
+    }
+
     @Override
     public void validateLogin(String usuario, String clave){
         try{
@@ -272,8 +341,22 @@ public class FragmentLoginView extends Fragment implements FragmentLoginContract
                     encripcion.encriptar(clave),
                     "APPPRESENTE"
             ));
+//            resultValidateLogin(new Usuario(
+//                encripcion.encriptar("1049629949"),
+//                encripcion.encriptar("1234"),
+//                "ecce6d5c-46ff-4457-86d3-941125a5a378",
+//                "Pruebas",
+//                "1200000",
+//               "Y",
+//                new DatosActualizados(
+//                        "N",
+//                        "Y",
+//                        new Date().getTime(),
+//                        ""
+//                )
+//            ));
         }catch (Exception ex){
-            showDataFetchError("Lo sentimos", "");
+            showDataFetchError("");
         }
     }
 
@@ -286,7 +369,8 @@ public class FragmentLoginView extends Fragment implements FragmentLoginContract
             state.setTopeTransacciones(usuario.getTopeTransacciones());
             state.setUsuario(usuario);
 
-
+//            usuario.getDatosActualizados().setActualizaPrimeraVez("Y");
+//            usuario.setAceptoUltimosTyC("N");
             if (state.validarEstado()) {
                 switch (usuario.getDatosActualizados().getActualizaPrimeraVez()){
                     case "Y":
@@ -294,17 +378,19 @@ public class FragmentLoginView extends Fragment implements FragmentLoginContract
                         hideProgressDialog();
                         if(usuario.getAceptoUltimosTyC().equals("N")){
                             Intent i = new Intent(context, ActivityTermsAndConditionsView.class);
-                            context.startActivityForResult(i, GlobalState.TERMS_AND_CONDITIONS);
+                            context.startActivityForResult(i, ActivityMainView.TERMS_AND_CONDITIONS);
                             return;
                         } else {
                             Intent i = new Intent(context, ActivityUpdatePersonalDataView.class);
                             i.putExtra("actualizaPrimeraVez", usuario.getDatosActualizados().getActualizaPrimeraVez());
                             i.putExtra("datosActualizados", usuario.getDatosActualizados().getTieneDatosActualizados());
-                            context.startActivityForResult(i, GlobalState.UPDATE_PERSONAL_DATA);
+                            context.startActivityForResult(i,ActivityMainView.UPDATE_PERSONAL_DATA);
                         }
                         break;
                     case "N":
-                        validateRegisterDevice();
+                        context.setFragment(IFragmentCoordinator.Pantalla.MenuPrincipal);
+                        hideProgressDialog();
+//                        validateRegisterDevice();
                         break;
                     default:
                         context.setFragment(IFragmentCoordinator.Pantalla.MenuPrincipal);
@@ -314,13 +400,16 @@ public class FragmentLoginView extends Fragment implements FragmentLoginContract
             }
         }else{
             hideProgressDialog();
-            showDataFetchError("Lo sentimos","Usuario inválido");
+            showDataFetchError("Usuario inválido");
         }
     }
 
     @Override
     public void fetchBannerMessages(){
-        presenter.fetchBannerMessages();
+        try{
+            presenter.fetchBannerMessages();
+        }catch (Exception ex){
+        }
     }
 
     @Override
@@ -338,7 +427,7 @@ public class FragmentLoginView extends Fragment implements FragmentLoginContract
     public void fetchLoginImage(){
         try{
             presenter.fetchLoginImage();
-        }catch (Exception ignored){
+        }catch (Exception ex){
         }
     }
 
@@ -346,10 +435,10 @@ public class FragmentLoginView extends Fragment implements FragmentLoginContract
     public void loadLoginImage(String loginImage){
         if(!TextUtils.isEmpty(loginImage)){
             Picasso.get()
-                    .load(loginImage)
-                    .placeholder(R.drawable.banner_login)
-                    .transform(transformation)
-                    .into(_imgBannerLogin);
+                .load(loginImage)
+                .placeholder(R.drawable.banner_login)
+                .transform(transformation)
+                .into(_imgBannerLogin);
         }
     }
 
@@ -363,18 +452,23 @@ public class FragmentLoginView extends Fragment implements FragmentLoginContract
                 Point size = new Point();
                 display.getSize(size);
                 int targetWidth = size.x;
+
                 double aspectRatio = (double) source.getHeight() / (double) source.getWidth();
                 int targetHeight = (int) (targetWidth * aspectRatio);
+
                 Bitmap result = source;
 
                 if(targetHeight > 0 && targetWidth > 0)
                     result = Bitmap.createScaledBitmap(source, targetWidth, targetHeight, false);
 
                 if (source != result && !source.isRecycled()) {
+                    // Same bitmap is returned if sizes are the same
                     source.recycle();
                     source = null;
                 }
+
                 return result;
+
             }catch (Exception e){
                 return source;
             }
@@ -401,7 +495,7 @@ public class FragmentLoginView extends Fragment implements FragmentLoginContract
                     context.getVersionSistemaOperativo()
             ));
         }catch(Exception ex){
-            showDataFetchError("Lo sentimos", "");
+            showDataFetchError("");
         }
     }
 
@@ -411,49 +505,57 @@ public class FragmentLoginView extends Fragment implements FragmentLoginContract
             if(validateDevice.getDispositivoRegistrado() != null &&
                     validateDevice.getDispositivoRegistrado().equals("Y")){
                 state.setIdDispositivoRegistrado(validateDevice.getIdRegistroDispositivo());
-                context.showScreenHome();
+                context.verMenuPrincipal();
                 hideProgressDialog();
                 if(state.getUsuario().getAceptoUltimosTyC().equals("N")){
                     Intent i = new Intent(context, ActivityTermsAndConditionsView.class);
-                    context.startActivityForResult(i, GlobalState.TERMS_AND_CONDITIONS);
+                    context.startActivityForResult(i, ActivityMainView.TERMS_AND_CONDITIONS);
+                    return;
                 }
 
                 if(state.getUsuario().getDatosActualizados().getTieneDatosActualizados().equals("N")){
                     Intent i = new Intent(context, ActivityUpdatePersonalDataView.class);
                     i.putExtra("actualizaPrimeraVez", state.getUsuario().getDatosActualizados().getActualizaPrimeraVez());
                     i.putExtra("datosActualizados", state.getUsuario().getDatosActualizados().getTieneDatosActualizados());
-                    context.startActivityForResult(i, GlobalState.UPDATE_PERSONAL_DATA);
+                    context.startActivityForResult(i, ActivityMainView.UPDATE_PERSONAL_DATA);
+                    return;
                 }
+
             } else {
                 hideProgressDialog();
-                context.showDialogValidateCode();
+//                Intent i = new Intent(context, ActivityValidateCodeView.class);
+//                startActivityForResult(i, ActivityMainView.VALIDAR_CODIGO);
+                context.showActivityValidateCode();
             }
         }else{
             hideProgressDialog();
-            showDataFetchError("Lo sentimos", "");
+            showDataFetchError("");
         }
     }
 
     @Override
     public void showMessageUpdateApp(String versionCodeFirebase) {
         int versionActual = BuildConfig.VERSION_CODE;
+
         int codigoDesdeFirebase = versionCodeFirebase.isEmpty() ? versionActual : Integer.parseInt(versionCodeFirebase);
         if (codigoDesdeFirebase > versionActual) {
-            final Dialog dialog = new Dialog(context);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.setContentView(R.layout.pop_up_versionapp_available);
-            dialog.setCancelable(false);
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            Button buttonAceptar =  dialog.findViewById(R.id.btnAceptar);
-            buttonAceptar.setOnClickListener(view -> {
-                if (state != null && state.isHmsSystem()) {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("appmarket://details?id=" + "solidappservice.cm.com.presenteapp")));
-                } else {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + "solidappservice.cm.com.presenteapp")));
+
+            AlertDialog.Builder d = new AlertDialog.Builder(getActivity());
+            d.setTitle("Actualización disponible");
+            d.setIcon(R.mipmap.icon_presente);
+            d.setMessage("Nuestro objetivo es brindarte siempre la mejor experiencia. Hemos publicado una versión reciente de nuestra App, para continuar navegando te invitamos a actualizarla");
+            d.setCancelable(false);
+            d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+
+                    if (context.getState().isHmsSystem()) {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("appmarket://details?id=" + "solidappservice.cm.com.presenteapp")));
+                    } else {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + "solidappservice.cm.com.presenteapp")));
+                    }
                 }
             });
-            dialog.show();
+            d.show();
         }
     }
 
@@ -470,36 +572,33 @@ public class FragmentLoginView extends Fragment implements FragmentLoginContract
 
     public void runnable(final int size) {
         handler = new Handler();
-        animateViewPager = () -> {
-            if (!stopSliding) {
-                if (mViewPager.getCurrentItem() == size - 1) {
-                    mViewPager.setCurrentItem(0);
-                } else {
-                    mViewPager.setCurrentItem(
-                            mViewPager.getCurrentItem() + 1, true);
+        animateViewPager = new Runnable() {
+            public void run() {
+                if (!stopSliding) {
+                    if (mViewPager.getCurrentItem() == size - 1) {
+                        mViewPager.setCurrentItem(0);
+                    } else {
+                        mViewPager.setCurrentItem(
+                                mViewPager.getCurrentItem() + 1, true);
+                    }
+                    handler.postDelayed(animateViewPager, ANIM_VIEWPAGER_DELAY);
                 }
-                handler.postDelayed(animateViewPager, ANIM_VIEWPAGER_DELAY);
             }
         };
     }
 
     @Override
     public void showProgressDialog(String message) {
-        pd = new Dialog(context);
-        pd.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        pd.setCanceledOnTouchOutside(false);
-        pd.setContentView(R.layout.pop_up_loading);
+        pd.setTitle(context.getResources().getString(R.string.app_name));
+        pd.setMessage(message);
+        pd.setIcon(R.mipmap.icon_presente);
         pd.setCancelable(false);
-        pd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView contentMessage = pd.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
         pd.show();
     }
 
     @Override
     public void hideProgressDialog() {
-        if(pd != null)
-            pd.dismiss();
+        pd.dismiss();
     }
 
     @Override
@@ -512,25 +611,22 @@ public class FragmentLoginView extends Fragment implements FragmentLoginContract
                 }
             }
         }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText("Lo sentimos");
-        TextView contentMessage = dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(view -> {
-            dialog.dismiss();
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
-    public void showDataFetchError(String title, String message){
+    public void showDataFetchError(String message) {
         if(TextUtils.isEmpty(message)){
             message = "Ha ocurrido un error. Intenta de nuevo y si el error persiste, contacta a PRESENTE.";
             if(state != null && state.getMensajesRespuesta() != null && state.getMensajesRespuesta().size()>0){
@@ -541,20 +637,202 @@ public class FragmentLoginView extends Fragment implements FragmentLoginContract
                 }
             }
         }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText(title);
-        TextView contentMessage = dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(view -> {
-            dialog.dismiss();
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
         });
-        dialog.show();
+        d.show();
     }
+
+
+
+//    public void mensajeActualizar(String codigoVersionFirebase) {
+//        int versionActual = BuildConfig.VERSION_CODE;
+//
+//        int codigoDesdeFirebase = codigoVersionFirebase.isEmpty() ? versionActual : Integer.parseInt(codigoVersionFirebase);
+//        if (codigoDesdeFirebase > versionActual) {
+//
+//            AlertDialog.Builder d = new AlertDialog.Builder(getActivity());
+//            d.setTitle("Actualización disponible");
+//            d.setIcon(R.mipmap.icon_presente);
+//            d.setMessage("Nuestro objetivo es brindarte siempre la mejor experiencia. Hemos publicado una versión reciente de nuestra App, para continuar navegando te invitamos a actualizarla");
+//            d.setCancelable(false);
+//            d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface dialog, int id) {
+//
+//                    if(context.getState().isHmsSystem()){
+//                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("appmarket://details?id=" + "solidappservice.cm.com.presenteapp")));
+//                    }else{
+//                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + "solidappservice.cm.com.presenteapp")));
+//                    }
+//                }
+//            });
+//            d.show();
+//        }
+//    }
+//
+//    private class LoginTask extends AsyncTask<String, String, String> {
+//
+//        String cedula = null;
+//        String clave = null;
+//
+//        @Override
+//        protected void onPreExecute() {
+//            pd.setTitle(context.getResources().getString(R.string.app_name));
+//            pd.setMessage("Validando usuario...");
+//            pd.setIcon(R.mipmap.icon_presente);
+//            pd.setCancelable(false);
+//            pd.show();
+//        }
+//
+//        @Override
+//        protected String doInBackground(String... params) {
+//            try {
+//                NetworkHelper networkHelper = new NetworkHelper();
+//                Encripcion encripcion = Encripcion.getInstance();
+//                JSONObject param = new JSONObject();
+//
+//                param.put("cedula", cedula = encripcion.encriptar(params[0]));
+//                param.put("clave", clave = encripcion.encriptar(params[1]));
+//                param.put("origen", "APPPRESENTE");
+//                return networkHelper.writeService(param, SincroHelper.LOGIN_USUARIO);
+//            } catch (Exception e) {
+//                return e.getMessage();
+//            }
+//        }
+//
+//        @Override
+//        protected void onProgressUpdate(String... values) {
+//            pd.setMessage(values[0]);
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            super.onPostExecute(result);
+//            pd.dismiss();
+//            context.ingresar(result, cedula, clave);
+//        }
+//    }
+//
+//    private class MensajesBannerTask extends AsyncTask<String, String, String> {
+//
+//        @Override
+//        protected String doInBackground(String... params) {
+//            try {
+//                NetworkHelper networkHelper = new NetworkHelper();
+//                return networkHelper.readService(SincroHelper.MENSAJES_BANNER);
+//            } catch (Exception e) {
+//                return e.getMessage();
+//            }
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            super.onPostExecute(result);
+//            procesarResultMensajesBanner(result);
+//        }
+//    }
+//
+//    private class ImageBannerTask extends AsyncTask<String, String, String> {
+//
+//        @Override
+//        protected String doInBackground(String... params) {
+//            try {
+//                NetworkHelper networkHelper = new NetworkHelper();
+//                return networkHelper.readService(SincroHelper.IMAGEN_BANNER);
+//            } catch (Exception e) {
+//                return e.getMessage();
+//            }
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            super.onPostExecute(result);
+//            procesarResultImageBanner(result);
+//        }
+//    }
+//
+//    private void procesarResultImageBanner(String result) {
+//        try {
+//            String url = SincroHelper.procesarJsonImagenBanner(result);
+//            LoadImage(url);
+//        } catch (Exception ex) {
+//            context.makeLToast("Error cargando el banner");
+//        }
+//    }
+//
+//    private void LoadImage(String imageUrl) {
+//        try{
+//            Picasso.get()
+//                    .load(imageUrl)
+//                    .placeholder(R.drawable.banner_login)
+//                    .transform(transformation)
+//                    .into(_imgBannerLogin);
+//        }catch(Exception ex){
+//            context.makeLToast("Error cargando el banner");
+//        }
+//    }
+//
+//    private void procesarResultMensajesBanner(String result) {
+//        try {
+//            mensajes = SincroHelper.procesarJsonMensajesBanner(result);
+//            if (mensajes.size() > 0) {
+//                context.getState().setMensajes(mensajes);
+//                setPageAdapter();
+//            }
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
+//    }
+//
+//    private void setPageAdapter() {
+//        mensajes = context.getState().getMensajes();
+//
+//        if (mensajes != null && mensajes.size() > 0) {
+//            mViewPager.setAdapter(new ImageSlideAdapter(context, mensajes));
+//            mIndicator.setViewPager(mViewPager);
+//            runnable(mensajes.size());
+//            // Re-run callback
+//            handler.postDelayed(animateViewPager, ANIM_VIEWPAGER_DELAY);
+//        }
+//    }
+//
+//    public void runnable(final int size) {
+//        handler = new Handler();
+//        animateViewPager = new Runnable() {
+//            public void run() {
+//                if (!stopSliding) {
+//                    if (mViewPager.getCurrentItem() == size - 1) {
+//                        mViewPager.setCurrentItem(0);
+//                    } else {
+//                        mViewPager.setCurrentItem(
+//                                mViewPager.getCurrentItem() + 1, true);
+//                    }
+//                    handler.postDelayed(animateViewPager, ANIM_VIEWPAGER_DELAY);
+//                }
+//            }
+//        };
+//    }
+//
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == ActivityMain.TERMINOS_USO) {
+//            if (resultCode != Activity.RESULT_OK) {
+//                context.reiniciarEstado();
+//                context.finish();
+//            }
+//        }
+//    }
+//
+
+
+
 }

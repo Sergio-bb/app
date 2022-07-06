@@ -12,17 +12,13 @@ import solidappservice.cm.com.presenteapp.entities.base.BaseResponse;
 public interface ActivityServicesContract {
 
     interface View{
-        void fetchServices();
-        void showServices(List<ResponseServicios> servicios);
         void showFeaturedService1(ResponseServicios servicio);
         void showFeaturedService2(ResponseServicios servicio);
-        void showSectionServices();
-        void hideSectionServices();
-        void showCircularProgressBar(String message);
-        void hideCircularProgressBar();
-        void showErrorWithRefresh();
+        void showServices(List<ResponseServicios> servicios);
+        void showProgressDialog(String message);
+        void hideProgressDialog();
+        void showDataFetchError(String message);
         void showErrorTimeOut();
-        void showDataFetchError(String title, String message);
         void showExpiredToken(String message);
     }
 

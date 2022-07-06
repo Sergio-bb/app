@@ -13,15 +13,11 @@ import solidappservice.cm.com.presenteapp.entities.base.BaseResponse;
 public interface ActivityPortfolioProductsContract {
 
     interface View{
-        void fetchPortfolioProducts();
         void showPortfolioProducts(List<ResponsePortafolio> productosPortafolio, List<PortafolioPadre> portafolioPadres);
-        void showSectionPortfolioProducts();
-        void hideSectionPortfolioProducts();
-        void showCircularProgressBar(String message);
-        void hideCircularProgressBar();
-        void showErrorWithRefresh();
+        void showProgressDialog(String message);
+        void hideProgressDialog();
+        void showDataFetchError(String message);
         void showErrorTimeOut();
-        void showDataFetchError(String title, String message);
         void showExpiredToken(String message);
     }
 

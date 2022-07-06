@@ -57,9 +57,9 @@ public class ActivityTermsAndConditionsPresenter implements ActivityTermsAndCond
         view.enableAcceptButton();
         view.enableCancelButton();
         if(response != null){
-            view.showDataFetchError("Lo sentimos", response.body().getMensajeErrorUsuario());
+            view.showDataFetchError(response.body().getMensajeErrorUsuario());
         }else{
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
     }
 
@@ -70,7 +70,7 @@ public class ActivityTermsAndConditionsPresenter implements ActivityTermsAndCond
         if(isErrorTimeOut){
             view.showErrorTimeOut();
         }else{
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
     }
 

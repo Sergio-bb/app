@@ -23,7 +23,7 @@ public class FragmentValidateDataModel implements FragmentValidateDataContract.M
     public void getPersonalData(BaseRequest body, final FragmentValidateDataContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -42,17 +42,21 @@ public class FragmentValidateDataModel implements FragmentValidateDataContract.M
                             listener.onSuccessPersonalData(response);
                         }
                     } else {
-                        listener.onError(response);
+                        listener.onError(null);
                     }
                 }
                 @Override
                 public void onFailure(Call<BaseResponse<ResponseConsultarDatosAsociado>> call, Throwable t) {
-                    listener.onFailure(t, t instanceof IOException);
+                    if(t instanceof IOException){
+                        listener.onFailure(t, true);
+                    }else{
+                        listener.onError(null);
+                    }
                 }
             });
 
         } catch (Exception e) {
-            listener.onFailure(null, false);
+            listener.onError(null);
         }
     }
 
@@ -61,7 +65,7 @@ public class FragmentValidateDataModel implements FragmentValidateDataContract.M
     public void updatePersonalData(RequestActualizarDatos body, final FragmentValidateDataContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -88,13 +92,13 @@ public class FragmentValidateDataModel implements FragmentValidateDataContract.M
                     if(t instanceof IOException){
                         listener.onFailure(t, true);
                     }else{
-                        listener.onFailure(t, false);
+                        listener.onError(null);
                     }
                 }
             });
 
         } catch (Exception e) {
-            e.printStackTrace();
+            listener.onError(null);
         }
     }
 

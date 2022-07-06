@@ -28,13 +28,13 @@ public class FragmentSecurityCardMenuPresenter implements FragmentSecurityCardMe
 
     @Override
     public void fetchPresenteCards(BaseRequest baseRequest) {
-        view.hideSectionSecurityCardMenu();
-        view.showCircularProgressBar("Obteniendo tarjetas...");
+        view.showProgressDialog("Obteniendo tarjetas...");
         model.getPresenteCards(baseRequest, this);
     }
 
     @Override
     public <T> void onSuccess(Response<BaseResponse<T>> response) {
+        view.hideProgressDialog();
         try{
             List<ResponseTarjeta> tarjetas = (List<ResponseTarjeta>) response.body().getResultado();
             if(tarjetas != null){
@@ -51,42 +51,36 @@ public class FragmentSecurityCardMenuPresenter implements FragmentSecurityCardMe
                     tarjeta.setV_cupo(tarjeta.getV_cupo());
                 }
             }
-            view.hideCircularProgressBar();
-            view.showSectionSecurityCardMenu();
             view.showPresenteCards(tarjetas);
         }catch (Exception ex){
-            view.hideCircularProgressBar();
-            view.showDataFetchError("Lo sentimos", "");
-            view.showErrorWithRefresh();
+            view.showDataFetchError("");
         }
     }
 
     @Override
     public <T> void onExpiredToken(Response<BaseResponse<T>> response) {
-        view.hideCircularProgressBar();
+        view.hideProgressDialog();
         view.showExpiredToken(response.body().getErrorToken());
     }
 
     @Override
     public <T> void onError(Response<BaseResponse<T>> response) {
-        view.hideCircularProgressBar();
+        view.hideProgressDialog();
         if(response != null){
-            view.showDataFetchError("Lo sentimos", response.body().getMensajeErrorUsuario());
+            view.showDataFetchError(response.body().getMensajeErrorUsuario());
         }else{
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
-        view.showErrorWithRefresh();
     }
 
     @Override
     public void onFailure(Throwable t, boolean isErrorTimeOut) {
-        view.hideCircularProgressBar();
+        view.hideProgressDialog();
         if(isErrorTimeOut){
             view.showErrorTimeOut();
         }else{
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
-        view.showErrorWithRefresh();
     }
 
 }

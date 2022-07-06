@@ -26,50 +26,47 @@ public class ActivityFrequentQuestionsPresenter implements ActivityFrequentQuest
 
     @Override
     public void fetchFrequentQuestions() {
-        view.hideSectionFrequentQuestions();
-        view.showCircularProgressBar("Consultando preguntas frecuentes...");
+        view.showProgressDialog("Consultando preguntas frecuentes...");
         model.getFrequentQuestions(this);
     }
 
     @Override
     public <T> void onSuccess(Response<BaseResponse<T>> response) {
-        view.hideCircularProgressBar();
+        view.hideProgressDialog();
         try {
             List<ResponsePreguntasFrecuente> frequentsQuestions = (List<ResponsePreguntasFrecuente>) response.body().getResultado();
-            view.showSectionFrequentQuestions();
-            view.showFrequentQuestions(frequentsQuestions);
+            if(frequentsQuestions != null && frequentsQuestions.size()>0){
+                view.showFrequentQuestions(frequentsQuestions);
+            }
         }catch(Exception ex){
-            view.showDataFetchError("Lo sentimos", "");
-            view.showErrorWithRefresh();
+            view.showDataFetchError("");
         }
     }
 
     @Override
     public <T> void onExpiredToken(Response<BaseResponse<T>> response) {
-        view.hideCircularProgressBar();
+        view.hideProgressDialog();
         view.showExpiredToken(response.body().getErrorToken());
     }
 
     @Override
     public <T> void onError(Response<BaseResponse<T>> response) {
-        view.hideCircularProgressBar();
+        view.hideProgressDialog();
         if(response != null){
-            view.showDataFetchError("Lo sentimos", response.body().getMensajeErrorUsuario());
+            view.showDataFetchError(response.body().getMensajeErrorUsuario());
         }else{
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
-        view.showErrorWithRefresh();
     }
 
     @Override
     public void onFailure(Throwable t, boolean isErrorTimeOut) {
-        view.hideCircularProgressBar();
+        view.hideProgressDialog();
         if(isErrorTimeOut){
             view.showErrorTimeOut();
         }else{
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
-        view.showErrorWithRefresh();
     }
 
 }

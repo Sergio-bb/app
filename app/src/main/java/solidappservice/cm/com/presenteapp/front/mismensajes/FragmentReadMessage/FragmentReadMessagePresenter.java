@@ -33,7 +33,7 @@ public class FragmentReadMessagePresenter implements FragmentReadMessageContract
             String resultUpdateMessage = (String) response.body().getResultado();
             view.showUpdateResultStatusMessages();
         }catch (Exception ex){
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
     }
 
@@ -45,9 +45,9 @@ public class FragmentReadMessagePresenter implements FragmentReadMessageContract
     @Override
     public <T> void onError(Response<BaseResponse<T>> response) {
         if(response != null){
-            view.showDataFetchError("Lo sentimos", response.body().getMensajeErrorUsuario());
+            view.showDataFetchError(response.body().getMensajeErrorUsuario());
         }else{
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
     }
 
@@ -56,9 +56,8 @@ public class FragmentReadMessagePresenter implements FragmentReadMessageContract
         if(isErrorTimeOut){
             view.showErrorTimeOut();
         }else{
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
     }
 
 }
-

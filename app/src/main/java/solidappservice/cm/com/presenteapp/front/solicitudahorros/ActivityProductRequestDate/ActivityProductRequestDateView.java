@@ -1,7 +1,6 @@
 package solidappservice.cm.com.presenteapp.front.solicitudahorros.ActivityProductRequestDate;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
@@ -10,13 +9,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,10 +24,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemSelected;
 import solidappservice.cm.com.presenteapp.R;
-import solidappservice.cm.com.presenteapp.front.base.main.ActivityMainView;
+import solidappservice.cm.com.presenteapp.front.base.ActivityMainView;
 import solidappservice.cm.com.presenteapp.front.base.ActivityBase;
 import solidappservice.cm.com.presenteapp.entities.base.GlobalState;
-import solidappservice.cm.com.presenteapp.front.tabs.ActivityTabs.ActivityTabsView;
 
 /**
  * CREADO POR JORGE ANDRÉS DAVID CARDONA EL 28/11/2015.
@@ -151,18 +147,18 @@ public class ActivityProductRequestDateView extends ActivityBase implements Acti
         int int_mes = selectMonthIndex(mes.toString()) + 1;
 
         if(Integer.parseInt(anio.toString()) < yearActual){
-            showDataFetchError("Datos erróneos", "Por favor ingrese una fecha válida");
+            context.makeErrorDialog("Por favor ingrese una fecha válida");
             return;
         }
 
         if(int_mes < monthActual && Integer.parseInt(anio.toString()) == yearActual){
-            showDataFetchError("Datos erróneos", "Por favor ingrese una fecha válida");
+            context.makeErrorDialog("Por favor ingrese una fecha válida");
             return;
         }
 
         if(monthActual == int_mes && Integer.parseInt(dia.toString()) < dayActual
                 && Integer.parseInt(anio.toString()) == yearActual){
-            showDataFetchError("Datos erróneos", "Por favor ingrese una fecha válida");
+            context.makeErrorDialog("Por favor ingrese una fecha válida");
             return;
         }
 
@@ -174,7 +170,7 @@ public class ActivityProductRequestDateView extends ActivityBase implements Acti
         c.add(Calendar.YEAR, 3);
 
         if(c_validacion.compareTo(c) > 0){
-            showDataFetchError("Datos erróneos", "Por favor ingrese una fecha válida, no superior a tres años desde la fecha actual");
+            context.makeErrorDialog("Por favor ingrese una fecha válida, no superior a tres años desde la fecha actual");
             return;
         }
 
@@ -283,27 +279,6 @@ public class ActivityProductRequestDateView extends ActivityBase implements Acti
         }
     }
 
-    @Override
-    public void showDataFetchError(String title, String message){
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText(title);
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
-    }
 
 
 

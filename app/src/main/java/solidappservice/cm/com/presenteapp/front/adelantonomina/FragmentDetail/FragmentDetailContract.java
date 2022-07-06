@@ -14,16 +14,14 @@ public interface FragmentDetailContract {
     interface View{
         void fetchCommissionValue();
         void showCommissionValue(String valorComision);
-        void showCircularProgressBarValue();
-        void hideCircularProgressBarValue();
         void fetchRegisterSalaryAdvance();
         void fetchProcessSalaryAdvance(String numeroTransaccion);
         void enterLogs(String accion, String descripcion);
         void showSuccessfulSalaryAdvance();
         void showProgressDialog(String message);
         void hideProgressDialog();
-        void showErrorTimeOut();
         void showDataFetchError(String title, String message);
+        void showErrorTimeOut();
         void showExpiredToken(String message);
     }
 
@@ -42,10 +40,7 @@ public interface FragmentDetailContract {
     }
 
     interface APIListener{
-        <T> void onSuccessCommissionValue(Response<BaseResponse<T>> response);
-        <T> void onSuccessRegisterSalaryAdvance(Response<BaseResponse<T>> response);
-        <T> void onSuccessProcessSalaryAdvance(Response<BaseResponse<T>> response);
-
+        <T> void onSuccess(Response<BaseResponse<T>> response);
         <T> void onExpiredToken(Response<BaseResponse<T>> response);
         <T> void onError(Response<BaseResponse<T>> response);
         void onFailure(Throwable t, boolean isErrorTimeOut);

@@ -14,7 +14,7 @@
         android:background="@color/gris"
         android:text="Mis mensajes"
         android:gravity="center"
-        android:textSize="16sp"
+        android:textSize="17sp"
         android:fontFamily="@font/roboto_light"/>
 
     <ScrollView
@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:text="Buzón de mensajes"
                 android:padding="6dp"
-                android:textSize="16sp"
+                android:textSize="17sp"
                 android:layout_margin="10dp"
                 android:background="@drawable/btn_yellow_internal"
                 android:drawableRight="@drawable/icon_plus"

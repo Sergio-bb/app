@@ -20,17 +20,10 @@ public interface FragmentBlockCardContract {
         void confirmBlockCard(ResponseTarjeta tarjeta);
         void blockCard(ResponseTarjeta tarjeta, String motivoBloqueo);
         void showResultBlockCard(String result);
-        void updateStatePresenteCard(ResponseTarjeta card, boolean isBlock);
-        void showSectionBlockCard();
-        void hideSectionBlockCard();
-        void showCircularProgressBar(String message);
-        void hideCircularProgressBar();
-        void showErrorWithRefresh();
         void showProgressDialog(String message);
         void hideProgressDialog();
-        void showDialogError(String title, String message);
+        void showDataFetchError(String message);
         void showErrorTimeOut();
-        void showDataFetchError(String title, String message);
         void showExpiredToken(String message);
     }
 
@@ -45,15 +38,10 @@ public interface FragmentBlockCardContract {
     }
 
     interface APIListener{
-        <T> void onSuccessReasonsBlockCard(Response<BaseResponse<T>> response);
-        <T> void onErrorReasonsBlockCard(Response<BaseResponse<T>> response);
-        void onFailureReasonsBlockCard(Throwable t, boolean isErrorTimeOut);
-
-        <T> void onSuccessBlockCard(Response<BaseResponse<T>> response);
-        <T> void onErrorBlockCard(Response<BaseResponse<T>> response);
-        void onFailureBlockCard(Throwable t, boolean isErrorTimeOut);
-
+        <T> void onSuccess(Response<BaseResponse<T>> response);
         <T> void onExpiredToken(Response<BaseResponse<T>> response);
+        <T> void onError(Response<BaseResponse<T>> response);
+        void onFailure(Throwable t, boolean isErrorTimeOut);
     }
 
 }

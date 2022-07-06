@@ -71,7 +71,8 @@ public class ActivityValidateCodePresenter implements ActivityValidateCodeContra
                 ));
             }
         }catch(Exception ex){
-            view.showDataFetchError("Lo sentimos", "");
+            Log.d("Error",ex.getMessage());
+            view.showDataFetchError("");
         }
     }
 
@@ -92,8 +93,9 @@ public class ActivityValidateCodePresenter implements ActivityValidateCodeContra
                 view.showTextError("Codigo erróneo");
             }
         }catch(Exception ex){
+            Log.d("Error",ex.getMessage());
             view.showBoxCodeFields();
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
     }
 
@@ -103,7 +105,8 @@ public class ActivityValidateCodePresenter implements ActivityValidateCodeContra
             ResponseRegistrarDispositivo registrarDispositivo = (ResponseRegistrarDispositivo) response.body().getResultado();
             view.resultRegisterDevice(registrarDispositivo.getIdRegistroDispositivo());
         }catch(Exception ex){
-            view.showDataFetchError("Lo sentimos", "");
+            Log.d("Error",ex.getMessage());
+            view.showDataFetchError("");
         }
     }
 
@@ -115,9 +118,9 @@ public class ActivityValidateCodePresenter implements ActivityValidateCodeContra
     @Override
     public <T> void onError(Response<BaseResponse<T>> response) {
         if(response != null){
-            view.showDataFetchError("Lo sentimos", response.body().getMensajeErrorUsuario());
+            view.showDataFetchError(response.body().getMensajeErrorUsuario());
         }else{
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
     }
 
@@ -126,7 +129,7 @@ public class ActivityValidateCodePresenter implements ActivityValidateCodeContra
         if(isErrorTimeOut){
             view.showErrorTimeOut();
         }else{
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
     }
 

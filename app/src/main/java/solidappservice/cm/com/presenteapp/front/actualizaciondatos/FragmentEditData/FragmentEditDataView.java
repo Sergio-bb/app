@@ -1,8 +1,10 @@
 package solidappservice.cm.com.presenteapp.front.actualizaciondatos.FragmentEditData;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
@@ -19,10 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -61,19 +60,8 @@ public class FragmentEditDataView extends Fragment implements FragmentEditDataCo
     private ActivityUpdatePersonalDataView baseView;
     private ActivityBase context;
     private GlobalState state;
+    private ProgressDialog pd;
     private FirebaseAnalytics firebaseAnalytics;
-
-    @BindView(R.id.contentEditData)
-    RelativeLayout contentEditData;
-
-    @BindView(R.id.layout_circular_progress_bar)
-    LinearLayout layoutCircularProgressBar;
-    @BindView(R.id.circular_progress_bar)
-    ProgressBar circularProgressBar;
-    @BindView(R.id.text_circular_progress_Bar)
-    TextView textCircularProgressBar;
-    @BindView(R.id.imageReferesh)
-    ImageView buttonReferesh;
 
     @BindView(R.id.view_final_Editar)
     View viewFinal;
@@ -118,7 +106,8 @@ public class FragmentEditDataView extends Fragment implements FragmentEditDataCo
     @BindView(R.id.tv_direccion_completa)
     TextView tvDireccionCompleta;
     //Boton Guardar
-
+    @BindView(R.id.btnGuardar_actDatos_guardar)
+    Button btnGuardarDatos;
 
     @Override
     public void onAttach(Context context) {
@@ -149,6 +138,7 @@ public class FragmentEditDataView extends Fragment implements FragmentEditDataCo
         baseView = (ActivityUpdatePersonalDataView) getActivity();
         context = (ActivityBase) getActivity();
         state = context.getState();
+        pd = new ProgressDialog(context);
         tvPrimerNombre.setText(context.getState() == null ? "" : context.getState().getUsuario().getNombreAsociado()+"...");
         tvPrimerNombre.setTypeface(null, Typeface.BOLD);
         if (baseView != null) {
@@ -163,21 +153,34 @@ public class FragmentEditDataView extends Fragment implements FragmentEditDataCo
         GlobalState state = context.getState();
         if(state == null || state.getUsuario() == null){
             context.salir();
+            return;
         }else{
             processPersonalData();
+            if(state.getUbicaciones() == null){
+                fetchLocations();
+            } else {
+                showLocations(state.getUbicaciones());
+            }
+            if(state.getFormatoDirecciones() == null){
+                fetchAddressFormat();
+            } else {
+                showAddressFormat(state.getFormatoDirecciones());
+            }
         }
     }
 
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.btn_back) {
-            GlobalState state = context.getState();
-            if (baseView != null && state != null) {
-                baseView.basePresenter.loadFragmentUpdatePersonalData(IFragmentCoordinator.Pantalla.ActDatosValidateData);
-            } else {
-                context.salir();
-            }
+        switch (id) {
+            case R.id.btn_back:
+                GlobalState state = context.getState();
+                if(baseView != null && state != null){
+                    baseView.basePresenter.loadFragmentUpdatePersonalData(IFragmentCoordinator.Pantalla.ActDatosValidateData);
+                }else{
+                    context.salir();
+                }
+                break;
         }
     }
 
@@ -216,11 +219,6 @@ public class FragmentEditDataView extends Fragment implements FragmentEditDataCo
                     }
                     break;
             }
-            if(state.getUbicaciones() == null){
-                fetchLocations();
-            } else {
-                showLocations(state.getUbicaciones());
-            }
         }
         else {
             baseView.basePresenter.loadFragmentUpdatePersonalData(IFragmentCoordinator.Pantalla.ActDatosStart);
@@ -237,7 +235,7 @@ public class FragmentEditDataView extends Fragment implements FragmentEditDataCo
                     state.getUsuario().getToken()
             ));
         }catch(Exception ex){
-            showDataFetchError("Lo sentimos", "");
+            showDataFetchError("");
         }
     }
 
@@ -251,23 +249,15 @@ public class FragmentEditDataView extends Fragment implements FragmentEditDataCo
         try{
             presenterEditData.fetchLocations();
         }catch(Exception ex){
-            showDataFetchError("Lo sentimos", "");
+            showDataFetchError("");
         }
     }
 
     @Override
     public void showLocations(ResponseUbicaciones locations) {
-        state.setUbicaciones(locations);
+        context.getState().setUbicaciones(locations);
         if(locations.getPaises() != null){
             fillLocations(locations);
-        }
-
-        if(state.getFormatoDirecciones() == null){
-            fetchAddressFormat();
-        } else {
-            showAddressFormat(state.getFormatoDirecciones());
-            hideCircularProgressBar();
-            showContentEditData();
         }
     }
 
@@ -379,8 +369,8 @@ public class FragmentEditDataView extends Fragment implements FragmentEditDataCo
         adapterCiudad.addAll(listCities);
         spCiudad.setAdapter(adapterCiudad);
         if(!TextUtils.isEmpty(baseView.datosAsociado.getIdPais()) &&
-                !TextUtils.isEmpty(baseView.datosAsociado.getIdDepartamento()) &&
-                !TextUtils.isEmpty(baseView.datosAsociado.getIdCiudad())){
+            !TextUtils.isEmpty(baseView.datosAsociado.getIdDepartamento()) &&
+            !TextUtils.isEmpty(baseView.datosAsociado.getIdCiudad())){
             for (ResponseUbicaciones.Ciudad ciudad : listCities) {
                 if (ciudad.getIdCiudad().equals(baseView.datosAsociado.getIdCiudad())) {
                     int spinnerPosition = adapterCiudad.getPosition(ciudad);
@@ -395,13 +385,13 @@ public class FragmentEditDataView extends Fragment implements FragmentEditDataCo
         try{
             presenterEditData.fetchAddressFormat();
         }catch(Exception ex){
-            showDataFetchError("Lo sentimos", "");
+            showDataFetchError("");
         }
     }
 
     @Override
     public void showAddressFormat(ResponseFormatoDirecciones addressFormat) {
-        state.setFormatoDirecciones(addressFormat);
+        context.getState().setFormatoDirecciones(addressFormat);
         if(addressFormat != null){
             fillTypesOfRoad(addressFormat.getTiposVia());
             fillLettersOfRoad(addressFormat.getLetrasVia());
@@ -521,36 +511,6 @@ public class FragmentEditDataView extends Fragment implements FragmentEditDataCo
                 }
             }
         }
-    }
-
-    @Override
-    public void showContentEditData(){
-        contentEditData.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void hideContentEditData(){
-        contentEditData.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showCircularProgressBar(String textProgressBar) {
-        layoutCircularProgressBar.setVisibility(View.VISIBLE);
-        textCircularProgressBar.setText(textProgressBar);
-    }
-
-    @Override
-    public void hideCircularProgressBar() {
-        layoutCircularProgressBar.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showErrorWithRefresh(){
-        contentEditData.setVisibility(View.GONE);
-        layoutCircularProgressBar.setVisibility(View.VISIBLE);
-        circularProgressBar.setVisibility(View.GONE);
-        textCircularProgressBar.setText("Ha ocurrido un error, inténtalo de nuevo ");
-        buttonReferesh.setVisibility(View.VISIBLE);
     }
 
     @OnClick(R.id.btnGuardar_actDatos_guardar)
@@ -728,6 +688,20 @@ public class FragmentEditDataView extends Fragment implements FragmentEditDataCo
     }
 
     @Override
+    public void showProgressDialog(String message) {
+        pd.setTitle(context.getResources().getString(R.string.app_name));
+        pd.setMessage(message);
+        pd.setIcon(R.mipmap.icon_presente);
+        pd.setCancelable(false);
+        pd.show();
+    }
+
+    @Override
+    public void hideProgressDialog() {
+        pd.dismiss();
+    }
+
+    @Override
     public void showErrorTimeOut() {
         String message = "Ha ocurrido un error. Intenta de nuevo y si el error persiste, contacta a PRESENTE.";
         if(state != null && state.getMensajesRespuesta() != null && state.getMensajesRespuesta().size()>0){
@@ -737,29 +711,23 @@ public class FragmentEditDataView extends Fragment implements FragmentEditDataCo
                 }
             }
         }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText("Lo sentimos");
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 baseView.finish();
             }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
-    public void showDataFetchError(String title, String message) {
+    public void showDataFetchError(String message) {
         if(TextUtils.isEmpty(message)){
             message = "Ha ocurrido un error. Intenta de nuevo y si el error persiste, contacta a PRESENTE.";
             if(state != null && state.getMensajesRespuesta() != null && state.getMensajesRespuesta().size()>0){
@@ -770,45 +738,34 @@ public class FragmentEditDataView extends Fragment implements FragmentEditDataCo
                 }
             }
         }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText(title);
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 baseView.finish();
             }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
     public void showExpiredToken(String message) {
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_closedsession);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        Button buttonClosedSession = (Button) dialog.findViewById(R.id.btnVolverAIngresar);
-        buttonClosedSession.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle("Sesión finalizada");
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
                 context.salir();
             }
         });
-        dialog.show();
-
+        d.show();
     }
 
 }

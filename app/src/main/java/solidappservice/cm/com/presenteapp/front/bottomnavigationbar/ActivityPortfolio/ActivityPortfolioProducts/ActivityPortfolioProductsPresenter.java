@@ -28,13 +28,13 @@ public class ActivityPortfolioProductsPresenter implements ActivityPortfolioProd
 
     @Override
     public void fetchPortfolioProducts() {
-        view.hideSectionPortfolioProducts();
-        view.showCircularProgressBar("Consultando portafolio...");
+        view.showProgressDialog("Consultando portafolio...");
         model.getPortfolioProducts(this);
     }
 
     @Override
     public <T> void onSuccess(Response<BaseResponse<T>> response) {
+        view.hideProgressDialog();
         try {
             List<ResponsePortafolio> productosPortafolio = (List<ResponsePortafolio>) response.body().getResultado();
             List<PortafolioPadre> portafolioPadres = new ArrayList<>();
@@ -57,42 +57,36 @@ public class ActivityPortfolioProductsPresenter implements ActivityPortfolioProd
                 portafolioPadre.setPortafolios(portafolios);
                 portafolioPadres.add(portafolioPadre);
             }
-            view.hideCircularProgressBar();
-            view.showSectionPortfolioProducts();
             view.showPortfolioProducts(productosPortafolio, portafolioPadres);
         }catch(Exception ex){
-            view.hideCircularProgressBar();
-            view.showDataFetchError("Lo sentimos", "");
-            view.showErrorWithRefresh();
+            view.showDataFetchError("");
         }
     }
 
     @Override
     public <T> void onExpiredToken(Response<BaseResponse<T>> response) {
-        view.hideCircularProgressBar();
+        view.hideProgressDialog();
         view.showExpiredToken(response.body().getErrorToken());
     }
 
     @Override
     public <T> void onError(Response<BaseResponse<T>> response) {
-        view.hideCircularProgressBar();
+        view.hideProgressDialog();
         if(response != null){
-            view.showDataFetchError("Lo sentimos", response.body().getMensajeErrorUsuario());
+            view.showDataFetchError(response.body().getMensajeErrorUsuario());
         }else{
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
-        view.showErrorWithRefresh();
     }
 
     @Override
     public void onFailure(Throwable t, boolean isErrorTimeOut) {
-        view.hideCircularProgressBar();
+        view.hideProgressDialog();
         if(isErrorTimeOut){
             view.showErrorTimeOut();
         }else{
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
-        view.showErrorWithRefresh();
     }
 
 }

@@ -13,7 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import solidappservice.cm.com.presenteapp.entities.transferencias.response.ResponseTransferenciasPendientes;
 import solidappservice.cm.com.presenteapp.entities.base.BaseRequest;
 import solidappservice.cm.com.presenteapp.entities.base.BaseResponse;
-import solidappservice.cm.com.presenteapp.entities.estadocuenta.response.ResponseProducto;
+import solidappservice.cm.com.presenteapp.entities.estadocuenta.response.ResponseProductos;
 import solidappservice.cm.com.presenteapp.entities.transferencias.request.RequestMakeTransfer;
 import solidappservice.cm.com.presenteapp.entities.transferencias.response.ResponseCuentasInscritas;
 import solidappservice.cm.com.presenteapp.rest.NetworkHelper;
@@ -28,7 +28,7 @@ public class FragmentMakeTransferModel implements FragmentMakeTransferContract.M
     public void getIncompleteTransfers(BaseRequest body, final FragmentMakeTransferContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -41,7 +41,7 @@ public class FragmentMakeTransferModel implements FragmentMakeTransferContract.M
                     if (response.isSuccessful()) {
                         if(response.body().getErrorToken() != null && !response.body().getErrorToken().isEmpty()){
                             listener.onExpiredToken(response);
-                        }else if(response.body().getMensajeErrorUsuario() != null && !response.body().getMensajeErrorUsuario().isEmpty()){
+                        }else if(response.body().getMensajeErrorUsuario()!= null && !response.body().getMensajeErrorUsuario().isEmpty()){
                             listener.onError(response);
                         }else{
                             listener.onSuccessIncompleteTransfers(response);
@@ -55,7 +55,7 @@ public class FragmentMakeTransferModel implements FragmentMakeTransferContract.M
                     if(t instanceof IOException){
                         listener.onFailure(t, true);
                     }else{
-                        listener.onFailure(t, false);
+                        listener.onError(null);
                     }
                 }
             });
@@ -68,7 +68,7 @@ public class FragmentMakeTransferModel implements FragmentMakeTransferContract.M
     public void getRegisteredAccounts(BaseRequest body, final FragmentMakeTransferContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -95,7 +95,7 @@ public class FragmentMakeTransferModel implements FragmentMakeTransferContract.M
                     if(t instanceof IOException){
                         listener.onFailure(t, true);
                     }else{
-                        listener.onFailure(t, false);
+                        listener.onError(null);
                     }
                 }
             });
@@ -108,16 +108,16 @@ public class FragmentMakeTransferModel implements FragmentMakeTransferContract.M
     public void getAccounts(BaseRequest body, final FragmentMakeTransferContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
             ApiPresente service = retrofit.create(ApiPresente.class);
-            Call<BaseResponse<List<ResponseProducto>>> call = service.getAccounts(body);
-            call.enqueue(new Callback<BaseResponse<List<ResponseProducto>>>() {
+            Call<BaseResponse<List<ResponseProductos>>> call = service.getAccounts(body);
+            call.enqueue(new Callback<BaseResponse<List<ResponseProductos>>>() {
 
                 @Override
-                public void onResponse(Call<BaseResponse<List<ResponseProducto>>> call, Response<BaseResponse<List<ResponseProducto>>> response) {
+                public void onResponse(Call<BaseResponse<List<ResponseProductos>>> call, Response<BaseResponse<List<ResponseProductos>>> response) {
                     if (response.isSuccessful()) {
                         if(response.body().getErrorToken() != null && !response.body().getErrorToken().isEmpty()){
                             listener.onExpiredToken(response);
@@ -131,11 +131,11 @@ public class FragmentMakeTransferModel implements FragmentMakeTransferContract.M
                     }
                 }
                 @Override
-                public void onFailure(Call<BaseResponse<List<ResponseProducto>>> call, Throwable t) {
+                public void onFailure(Call<BaseResponse<List<ResponseProductos>>> call, Throwable t) {
                     if(t instanceof IOException){
                         listener.onFailure(t, true);
                     }else{
-                        listener.onFailure(t, false);
+                        listener.onError(null);
                     }
                 }
             });
@@ -154,7 +154,7 @@ public class FragmentMakeTransferModel implements FragmentMakeTransferContract.M
                     .build();
 
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(client)
                     .build();
@@ -168,7 +168,7 @@ public class FragmentMakeTransferModel implements FragmentMakeTransferContract.M
                     if (response.isSuccessful()) {
                         if(response.body().getErrorToken() != null && !response.body().getErrorToken().isEmpty()){
                             listener.onExpiredToken(response);
-                        }else if(response.body().getDescripcionError() != null && !response.body().getDescripcionError().isEmpty()){
+                        }else if(response.body().getMensajeErrorUsuario() != null && !response.body().getMensajeErrorUsuario().isEmpty()){
                             listener.onError(response);
                         }else{
                             listener.onSuccessMakeTransfer(response);
@@ -189,11 +189,7 @@ public class FragmentMakeTransferModel implements FragmentMakeTransferContract.M
                         Response<BaseResponse<String>> response = Response.success(body);
                         listener.onSuccessMakeTransfer(response);
                     }else{
-                        if(t instanceof IOException){
-                            listener.onFailure(t, true);
-                        }else{
-                            listener.onFailure(t, false);
-                        }
+                        listener.onError(null);
                     }
                 }
             });

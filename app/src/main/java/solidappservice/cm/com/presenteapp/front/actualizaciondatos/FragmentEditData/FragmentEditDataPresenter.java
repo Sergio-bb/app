@@ -27,90 +27,88 @@ public class FragmentEditDataPresenter implements FragmentEditDataContract.Prese
 
     @Override
     public void fetchPersonalData(BaseRequest base) {
-        view.hideContentEditData();
-        view.showCircularProgressBar("Validando datos...");
+        view.showProgressDialog("Un momento...");
         model.getPersonalData(base, this);
-    }
-    @Override
-    public <T> void onSuccessPersonalData(Response<BaseResponse<T>> response) {
-        try{
-            ResponseConsultarDatosAsociado datos = (ResponseConsultarDatosAsociado) response.body().getResultado();
-            view.showPersonalData(new DatosAsociado(
-                    datos.getNombreCompleto(),
-                    datos.getDireccion(),
-                    datos.getCelular(),
-                    datos.getEmail(),
-                    datos.getBarrio(),
-                    datos.getIdCiudad(),
-                    datos.getNombreCiudad(),
-                    datos.getIdDepartamento(),
-                    datos.getNombreDepartamento(),
-                    datos.getIdPais(),
-                    datos.getNombrePais()
-            ));
-        } catch(Exception ex){
-            view.hideCircularProgressBar();
-            view.showDataFetchError("Lo sentimos", "");
-        }
     }
 
     @Override
     public void fetchLocations() {
-        view.hideContentEditData();
-        view.showCircularProgressBar("Un momento...");
+        view.showProgressDialog("Un momento...");
         model.getLocations(this);
-    }
-    @Override
-    public <T> void onSuccessLocations(Response<BaseResponse<T>> response) {
-        try{
-            view.showLocations((ResponseUbicaciones) response.body().getResultado());
-        } catch(Exception ex){
-            view.hideCircularProgressBar();
-            view.showDataFetchError("Lo sentimos", "");
-        }
     }
 
     @Override
     public void fetchAddressFormat() {
-        view.hideContentEditData();
-        view.showCircularProgressBar("Un momento...");
+        view.showProgressDialog("Un momento...");
         model.getAddressFormat(this);
     }
+
+    @Override
+    public <T> void onSuccessPersonalData(Response<BaseResponse<T>> response) {
+        view.hideProgressDialog();
+        try{
+            ResponseConsultarDatosAsociado datos = (ResponseConsultarDatosAsociado) response.body().getResultado();
+            view.showPersonalData(new DatosAsociado(
+                datos.getNombreCompleto(),
+                datos.getDireccion(),
+                datos.getCelular(),
+                datos.getEmail(),
+                datos.getBarrio(),
+                datos.getIdCiudad(),
+                datos.getNombreCiudad(),
+                datos.getIdDepartamento(),
+                datos.getNombreDepartamento(),
+                datos.getIdPais(),
+                datos.getNombrePais()
+            ));
+        } catch(Exception ex){
+            view.showDataFetchError("");
+        }
+    }
+
+    @Override
+    public <T> void onSuccessLocations(Response<BaseResponse<T>> response) {
+        view.hideProgressDialog();
+        try{
+            view.showLocations((ResponseUbicaciones) response.body().getResultado());
+        } catch(Exception ex){
+            view.showDataFetchError("");
+        }
+    }
+
     @Override
     public <T> void onSuccessAddressFormat(Response<BaseResponse<T>> response) {
-        view.hideCircularProgressBar();
+        view.hideProgressDialog();
         try{
             view.showAddressFormat((ResponseFormatoDirecciones) response.body().getResultado());
-            view.showContentEditData();
         } catch(Exception ex){
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
     }
 
     @Override
     public <T> void onExpiredToken(Response<BaseResponse<T>> response) {
-        view.hideCircularProgressBar();
+        view.hideProgressDialog();
         view.showExpiredToken(response.body().getErrorToken());
     }
 
     @Override
     public <T> void onError(Response<BaseResponse<T>> response) {
-        view.hideCircularProgressBar();
+        view.hideProgressDialog();
         if(response != null){
-            view.showDataFetchError("Lo sentimos", response.body().getMensajeErrorUsuario());
+            view.showDataFetchError(response.body().getMensajeErrorUsuario());
         }else{
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
     }
 
     @Override
     public void onFailure(Throwable t, boolean isErrorTimeOut) {
-        view.hideCircularProgressBar();
+        view.hideProgressDialog();
         if(isErrorTimeOut){
             view.showErrorTimeOut();
         }else{
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
     }
 }
-

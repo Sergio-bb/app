@@ -1,22 +1,16 @@
 package solidappservice.cm.com.presenteapp.front.login.FragmentForgotPassword;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,8 +25,7 @@ import butterknife.OnClick;
 import solidappservice.cm.com.presenteapp.R;
 import solidappservice.cm.com.presenteapp.entities.login.Request.RequestForgotPassword;
 import solidappservice.cm.com.presenteapp.entities.parametrosgenerales.ResponseMensajesRespuesta;
-import solidappservice.cm.com.presenteapp.front.base.main.ActivityMainView;
-import solidappservice.cm.com.presenteapp.front.tabs.ActivityTabs.ActivityTabsView;
+import solidappservice.cm.com.presenteapp.front.base.ActivityMainView;
 import solidappservice.cm.com.presenteapp.tools.security.Encripcion;
 import solidappservice.cm.com.presenteapp.entities.base.GlobalState;
 
@@ -45,8 +38,7 @@ public class FragmentForgotPasswordView extends Fragment implements FragmentForg
     private FragmentForgotPasswordPresenter presenter;
     private ActivityMainView context;
     private GlobalState state;
-//    private ProgressDialog pd;
-    private Dialog pd;
+    private ProgressDialog pd;
     private FirebaseAnalytics firebaseAnalytics;
 
     @BindView(R.id.txtNumCedula)
@@ -82,16 +74,18 @@ public class FragmentForgotPasswordView extends Fragment implements FragmentForg
         presenter = new FragmentForgotPasswordPresenter(this, new FragmentForgotPasswordModel());
         context = (ActivityMainView) getActivity();
         state = context.getState();
+        pd = new ProgressDialog(context);
         if(context != null){
             context.btn_back.setVisibility(View.VISIBLE);
             context.header.setImageResource(R.drawable.logo_internal);
+            context.btnSalir.setVisibility(View.GONE);
         }
     }
 
     @OnClick(R.id.btnRecuperar)
     public void onClickRecuperar(View v) {
         if(txtNumCedula == null || txtNumCedula.getText() == null || TextUtils.isEmpty(txtNumCedula.getText())){
-            txtNumCedula.setError("Ingresa tu número de cédula");
+            context.makeErrorDialog("Ingresa tu número de cédula");
             return;
         }
         String cedula = txtNumCedula.getText().toString();
@@ -104,43 +98,31 @@ public class FragmentForgotPasswordView extends Fragment implements FragmentForg
             Encripcion encripcion = Encripcion.getInstance();
             presenter.recoverPassword(new RequestForgotPassword(encripcion.encriptar(cedula)));
         }catch (Exception ex){
-            showDataFetchError("Lo sentimos", "");
+            showDataFetchError("");
         }
     }
 
     @Override
     public void resultRecoverPassword(String result){
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_success);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.titleSuccess);
-        titleMessage.setText("Solicitud Enviada");
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.contentSuccess);
-        contentMessage.setText(result);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.buttonClose);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(result);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
                 context.onBackPressed();
-                dialog.dismiss();
             }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
     public void showProgressDialog(String message) {
-        pd = new Dialog(context);
-        pd.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        pd.setCanceledOnTouchOutside(false);
-        pd.setContentView(R.layout.pop_up_loading);
+        pd.setTitle(context.getResources().getString(R.string.app_name));
+        pd.setMessage(message);
+        pd.setIcon(R.mipmap.icon_presente);
         pd.setCancelable(false);
-        pd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView contentMessage = (TextView) pd.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
         pd.show();
     }
 
@@ -159,28 +141,22 @@ public class FragmentForgotPasswordView extends Fragment implements FragmentForg
                 }
             }
         }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText("Lo sentimos");
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
-    public void showDataFetchError(String title, String message) {
+    public void showDataFetchError(String message) {
         if(TextUtils.isEmpty(message)){
             message = "Ha ocurrido un error. Intenta de nuevo y si el error persiste, contacta a PRESENTE.";
             if(state != null && state.getMensajesRespuesta() != null && state.getMensajesRespuesta().size()>0){
@@ -191,24 +167,18 @@ public class FragmentForgotPasswordView extends Fragment implements FragmentForg
                 }
             }
         }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText(title);
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
         });
-        dialog.show();
+        d.show();
     }
 
 //    private void recuperarContrasena(){

@@ -40,7 +40,7 @@ public class ActivityProductRequestDatePresenter implements ActivityProductReque
     }
 
     @Override
-    public void onFailure(Throwable t, boolean isErrorTimeOut) {
+    public void onFailure(Throwable t) {
     }
 
 }

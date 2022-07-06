@@ -1,22 +1,15 @@
 package solidappservice.cm.com.presenteapp.front.estadocuenta.FragmentStatusAccount;
 
-import static solidappservice.cm.com.presenteapp.tools.constants.Constans.ERROR_CONTACTA_PRESENTE;
-
-import android.app.Dialog;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -25,7 +18,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
@@ -40,26 +32,21 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.OnItemClick;
 import solidappservice.cm.com.presenteapp.R;
 import solidappservice.cm.com.presenteapp.adapters.estadocuenta.ProductosAdapter;
+import solidappservice.cm.com.presenteapp.entities.adelantonomina.response.ResponseConsultaAdelantoNomina;
 import solidappservice.cm.com.presenteapp.entities.adelantonomina.request.RequestActualizarAdelantoNomina;
 import solidappservice.cm.com.presenteapp.entities.adelantonomina.request.RequestConsultarAdelantoNomina;
-import solidappservice.cm.com.presenteapp.entities.adelantonomina.response.ResponseConsultaAdelantoNomina;
 import solidappservice.cm.com.presenteapp.entities.base.BaseRequest;
-import solidappservice.cm.com.presenteapp.entities.base.BaseRequestNequi;
-import solidappservice.cm.com.presenteapp.entities.base.GlobalState;
 import solidappservice.cm.com.presenteapp.entities.estadocuenta.dto.ProductosPorTipoDR;
-import solidappservice.cm.com.presenteapp.entities.estadocuenta.response.ResponseProducto;
+import solidappservice.cm.com.presenteapp.entities.estadocuenta.response.ResponseProductos;
 import solidappservice.cm.com.presenteapp.entities.mensajes.request.RequestEnviarMensaje;
 import solidappservice.cm.com.presenteapp.entities.parametrosgenerales.ResponseMensajesRespuesta;
 import solidappservice.cm.com.presenteapp.front.base.ActivityBase;
-import solidappservice.cm.com.presenteapp.front.nequi.transfieredinero.ActivityDialogNequiBalance.ActivityDialogNequiBalanceView;
-import solidappservice.cm.com.presenteapp.front.popups.PopUp;
 import solidappservice.cm.com.presenteapp.front.tabs.ActivityTabs.ActivityTabsView;
-import solidappservice.cm.com.presenteapp.tools.helpers.DialogHelpers;
 import solidappservice.cm.com.presenteapp.tools.security.Encripcion;
+import solidappservice.cm.com.presenteapp.entities.base.GlobalState;
 
 /**
  * CREADO POR JORGE ANDRÉS DAVID CARDONA EL 24/11/2015.
@@ -69,8 +56,8 @@ public class FragmentStatusAccountView extends Fragment implements FragmentStatu
 
     private FragmentStatusAccountPresenter presenter;
     private ActivityBase context;
-    private ActivityTabsView tabsContext;
     private GlobalState state;
+    private ProgressDialog pd;
     private FirebaseAnalytics firebaseAnalytics;
     private ArrayList<ProductosPorTipoDR> tipoDRs;
     private String valorSolicitudAN;
@@ -84,10 +71,6 @@ public class FragmentStatusAccountView extends Fragment implements FragmentStatu
     ProgressBar circularProgressBar;
     @BindView(R.id.text_circular_progress_Bar)
     TextView textCircularProgressBar;
-    @BindView(R.id.imageReferesh)
-    ImageView buttonReferesh;
-    @BindView(R.id.pullToRefresh)
-    SwipeRefreshLayout pullToRefresh;
 
     @Override
     public void onAttach(Context context) {
@@ -115,27 +98,20 @@ public class FragmentStatusAccountView extends Fragment implements FragmentStatu
     protected void setControls() {
         presenter = new FragmentStatusAccountPresenter(this, new FragmentStatusAccountModel());
         context = (ActivityBase) getActivity();
-        tabsContext = (ActivityTabsView) getActivity();
         state = context.getState();
-        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                state.setProductos(null);
-                state.setMovimientos(null);
-                state.setSaldoNequi(null);
-                fetchSalaryAdvanceMovements();
-                pullToRefresh.setRefreshing(false);
-            }
-        });
-        fetchSalaryAdvanceMovements();
+        pd = new ProgressDialog(context);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         GlobalState state = context.getState();
-        if(state == null || state.getUsuario() == null){
+        if (state == null || state.getUsuario() == null) {
             context.salir();
+        } else {
+//            Usuario usuario = state.getUsuario();
+//            new MovimientosANTask().execute(usuario.cedula, usuario.token);
+            fetchSalaryAdvanceMovements();
         }
     }
 
@@ -145,31 +121,22 @@ public class FragmentStatusAccountView extends Fragment implements FragmentStatu
         state.getmTabHost().setCurrentTab(ActivityTabsView.TAB_6_STATUS_ACCOUNT_PRODUCTS_TAG);
     }
 
-    @OnClick(R.id.imageReferesh)
-    public void onClickRefresh(){
-        state.setProductos(null);
-        state.setMovimientos(null);
-        state.setSaldoNequi(null);
-        fetchSalaryAdvanceMovements();
-    }
-
     @Override
-    public void fetchSalaryAdvanceMovements(){
-        try{
+    public void fetchSalaryAdvanceMovements() {
+        try {
             Encripcion encripcion = Encripcion.getInstance();
             presenter.fetchSalaryAdvanceMovements(new BaseRequest(
                     encripcion.encriptar(state.getUsuario().getCedula()),
                     state.getUsuario().getToken()
             ));
-        }catch (Exception ex){
-            showDataFetchError("Lo sentimos", "");
-            showErrorWithRefresh();
+        } catch (Exception ex) {
+            showDataFetchError("");
         }
     }
 
     @Override
-    public void processSalaryAdvancePending(Integer idFlujo, String valorSolicitado){
-        try{
+    public void processSalaryAdvancePending(Integer idFlujo, String valorSolicitado) {
+        try {
             this.valorSolicitudAN = valorSolicitado;
             Encripcion encripcion = Encripcion.getInstance();
             presenter.processSalaryAdvancePending(new RequestConsultarAdelantoNomina(
@@ -177,43 +144,41 @@ public class FragmentStatusAccountView extends Fragment implements FragmentStatu
                     state.getUsuario().getToken(),
                     idFlujo
             ));
-        }catch (Exception ex){
-            showDataFetchError("Lo sentimos", "");
-            showErrorWithRefresh();
+        } catch (Exception ex) {
+            showDataFetchError("");
         }
     }
 
     @Override
-    public void updateSalaryAdvanceStatus(ResponseConsultaAdelantoNomina consulta){
-        try{
+    public void updateSalaryAdvanceStatus(ResponseConsultaAdelantoNomina consulta) {
+        try {
             Encripcion encripcion = Encripcion.getInstance();
             SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
             SimpleDateFormat format2 = new SimpleDateFormat("dd/MM/yyyy");
             presenter.updateSalaryAdvanceStatus(new RequestActualizarAdelantoNomina(
                     encripcion.encriptar(state.getUsuario().getCedula()),
                     state.getUsuario().getToken(),
-                    consulta.v_k_flujo,
+                    Integer.parseInt(consulta.getV_k_flujo()),
                     "C",
-                    consulta.n_error,
-                    consulta.k_numdoc,
-                    format2.format(format1.parse(consulta.f_primera))
+                    consulta.getN_error(),
+                    consulta.getK_numdoc(),
+                    format2.format(format1.parse(consulta.getF_primera()))
             ));
-        }catch (Exception ex){
-            showDataFetchError("Lo sentimos", "");
-            showErrorWithRefresh();
+        } catch (Exception ex) {
+            showDataFetchError("");
         }
     }
 
     @Override
-    public void sendSalaryAdvanceNotification(){
-        try{
+    public void sendSalaryAdvanceNotification() {
+        try {
             Encripcion encripcion = Encripcion.getInstance();
             SimpleDateFormat formatFecha = new SimpleDateFormat("dd/MM/yyyy");
             Date date = new Date();
             String fechaInicio = formatFecha.format(date);
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(date);
-            calendar.add(Calendar.DAY_OF_YEAR , 3);
+            calendar.add(Calendar.DAY_OF_YEAR, 3);
             String fechaFinal = formatFecha.format(calendar.getTime());
             presenter.sendSalaryAdvanceNotification(new RequestEnviarMensaje(
                     encripcion.encriptar(state.getUsuario().getCedula()),
@@ -221,163 +186,91 @@ public class FragmentStatusAccountView extends Fragment implements FragmentStatu
                     fechaInicio,
                     fechaFinal,
                     "Solicitud de adelanto de nómina",
-                    "El adelanto de nómina por el valor de $"+valorSolicitudAN+" ha sido exitoso, válida la transacción en los movimientos de tu cuenta de nómina."
+                    "El adelanto de nómina por el valor de $" + valorSolicitudAN + " ha sido exitoso, válida la transacción en los movimientos de tu cuenta de nómina."
             ));
-        }catch (Exception ex){
-            showDataFetchError("Lo sentimos", "");
-            showErrorWithRefresh();
+        } catch (Exception ex) {
+            showDataFetchError("");
         }
     }
 
     @Override
-    public void fetchAccountStatus(){
-        try{
-            state.setProductos(null);
-            if(state != null && state.getProductos() != null && state.getProductos().size()>0){
+    public void fetchAccountStatus() {
+        try {
+            if (state != null && state.getProductos() != null && state.getProductos().size() > 0) {
                 hideCircularProgressBar();
-                showSectionAcccountStatus();
                 showAccountStatus(state.getProductos());
-                fetchNequiBalance();
-            }else{
-                state.setMovimientos(null);
+            } else {
                 Encripcion encripcion = Encripcion.getInstance();
                 presenter.fetchAccountStatus(new BaseRequest(
                         encripcion.encriptar(state.getUsuario().getCedula()),
                         state.getUsuario().getToken()
                 ));
             }
-        }catch (Exception ex){
-            showDataFetchError("Lo sentimos", "");
-            showErrorWithRefresh();
+        } catch (Exception ex) {
+            showDataFetchError("");
         }
+        /*try{
+            Encripcion encripcion = Encripcion.getInstance();
+            presenter.fetchAccountStatus(new BaseRequest(
+                    encripcion.encriptar(state.getUsuario().getCedula()),
+                    state.getUsuario().getToken()
+            ));
+        }catch (Exception ex){
+            showDataFetchError("");
+        }*/
     }
 
     @Override
-    public void showAccountStatus(List<ResponseProducto> cuentas){
+    public void showAccountStatus(List<ResponseProductos> cuentas) {
         try {
+            list_productos.setVisibility(View.VISIBLE);
             state.setProductos(cuentas);
-            this.tipoDRs = new ArrayList<>();
+            ArrayList<ProductosPorTipoDR> productosPorTipoDRs = new ArrayList<>();
 
             //CREAMOS UN MAP PARA ORGANIZAR LOS PRODUCTOS POR N_TIPODR
-            Map<String, ArrayList<ResponseProducto>> mapTipoDRs = new HashMap<>();
-            for (ResponseProducto p : cuentas) {
-                if (!mapTipoDRs.containsKey(p.getN_tipodr())) {
-                    mapTipoDRs.put(p.getN_tipodr(), new ArrayList<ResponseProducto>());
+            Map<String, ArrayList<ResponseProductos>> tipoDRs = new HashMap<>();
+            for (ResponseProductos p : cuentas) {
+                if (!tipoDRs.containsKey(p.getN_tipodr())) {
+                    tipoDRs.put(p.getN_tipodr(), new ArrayList<ResponseProductos>());
                 }
                 p.setExpanded(false);
-                mapTipoDRs.get(p.getN_tipodr()).add(p);
+                tipoDRs.get(p.getN_tipodr()).add(p);
             }
 
             //RECORREMOS EL MAP, PARA CREAR LOS OBJETOS ProductoPorTipoDR
-            final Iterator<String> i = mapTipoDRs.keySet().iterator();
+            final Iterator<String> i = tipoDRs.keySet().iterator();
             while (i.hasNext()) {
                 ProductosPorTipoDR p = new ProductosPorTipoDR();
                 p.setN_tipodr(i.next());
-                p.setProductos(mapTipoDRs.get(p.getN_tipodr()));;
-                this.tipoDRs.add(p);
+                p.setProductos(tipoDRs.get(p.getN_tipodr()));
+                ;
+                productosPorTipoDRs.add(p);
             }
-            ProductosAdapter pa = new ProductosAdapter(context, this.tipoDRs);
+            this.tipoDRs = productosPorTipoDRs;
+            ProductosAdapter pa = new ProductosAdapter(context, productosPorTipoDRs);
             list_productos.setAdapter(pa);
         } catch (Exception ex) {
-            showDataFetchError("Lo sentimos", "");
-            showErrorWithRefresh();
+            context.makeErrorDialog("Error cargando los productos");
         }
     }
 
     @Override
-    public void fetchNequiBalance() {
-        if(state != null && state.isActiveStateNequiBalance()){
-            if(state != null && !TextUtils.isEmpty(state.getSaldoNequi())){
-                showNequiBalance(state.getSaldoNequi());
-                hideCircularProgressBar();
-                showSectionAcccountStatus();
-            }else{
-                presenter.fetchNequiBalance(new BaseRequestNequi(
-                        Encripcion.getInstance().encriptar(state.getUsuario().getCedula()),
-                        state.getUsuario().getToken(),
-                        ""
-                ));
-            }
-        }else{
-            hideCircularProgressBar();
-            showSectionAcccountStatus();
-        }
+    public void hideAccountStatus() {
+        list_productos.setVisibility(View.GONE);
     }
 
     @Override
-    public void fetchAuthorizationNequiBalance(){
-        try {
-            presenter.fetchAuthorizationNequiBalance(new BaseRequestNequi(
-                    Encripcion.getInstance().encriptar(state.getUsuario().getCedula()),
-                    state.getUsuario().getToken(),
-                    ""
-            ));
-        } catch (Exception ex) {
-            if(state != null){
-                state.setRefusedAuthorizationNequiBalance(false);
-            }
-            showNequiBalance("");
-        }
+    public void showProgressDialog(String message) {
+        pd.setTitle(context.getResources().getString(R.string.app_name));
+        pd.setMessage(message);
+        pd.setIcon(R.mipmap.icon_presente);
+        pd.setCancelable(false);
+        pd.show();
     }
 
     @Override
-    public void resultGetAuthorizationNequiBalance(String status){
-        switch(status){
-            case "0":
-                break;
-            case "1":
-                if(state != null){
-                    state.setRefusedAuthorizationNequiBalance(false);
-                }
-                break;
-            case "2":
-            case "3":
-                if(state != null){
-                    state.setRefusedAuthorizationNequiBalance(true);
-                }
-                break;
-            default:
-                if(state != null && !state.isRefusedAuthorizationNequiBalance() && !state.isAlreadyOpenDialogNequiBalance()){
-                    state.setAlreadyOpenDialogNequiBalance(true);
-                    showDialogGetBalanceNequi();
-                }
-                break;
-        }
-    }
-
-    @Override
-    public void showNequiBalance(String saldoNequi) {
-        try {
-            if (list_productos != null) {
-                if(context.tryParseDouble(saldoNequi)){
-                    ArrayList<ResponseProducto> productos = new ArrayList<ResponseProducto>();
-                    productos.add(new ResponseProducto(
-                            "Nequi",
-                            "Nequi general",
-                            "Nequi",
-                            Double.valueOf(saldoNequi).intValue()
-                    ));
-                    tipoDRs.add(new ProductosPorTipoDR("Nequi", productos));
-                    list_productos.deferNotifyDataSetChanged();
-                }
-            }
-        } catch (Exception ex) {}
-    }
-
-    @Override
-    public void showDialogGetBalanceNequi(){
-        Intent intent = new Intent(context, ActivityDialogNequiBalanceView.class);
-        startActivity(intent);
-    }
-
-    @Override
-    public void showSectionAcccountStatus(){
-        pullToRefresh.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void hideSectionAcccountStatus(){
-        pullToRefresh.setVisibility(View.GONE);
+    public void hideProgressDialog() {
+        pd.dismiss();
     }
 
     @Override
@@ -392,84 +285,451 @@ public class FragmentStatusAccountView extends Fragment implements FragmentStatu
     }
 
     @Override
-    public void showErrorWithRefresh(){
-        list_productos.setVisibility(View.GONE);
-        layoutCircularProgressBar.setVisibility(View.VISIBLE);
-        circularProgressBar.setVisibility(View.GONE);
-        textCircularProgressBar.setText("Ha ocurrido un error, inténtalo de nuevo ");
-        buttonReferesh.setVisibility(View.VISIBLE);
-    }
-
-    @Override
     public void showErrorTimeOut() {
-        String message = ERROR_CONTACTA_PRESENTE;
-        if(state != null && state.getMensajesRespuesta() != null && state.getMensajesRespuesta().size()>0){
-            for(ResponseMensajesRespuesta rm : state.getMensajesRespuesta()){
-                if(rm.getIdMensaje() == 6){
+        String message = "Ha ocurrido un error. Intenta de nuevo y si el error persiste, contacta a PRESENTE.";
+        if (state != null && state.getMensajesRespuesta() != null && state.getMensajesRespuesta().size() > 0) {
+            for (ResponseMensajesRespuesta rm : state.getMensajesRespuesta()) {
+                if (rm.getIdMensaje() == 6) {
                     message = rm.getMensaje();
                 }
             }
         }
-        final Dialog dialog = new Dialog(tabsContext);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText("Lo sentimos");
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(view -> dialog.dismiss());
-        dialog.show();
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                context.onBackPressed();
+                dialog.dismiss();
+            }
+        });
+        d.show();
     }
 
+
     @Override
-    public void showDataFetchError(String title, String message){
-        if(TextUtils.isEmpty(message)){
-            message = ERROR_CONTACTA_PRESENTE;
-            if(state != null && state.getMensajesRespuesta() != null && state.getMensajesRespuesta().size()>0){
-                for(ResponseMensajesRespuesta rm : state.getMensajesRespuesta()){
-                    if(rm.getIdMensaje() == 7){
+    public void showDataFetchError(String message) {
+        if (TextUtils.isEmpty(message)) {
+            message = "Ha ocurrido un error. Intenta de nuevo y si el error persiste, contacta a PRESENTE.";
+            if (state != null && state.getMensajesRespuesta() != null && state.getMensajesRespuesta().size() > 0) {
+                for (ResponseMensajesRespuesta rm : state.getMensajesRespuesta()) {
+                    if (rm.getIdMensaje() == 7) {
                         message = rm.getMensaje();
                     }
                 }
             }
         }
-        final Dialog dialog = new Dialog(tabsContext);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText(title);
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
+                context.onBackPressed();
             }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
     public void showExpiredToken(String message) {
-        final Dialog dialog = new Dialog(tabsContext);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_closedsession);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        Button buttonClosedSession = (Button) dialog.findViewById(R.id.btnVolverAIngresar);
-        buttonClosedSession.setOnClickListener(view -> {
-            dialog.dismiss();
-            context.salir();
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle("Sesión finalizada");
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                context.salir();
+            }
         });
-        dialog.show();
+        d.show();
     }
+
+    //Obtiene los movimientos de adelanto de nomina
+//    private class MovimientosANTask extends AsyncTask<String, String, String> {
+//
+//        @Override
+//        protected void onPreExecute() {
+//            pd.setTitle(context.getResources().getString(R.string.app_name));
+//            pd.setMessage("Actualizando estado de cuenta...");
+//            pd.setIcon(R.mipmap.icon_presente);
+//            pd.setCancelable(false);
+//            pd.show();
+//        }
+//
+//        @Override
+//        protected String doInBackground(String... params) {
+//            try {
+//                NetworkHelper networkHelper = new NetworkHelper();
+//                Encripcion encripcion = Encripcion.getInstance();
+//                JSONObject param = new JSONObject();
+//                param.put("cedula", encripcion.encriptar(params[0]));
+//                param.put("token", params[1]);
+//                return networkHelper.writeService(param, SincroHelper.OBTENER_MOVIMIENTOS_ADELANTO_NOMINA);
+//            } catch (Exception e) {
+//                return e.getMessage();
+//            }
+//        }
+//
+//        @Override
+//        protected void onProgressUpdate(String... values) {
+//            pd.setMessage(values[0]);
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            super.onPostExecute(result);
+//            procesarJsonMovimientosAN(result);
+//        }
+//    }
+//
+//    private void procesarJsonMovimientosAN(String jsonRespuesta) {
+//        try {
+//            ArrayList<ResponseMovimientos> listamovimientos = SincroHelper.procesarJsonMovimientosAN(jsonRespuesta);
+//
+//            if(listamovimientos != null && listamovimientos.size() > 0){
+//
+//                boolean pendiente = false;
+//                String numeroflujo = "";
+//
+//                for (ResponseMovimientos m : listamovimientos) {
+//                    ResponseMovimientos movimientos = new ResponseMovimientos();
+//                    if (m.getI_estado().equals("A")) {
+//                        pendiente = true;
+//                        valorSolicitudAN = m.getV_solicitado().toString();
+//                        numeroflujo = m.getK_flujo().toString();
+//                    }
+//                }
+//
+//                if(pendiente){
+//                    GlobalState state = context.getState();
+//                    Usuario usuario = state.getUsuario();
+//                    new ConsultaSolicitudANTask().execute(usuario.cedula, usuario.token, numeroflujo);
+//                } else {
+//                    actualizarEstadoCuenta();
+//                }
+//
+//            } else {
+//                actualizarEstadoCuenta();
+//            }
+//
+//        } catch (ErrorTokenException e) {
+//            AlertDialog.Builder d = new AlertDialog.Builder(context);
+//            d.setTitle("Sesión finalizada");
+//            d.setIcon(R.mipmap.icon_presente);
+//            d.setMessage(e.getMessage());
+//            d.setCancelable(false);
+//            d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface dialog, int id) {
+//                    context.salir();
+//                }
+//            });
+//            d.show();
+//        } catch (Exception e) {
+//            context.makeErrorDialog(e.getMessage());
+//        }
+//    }
+//
+//
+//    //Consulta el estado de la solicitud de adelanto nomina si existe alguna en proceso
+//    private class ConsultaSolicitudANTask extends AsyncTask<String, String, String> {
+//
+//        @Override
+//        protected String doInBackground(String... params) {
+//            try {
+//                NetworkHelper networkHelper = new NetworkHelper();
+//                Encripcion encripcion = Encripcion.getInstance();
+//                JSONObject param = new JSONObject();
+//                param.put("cedula", encripcion.encriptar(params[0]));
+//                param.put("token", params[1]);
+//                param.put("v_k_flujo", Integer.parseInt(params[2]));
+//                return networkHelper.writeService(param, SincroHelper.CONSULTAR_ADELANTAR_NOMINA);
+//            } catch (Exception e) {
+//                return e.getMessage();
+//            }
+//        }
+//
+//        @Override
+//        protected void onProgressUpdate(String... values) {
+//            pd.setMessage(values[0]);
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            super.onPostExecute(result);
+//            procesarJsonConsultaSolicitudAN(result);
+//        }
+//    }
+//
+//    private void procesarJsonConsultaSolicitudAN(String jsonRespuesta) {
+//        try {
+//            AdelantoNominaConsulta adelanto = SincroHelper.procesarJsonConsultaSolicitudAN(jsonRespuesta);
+//
+//            if(adelanto != null){
+//                if(!adelanto.n_resultado.equals("ERROR")){
+//
+//                    GlobalState state = context.getState();
+//                    Usuario usuario = state.getUsuario();
+//                    Encripcion encripcion = Encripcion.getInstance();
+//
+//                    SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+//                    SimpleDateFormat format2 = new SimpleDateFormat("dd/MM/yyyy");
+//
+//                    JSONObject param = new JSONObject();
+//                    param.put("cedula", encripcion.encriptar(usuario.cedula));
+//                    param.put("token", usuario.token);
+//                    param.put("k_flujo", adelanto.v_k_flujo);
+//                    param.put("i_estado", "C");
+//                    param.put("n_error", adelanto.n_error);
+//                    param.put("k_numdoc", adelanto.k_numdoc);
+//                    param.put("f_primcuota", format2.format(format1.parse(adelanto.f_primera)));
+//                    new ActualizarAdelantoNominaTask().execute(param);
+//                } else {
+//                    actualizarEstadoCuenta();
+//                }
+//            } else {
+//                actualizarEstadoCuenta();
+//            }
+//
+//        } catch (ErrorTokenException e) {
+//            AlertDialog.Builder d = new AlertDialog.Builder(context);
+//            d.setTitle("Sesión finalizada");
+//            d.setIcon(R.mipmap.icon_presente);
+//            d.setMessage(e.getMessage());
+//            d.setCancelable(false);
+//            d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface dialog, int id) {
+//                    context.salir();
+//                }
+//            });
+//            d.show();
+//        } catch (Exception e) {
+//            context.makeErrorDialog(e.getMessage());
+//        }
+//    }
+//
+//
+//
+//
+//
+//    //Actualiza la tabla de adelanto de nomina en caso que ya se hubiera realizado la solicitud
+//    private class ActualizarAdelantoNominaTask extends AsyncTask<JSONObject, String, String> {
+//
+//        @Override
+//        protected String doInBackground(JSONObject... params) {
+//            try {
+//                NetworkHelper networkHelper = new NetworkHelper();
+//                return networkHelper.writeService(params[0], SincroHelper.ACTUALIZAR_ADELANTAR_NOMINA);
+//            } catch (Exception e) {
+//                return e.getMessage();
+//            }
+//        }
+//
+//        @Override
+//        protected void onProgressUpdate(String... values) {
+//            pd.setMessage(values[0]);
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            super.onPostExecute(result);
+//            procesarJsonActualizarAdelantoNomina(result);
+//        }
+//    }
+//
+//    private void procesarJsonActualizarAdelantoNomina(String jsonRespuesta) {
+//        try {
+//            String respuesta = SincroHelper.procesarJsonActualizarAN(jsonRespuesta);
+//
+//            if(respuesta.equals("OK")){
+//
+//                GlobalState state = context.getState();
+//                Usuario usuario = state.getUsuario();
+//                Encripcion encripcion = Encripcion.getInstance();
+//
+//                SimpleDateFormat formatFecha = new SimpleDateFormat("dd/MM/yyyy");
+//                Date date = new Date();
+//
+//                String fechaInicio = formatFecha.format(date);
+//                Calendar calendar = Calendar.getInstance();
+//                calendar.setTime(date);
+//                calendar.add(Calendar.DAY_OF_YEAR , 3);
+//                String fechaFinal = formatFecha.format(calendar.getTime());
+//
+//                JSONObject paramMensaje = new JSONObject();
+//                paramMensaje.put("cedula", encripcion.encriptar(usuario.cedula));
+//                paramMensaje.put("token", usuario.token);
+//                paramMensaje.put("f_inicio", fechaInicio);
+//                paramMensaje.put("f_final", fechaFinal);
+//                paramMensaje.put("n_tipo", "Solicitud de adelanto de nómina ");
+//                paramMensaje.put("n_mensaj", "El adelanto de nómina por el valor de $"+valorSolicitudAN+" ha sido exitoso, válida la transacción en los movimientos de tu cuenta de nómina.");
+//                new EnviarNotificacionANTask().execute(paramMensaje);
+//            }else{
+//                actualizarEstadoCuenta();
+//            }
+//
+//        } catch (Exception e) {
+//            context.makeErrorDialog(e.getMessage());
+//        }
+//    }
+//
+//
+//    private class EnviarNotificacionANTask extends AsyncTask<JSONObject, String, String> {
+//
+//        @Override
+//        protected String doInBackground(JSONObject... params) {
+//            try {
+//                NetworkHelper networkHelper = new NetworkHelper();
+//                return networkHelper.writeService(params[0], SincroHelper.ENVIAR_NOTIFICACION_ADELANTO_NOMINA);
+//
+//            } catch (Exception e) {
+//                return e.getMessage();
+//            }
+//        }
+//
+//        @Override
+//        protected void onProgressUpdate(String... values) {
+//            pd.setMessage(values[0]);
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            super.onPostExecute(result);
+//            procesarResultNotificacionReposicionTarjeta(result);
+//            pd.dismiss();
+//        }
+//    }
+//
+//    private void procesarResultNotificacionReposicionTarjeta(String jsonRequisitos) {
+//        try {
+//
+//            String respuesta = SincroHelper.procesarJsonNotificacionInbox(jsonRequisitos);
+//            actualizarEstadoCuenta();
+//
+//        } catch (ErrorTokenException e) {
+//            AlertDialog.Builder d = new AlertDialog.Builder(context);
+//            d.setTitle("Sesión finalizada");
+//            d.setIcon(R.mipmap.icon_presente);
+//            d.setMessage(e.getMessage());
+//            d.setCancelable(false);
+//            d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface dialog, int id) {
+//                    context.salir();
+//                }
+//            });
+//            d.show();
+//        } catch (Exception ex) {
+//            context.makeErrorDialog(ex.getMessage());
+//        }
+//    }
+//
+//
+//    //Actualiza el estado de cuenta
+//    private void actualizarEstadoCuenta(){
+//        GlobalState state = context.getState();
+//        Usuario usuario = state.getUsuario();
+//        new EstadoCuentaTask().execute(usuario.cedula, usuario.token);
+//    }
+//
+//
+//    private void cargarProductos(ArrayList<ResponseProducto> productos) {
+//        try {
+//            ArrayList<ProductosPorTipoDR> productosPorTipoDRs = new ArrayList<>();
+//
+//            //CREAMOS UN MAP PARA ORGANIZAR LOS PRODUCTOS POR N_TIPODR
+//            Map<String, ArrayList<ResponseProducto>> tipoDRs = new HashMap<>();
+//            for (ResponseProducto p : productos) {
+//                if (!tipoDRs.containsKey(p.getN_tipodr())) {
+//                    tipoDRs.put(p.getN_tipodr(), new ArrayList<ResponseProducto>());
+//                }
+//                p.setExpanded(false);
+//                tipoDRs.get(p.getN_tipodr()).add(p);
+//            }
+//
+//            //RECORREMOS EL MAP, PARA CREAR LOS OBJETOS ProductoPorTipoDR
+//            final Iterator<String> i = tipoDRs.keySet().iterator();
+//            while (i.hasNext()) {
+//                ProductosPorTipoDR p = new ProductosPorTipoDR();
+//                p.n_tipodr = i.next();
+//                p.productos = tipoDRs.get(p.n_tipodr);
+//                productosPorTipoDRs.add(p);
+//            }
+//            this.tipoDRs = productosPorTipoDRs;
+//            ProductosAdapter pa = new ProductosAdapter(context, productosPorTipoDRs);
+//            list_productos.setAdapter(pa);
+//        } catch (Exception ex) {
+//            context.makeErrorDialog("Error cargando los productos");
+//        }
+//    }
+//
+//    private class EstadoCuentaTask extends AsyncTask<String, String, String> {
+//
+//        String cedula = null;
+//        String token = null;
+//
+//        @Override
+//        protected void onPreExecute() {
+//            pd.setTitle(context.getResources().getString(R.string.app_name));
+//            pd.setMessage("Actualizando estado de cuenta...");
+//            pd.setIcon(R.mipmap.icon_presente);
+//            pd.setCancelable(false);
+//            pd.show();
+//        }
+//
+//        @Override
+//        protected String doInBackground(String... params) {
+//            try {
+//                NetworkHelper networkHelper = new NetworkHelper();
+//                Encripcion encripcion = Encripcion.getInstance();
+//                JSONObject param = new JSONObject();
+//                param.put("cedula", cedula = encripcion.encriptar(params[0]));
+//                param.put("token", token = params[1]);
+////                return networkHelper.writeService(param, SincroHelper.ESTADO_CUENTA);
+//                return networkHelper.writeService(param, SincroHelper.CONSULTAR_CUENTAS);
+//            } catch (Exception e) {
+//                return e.getMessage();
+//            }
+//        }
+//
+//        @Override
+//        protected void onProgressUpdate(String... values) {
+//            pd.setMessage(values[0]);
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            super.onPostExecute(result);
+//            pd.dismiss();
+//            procesarJsonProductos(result);
+//        }
+//    }
+//
+//    private void procesarJsonProductos(String jsonRespuesta) {
+//        try {
+//            ArrayList<ResponseProducto> productos = SincroHelper.procesarJsonEstadoCuenta(jsonRespuesta);
+//            cargarProductos(productos);
+//            context.getState().setProductos(productos);
+//        } catch (ErrorTokenException e) {
+//            AlertDialog.Builder d = new AlertDialog.Builder(context);
+//            d.setTitle("Sesión finalizada");
+//            d.setIcon(R.mipmap.icon_presente);
+//            d.setMessage(e.getMessage());
+//            d.setCancelable(false);
+//            d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface dialog, int id) {
+//                    context.salir();
+//                }
+//            });
+//            d.show();
+//        } catch (Exception e) {
+//            context.makeErrorDialog(e.getMessage());
+//        }
+//    }
 }

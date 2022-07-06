@@ -1,25 +1,16 @@
 package solidappservice.cm.com.presenteapp.front.bottomnavigationbar.ActivityDirectory;
 
-import android.app.Dialog;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,26 +34,17 @@ public class ActivityDirectoryView extends ActivityBase implements ActivityDirec
     private ActivityDirectoryPresenter presenter;
     private ActivityBase context;
     private GlobalState state;
+    private ProgressDialog pd;
     private List<ResponseDirectorio> directorios;
     private ResponseDirectorio contactoDirectorio;
 
     public static final int MY_PERMISSIONS_REQUEST_CALL_PHONE = 98;
 
-    @BindView(R.id.btn_back)
-    ImageButton btnBack;
     @BindView(R.id.list_directorio)
     ListView list_directorio;
+    @BindView(R.id.btn_back)
+    ImageButton btnBack;
 
-    @BindView(R.id.layout_circular_progress_bar)
-    LinearLayout layoutCircularProgressBar;
-    @BindView(R.id.circular_progress_bar)
-    ProgressBar circularProgressBar;
-    @BindView(R.id.text_circular_progress_Bar)
-    TextView textCircularProgressBar;
-    @BindView(R.id.imageReferesh)
-    ImageView buttonReferesh;
-    @BindView(R.id.pullToRefresh)
-    SwipeRefreshLayout pullToRefresh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,14 +59,7 @@ public class ActivityDirectoryView extends ActivityBase implements ActivityDirec
         presenter = new ActivityDirectoryPresenter(this, new ActivityDirectoryModel());
         context = this;
         state = context.getState();
-        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                state.setDirectorios(null);
-                fetchDirectory();
-                pullToRefresh.setRefreshing(false);
-            }
-        });
+        pd = new ProgressDialog(context);
     }
 
     @Override
@@ -94,13 +69,14 @@ public class ActivityDirectoryView extends ActivityBase implements ActivityDirec
         if(state == null){
             context.salir();
         }else {
-            fetchDirectory();
+            if (context.getState().getDirectorios() == null ||
+                    context.getState().getDirectorios().size() == 0) {
+                presenter.fetchDirectory();
+            }else{
+                directorios = context.getState().getDirectorios();
+                showDirectory(directorios);
+            }
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        finish();
     }
 
     @OnClick(R.id.btn_back)
@@ -108,10 +84,9 @@ public class ActivityDirectoryView extends ActivityBase implements ActivityDirec
         onBackPressed();
     }
 
-    @OnClick(R.id.imageReferesh)
-    public void onClickRefresh(){
-        state.setDirectorios(null);
-        fetchDirectory();
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 
     @OnItemClick(R.id.list_directorio)
@@ -123,35 +98,14 @@ public class ActivityDirectoryView extends ActivityBase implements ActivityDirec
     }
 
     @Override
-    public void fetchDirectory(){
-        if (state.getDirectorios() == null || state.getDirectorios().size() == 0) {
-            presenter.fetchDirectory();
-        }else{
-            showDirectory(state.getDirectorios());
-        }
-    }
-
-    @Override
     public void showDirectory(List<ResponseDirectorio> directorios) {
         try {
-            if(directorios != null && directorios.size()>0){
-                hideCircularProgressBar();
-                showSectionDirectory();
-                this.directorios = directorios;
-                state.setDirectorios(directorios);
-                DirectorioAdapter pa = new DirectorioAdapter(context, directorios);
-                list_directorio.setAdapter(pa);;
-            }else{
-                hideSectionDirectory();
-                textCircularProgressBar.setText("No hay datos disponibles");
-                circularProgressBar.setVisibility(View.GONE);
-                buttonReferesh.setVisibility(View.GONE);
-                layoutCircularProgressBar.setVisibility(View.VISIBLE);
-                pullToRefresh.setVisibility(View.GONE);
-            }
+            if(directorios == null) directorios = new ArrayList<>();
+            this.directorios = directorios;
+            DirectorioAdapter pa = new DirectorioAdapter(context, directorios);
+            list_directorio.setAdapter(pa);
         } catch (Exception ex) {
-            showDataFetchError("Lo sentimos", "");
-            showErrorWithRefresh();
+            context.makeErrorDialog("Error cargando el directorio");
         }
     }
 
@@ -163,37 +117,22 @@ public class ActivityDirectoryView extends ActivityBase implements ActivityDirec
             call.setData(Uri.parse(uri));
             startActivity(call);
         } catch (Exception e){
-            showDataFetchError("Lo sentimos", "");
+            context.makeDialog("Erro haciendo la llamada: " + e.toString());
         }
     }
 
     @Override
-    public void showSectionDirectory(){
-        pullToRefresh.setVisibility(View.VISIBLE);
-    }
-    @Override
-    public void hideSectionDirectory(){
-        pullToRefresh.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showCircularProgressBar(String textProgressBar) {
-        layoutCircularProgressBar.setVisibility(View.VISIBLE);
-        textCircularProgressBar.setText(textProgressBar);
+    public void showProgressDialog(String message) {
+        pd.setTitle(context.getResources().getString(R.string.app_name));
+        pd.setMessage(message);
+        pd.setIcon(R.mipmap.icon_presente);
+        pd.setCancelable(false);
+        pd.show();
     }
 
     @Override
-    public void hideCircularProgressBar() {
-        layoutCircularProgressBar.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showErrorWithRefresh(){
-        pullToRefresh.setVisibility(View.GONE);
-        layoutCircularProgressBar.setVisibility(View.VISIBLE);
-        circularProgressBar.setVisibility(View.GONE);
-        textCircularProgressBar.setText("Ha ocurrido un error, inténtalo de nuevo ");
-        buttonReferesh.setVisibility(View.VISIBLE);
+    public void hideProgressDialog() {
+        pd.dismiss();
     }
 
     @Override
@@ -206,28 +145,23 @@ public class ActivityDirectoryView extends ActivityBase implements ActivityDirec
                 }
             }
         }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText("Lo sentimos");
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
+                finish();
             }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
-    public void showDataFetchError(String title, String message) {
+    public void showDataFetchError(String message) {
         if(TextUtils.isEmpty(message)){
             message = "Ha ocurrido un error. Intenta de nuevo y si el error persiste, contacta a PRESENTE.";
             if(state != null && state.getMensajesRespuesta() != null && state.getMensajesRespuesta().size()>0){
@@ -238,44 +172,101 @@ public class ActivityDirectoryView extends ActivityBase implements ActivityDirec
                 }
             }
         }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText(title);
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
+                finish();
             }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
     public void showExpiredToken(String message) {
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_closedsession);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        Button buttonClosedSession = (Button) dialog.findViewById(R.id.btnVolverAIngresar);
-        buttonClosedSession.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle("Sesión finalizada");
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
                 context.salir();
             }
         });
-        dialog.show();
-
+        d.show();
     }
+
+//    private void cargarDirectorio(ArrayList<Directorio> directorio) {
+//        try {
+//            if(directorio == null) directorio = new ArrayList<>();
+//            DirectorioAdapter pa = new DirectorioAdapter(context, directorio);
+//            list_directorio.setAdapter(pa);
+//        } catch (Exception ex) {
+//            context.makeErrorDialog("Error cargando los productos");
+//        }
+//    }
+
+//    private void call(Directorio dir){
+//        try{
+//            String uri = "tel:" + dir.getN_teleusu().trim();
+//            Intent call = new Intent(Intent.ACTION_DIAL);
+//            call.setData(Uri.parse(uri));
+//            startActivity(call);
+//
+//        } catch (Exception e){
+//            context.makeDialog("Erro haciendo la llamada: " + e.toString());
+//        }
+//    }
+
+
+//    private class DirectorioTask extends AsyncTask<String, String, String> {
+//
+//        protected void onPreExecute() {
+//            pd.setTitle(context.getResources().getString(R.string.app_name));
+//            pd.setMessage("Consultando directorio...");
+//            pd.setIcon(R.mipmap.icon_presente);
+//            pd.setCancelable(false);
+//            pd.show();
+//        }
+//
+//        @Override
+//        protected void onProgressUpdate(String... values) {
+//            pd.setMessage(values[0]);
+//        }
+//
+//        @Override
+//        protected String doInBackground(String... params) {
+//            try {
+//                NetworkHelper networkHelper = new NetworkHelper();
+//                return networkHelper.readService(SincroHelper.DIRECTORIO);
+//            } catch (Exception e) {
+//                return e.getMessage();
+//            }
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            super.onPostExecute(result);
+//            pd.dismiss();
+//            procesarResultDirectorio(result);
+//        }
+//    }
+//
+//    private void procesarResultDirectorio(String result){
+//        try{
+//            ArrayList<Directorio> list = SincroHelper.procesarJsonDirectorio(result);
+//            context.getState().setDirectorios(list);
+//            directorios = list;
+//            cargarDirectorio(directorios);
+//        }catch (Exception ex){
+//            makeErrorDialog(ex.getMessage());
+//        }
+//    }
 
 }

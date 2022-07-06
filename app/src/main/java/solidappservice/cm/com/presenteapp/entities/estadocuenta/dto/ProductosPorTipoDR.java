@@ -2,7 +2,7 @@ package solidappservice.cm.com.presenteapp.entities.estadocuenta.dto;
 
 import java.util.ArrayList;
 
-import solidappservice.cm.com.presenteapp.entities.estadocuenta.response.ResponseProducto;
+import solidappservice.cm.com.presenteapp.entities.estadocuenta.response.ResponseProductos;
 
 /**
  * CREADO POR JORGE ANDRÉS DAVID CARDONA EL 26/11/2015.
@@ -10,12 +10,12 @@ import solidappservice.cm.com.presenteapp.entities.estadocuenta.response.Respons
 public class ProductosPorTipoDR {
 
     private String n_tipodr;
-    private ArrayList<ResponseProducto> productos;
+    private ArrayList<ResponseProductos> productos;
 
     public ProductosPorTipoDR() {
     }
 
-    public ProductosPorTipoDR(String n_tipodr, ArrayList<ResponseProducto> productos) {
+    public ProductosPorTipoDR(String n_tipodr, ArrayList<ResponseProductos> productos) {
         this.n_tipodr = n_tipodr;
         this.productos = productos;
     }
@@ -28,11 +28,11 @@ public class ProductosPorTipoDR {
         this.n_tipodr = n_tipodr;
     }
 
-    public ArrayList<ResponseProducto> getProductos() {
+    public ArrayList<ResponseProductos> getProductos() {
         return productos;
     }
 
-    public void setProductos(ArrayList<ResponseProducto> productos) {
+    public void setProductos(ArrayList<ResponseProductos> productos) {
         this.productos = productos;
     }
 }

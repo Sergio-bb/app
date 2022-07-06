@@ -6,7 +6,7 @@ import retrofit2.Response;
 import solidappservice.cm.com.presenteapp.entities.base.BaseResponse;
 import solidappservice.cm.com.presenteapp.entities.estadocuenta.request.RequestMovimientosProducto;
 import solidappservice.cm.com.presenteapp.entities.estadocuenta.response.ResponseMovimientoProducto;
-import solidappservice.cm.com.presenteapp.entities.estadocuenta.response.ResponseProducto;
+import solidappservice.cm.com.presenteapp.entities.estadocuenta.response.ResponseProductos;
 
 /**
  * CREADO POR MIGUEL DAVID CABEZAS EL 13/09/2021.
@@ -14,15 +14,12 @@ import solidappservice.cm.com.presenteapp.entities.estadocuenta.response.Respons
 public interface FragmentMovementsProductsContract {
 
     interface View{
-        void fetchMovementsProducts(ResponseProducto producto);
+        void fetchMovementsProducts(ResponseProductos producto);
         void showMovementsProducts(List<ResponseMovimientoProducto> movimientos);
-        void showSectionMovementsProducts();
-        void hideSectionMovementsProducts();
-        void showCircularProgressBar(String message);
-        void hideCircularProgressBar();
-        void showErrorWithRefresh();
+        void showProgressDialog(String message);
+        void hideProgressDialog();
+        void showDataFetchError(String message);
         void showErrorTimeOut();
-        void showDataFetchError(String title, String message);
         void showExpiredToken(String message);
     }
 

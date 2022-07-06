@@ -21,16 +21,10 @@ public interface FragmentDeleteAccountContract {
         void showResultDeleteAccounts(String resultDelete);
         void disabledDeleteAccountButton();
         void enabledDeleteAccountButton();
-        void showSectionDeleteAccount();
-        void hideSectionDeleteAccount();
-        void showCircularProgressBar(String message);
-        void hideCircularProgressBar();
-        void showErrorWithRefresh();
         void showProgressDialog(String message);
         void hideProgressDialog();
-        void showDialogError(String title, String message);
+        void showDataFetchError(String message);
         void showErrorTimeOut();
-        void showDataFetchError(String title, String message);
         void showExpiredToken(String message);
     }
 
@@ -46,9 +40,6 @@ public interface FragmentDeleteAccountContract {
 
     interface APIListener{
         <T> void onSuccessRegisteredAccounts(Response<BaseResponse<T>> response);
-        <T> void onErrorRegisteredAccounts(Response<BaseResponse<T>> response);
-        void onFailureRegisteredAccounts(Throwable t, boolean isErrorTimeOut);
-
         <T> void onSuccessDeleteSelectedAccounts(Response<BaseResponse<T>> response);
         <T> void onExpiredToken(Response<BaseResponse<T>> response);
         <T> void onError(Response<BaseResponse<T>> response);

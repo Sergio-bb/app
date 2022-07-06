@@ -24,7 +24,7 @@ public class FragmentResortsSolicityModel implements FragmentResortsSolicityCont
     public void getResorts(BaseRequest body, final FragmentResortsSolicityContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -44,6 +44,7 @@ public class FragmentResortsSolicityModel implements FragmentResortsSolicityCont
                         }
                     } else {
                         listener.onError(null);
+
                     }
                 }
                 @Override
@@ -51,12 +52,13 @@ public class FragmentResortsSolicityModel implements FragmentResortsSolicityCont
                     if(t instanceof IOException){
                         listener.onFailure(t, true);
                     }else{
-                        listener.onFailure(t, false);
+                        listener.onError(null);
                     }
                 }
             });
         } catch (Exception e) {
             listener.onError(null);
+
         }
     }
 
@@ -64,7 +66,7 @@ public class FragmentResortsSolicityModel implements FragmentResortsSolicityCont
     public void solicityResort(RequestSolicitarCentroVacacional body, final FragmentResortsSolicityContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -91,7 +93,7 @@ public class FragmentResortsSolicityModel implements FragmentResortsSolicityCont
                     if(t instanceof IOException){
                         listener.onFailure(t, true);
                     }else{
-                        listener.onFailure(t, false);
+                        listener.onError(null);
                     }
                 }
             });

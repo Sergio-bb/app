@@ -7,12 +7,9 @@ import solidappservice.cm.com.presenteapp.entities.adelantonomina.response.Respo
 import solidappservice.cm.com.presenteapp.entities.adelantonomina.request.RequestActualizarAdelantoNomina;
 import solidappservice.cm.com.presenteapp.entities.adelantonomina.request.RequestConsultarAdelantoNomina;
 import solidappservice.cm.com.presenteapp.entities.base.BaseRequest;
-import solidappservice.cm.com.presenteapp.entities.base.BaseRequestNequi;
 import solidappservice.cm.com.presenteapp.entities.base.BaseResponse;
-import solidappservice.cm.com.presenteapp.entities.base.BaseResponseNequi;
-import solidappservice.cm.com.presenteapp.entities.estadocuenta.response.ResponseProducto;
+import solidappservice.cm.com.presenteapp.entities.estadocuenta.response.ResponseProductos;
 import solidappservice.cm.com.presenteapp.entities.mensajes.request.RequestEnviarMensaje;
-import solidappservice.cm.com.presenteapp.front.nequi.transfieredinero.FragmentSuscriptionsPayment.FragmentSuscriptionsPaymentContract;
 
 /**
  * CREADO POR MIGUEL DAVID CABEZAS EL 13/09/2021.
@@ -25,19 +22,14 @@ public interface FragmentStatusAccountContract {
         void updateSalaryAdvanceStatus(ResponseConsultaAdelantoNomina consulta);
         void sendSalaryAdvanceNotification();
         void fetchAccountStatus();
-        void showAccountStatus(List<ResponseProducto> cuentas);
-        void showSectionAcccountStatus();
-        void hideSectionAcccountStatus();
-        void fetchNequiBalance();
-        void fetchAuthorizationNequiBalance();
-        void resultGetAuthorizationNequiBalance(String status);
-        void showNequiBalance(String saldoNequi);
-        void showDialogGetBalanceNequi();
+        void showAccountStatus(List<ResponseProductos> cuentas);
+        void hideAccountStatus();
+        void showProgressDialog(String message);
+        void hideProgressDialog();
         void showCircularProgressBar(String message);
         void hideCircularProgressBar();
-        void showErrorWithRefresh();
+        void showDataFetchError(String message);
         void showErrorTimeOut();
-        void showDataFetchError(String title, String message);
         void showExpiredToken(String message);
     }
 
@@ -47,8 +39,6 @@ public interface FragmentStatusAccountContract {
         void updateSalaryAdvanceStatus(RequestActualizarAdelantoNomina request);
         void sendSalaryAdvanceNotification(RequestEnviarMensaje request);
         void fetchAccountStatus(BaseRequest baseRequest);
-        void fetchNequiBalance(BaseRequestNequi baseRequest);
-        void fetchAuthorizationNequiBalance(BaseRequestNequi body);
     }
 
     interface Model{
@@ -57,8 +47,6 @@ public interface FragmentStatusAccountContract {
         void updateSalaryAdvanceStatus(RequestActualizarAdelantoNomina body, final APIListener listener);
         void sendSalaryAdvanceNotification(RequestEnviarMensaje body, final APIListener listener);
         void getAccountStatus(BaseRequest body, final APIListener listener);
-        void getNequiBalance(BaseRequestNequi body, final APIListener listener);
-        void getAuthorizationNequiBalance(BaseRequestNequi  body, final APIListener listener);
     }
 
     interface APIListener{
@@ -66,21 +54,12 @@ public interface FragmentStatusAccountContract {
         <T> void onSuccessProcessSalaryAdvancePending(Response<BaseResponse<T>> response);
         <T> void onSuccessUpdateSalaryAdvanceStatus(Response<BaseResponse<T>> response);
         <T> void onSuccessSendSalaryAdvanceNotification(Response<BaseResponse<T>> response);
+        <T> void onSuccessAccountStatus(Response<BaseResponse<T>> response);
         <T> void onErrorSalaryAdvance(Response<BaseResponse<T>> response);
         void onFailureSalaryAdvance(Throwable t, boolean isErrorTimeOut);
-
-        <T> void onSuccessAccountStatus(Response<BaseResponse<T>> response);
-        <T> void onErrorAccountStatus(Response<BaseResponse<T>> response);
-        void onFailureAccountStatus(Throwable t, boolean isErrorTimeOut);
         <T> void onExpiredToken(Response<BaseResponse<T>> response);
-
-        <T> void onSuccessNequiBalance(Response<BaseResponseNequi<T>> response);
-        <T> void onErrorNequiBalance(Response<BaseResponseNequi<T>> response);
-
-        <T> void onSuccessAuthorizationNequiBalance(Response<BaseResponseNequi<T>> response);
-        <T> void onErrorAuthorizationNequiBalance(Response<BaseResponseNequi<T>> response);
-
-        <T> void onExpiredTokenNequi(Response<BaseResponseNequi<T>> response);
+        <T> void onError(Response<BaseResponse<T>> response);
+        void onFailure(Throwable t, boolean isErrorTimeOut);
     }
 
 }

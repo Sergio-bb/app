@@ -27,7 +27,6 @@ public class FragmentInboxPresenter implements FragmentInboxContract.Presenter,
 
     @Override
     public void fetchMessages(BaseRequest baseRequest) {
-        view.hideSectionMessages();
         view.showCircularProgressBar("Actualizando mensajes...");
         model.getMessages(baseRequest, this);
     }
@@ -37,11 +36,15 @@ public class FragmentInboxPresenter implements FragmentInboxContract.Presenter,
         view.hideCircularProgressBar();
         try{
             List<ResponseObtenerMensajes> messages = (List<ResponseObtenerMensajes>) response.body().getResultado();
-            view.showSectionMessages();
-            view.showMessages(messages);
+            if(messages != null && messages.size()>0){
+                view.hideTextFragmentExpanded();
+                view.showMessages(messages);
+            }else{
+                view.hideMessages();
+                view.showTextFragmentExpanded();
+            }
         }catch (Exception ex){
-            view.showDataFetchError("Lo sentimos", "");
-            view.showErrorWithRefresh();
+            view.showDataFetchError("");
         }
     }
 
@@ -55,11 +58,10 @@ public class FragmentInboxPresenter implements FragmentInboxContract.Presenter,
     public <T> void onError(Response<BaseResponse<T>> response) {
         view.hideCircularProgressBar();
         if(response != null){
-            view.showDataFetchError("Lo sentimos", response.body().getMensajeErrorUsuario());
+            view.showDataFetchError(response.body().getMensajeErrorUsuario());
         }else{
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
-        view.showErrorWithRefresh();
     }
 
     @Override
@@ -68,9 +70,8 @@ public class FragmentInboxPresenter implements FragmentInboxContract.Presenter,
         if(isErrorTimeOut){
             view.showErrorTimeOut();
         }else{
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
-        view.showErrorWithRefresh();
     }
 
 }

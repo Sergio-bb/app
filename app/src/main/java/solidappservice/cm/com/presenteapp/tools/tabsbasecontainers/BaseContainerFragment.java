@@ -28,4 +28,5 @@ public class BaseContainerFragment extends Fragment {
         }
         return isPop;
     }
+
 }

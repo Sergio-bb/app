@@ -65,122 +65,84 @@
         android:layout_below="@+id/header_app"
         android:text="Estamos para ti con más opciones"
         android:gravity="center"
-        android:textSize="16sp"
+        android:textSize="17sp"
         android:fontFamily="@font/roboto_light"/>
 
     <LinearLayout
-        android:id="@+id/layout_circular_progress_bar"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone">
-        <ProgressBar
-            android:id="@+id/circular_progress_bar"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:indeterminateTint="#707070"
-            android:visibility="visible"/>
-        <ImageView
-            android:id="@+id/imageReferesh"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:src="@drawable/icon_refresh"
-            android:visibility="gone"/>
-        <TextView
-            android:id="@+id/text_circular_progress_Bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:gravity="center"
-            android:text="Intentar de nuevo"
-            android:textSize="12sp"
-            android:fontFamily="@font/roboto_light"
-            android:visibility="visible"/>
-    </LinearLayout>
+        android:orientation="horizontal">
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/pullToRefresh"
-        android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:visibility="gone">
+        <View
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="6"/>
 
         <LinearLayout
-            android:layout_width="fill_parent"
+            android:layout_width="0dp"
             android:layout_height="fill_parent"
-            android:clickable="true"
+            android:layout_weight="88"
+            android:weightSum="100"
             android:gravity="center"
-            android:orientation="horizontal">
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:layout_weight="6"/>
+            android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:layout_weight="88"
+                android:id="@+id/imagesPrioritarias"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="30"
                 android:weightSum="100"
                 android:gravity="center"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:id="@+id/imagesPrioritarias"
-                    android:layout_width="fill_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="30"
-                    android:weightSum="100"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-                    <ImageButton
-                        android:id="@+id/image_destacada1"
-                        android:layout_width="0dp"
-                        android:layout_height="fill_parent"
-                        android:layout_weight="44"
-                        android:adjustViewBounds="true"
-                        android:scaleType="fitCenter"
-                        android:background="#fff"/>
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="fill_parent"
-                        android:layout_weight="4"/>
-                    <ImageButton
-                        android:id="@+id/image_destacada2"
-                        android:layout_width="0dp"
-                        android:layout_height="fill_parent"
-                        android:layout_weight="44"
-                        android:adjustViewBounds="true"
-                        android:scaleType="fitCenter"
-                        android:background="#fff"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="2"
-                    android:gravity="center"
-                    android:paddingLeft="35dp"
-                    android:paddingRight="35dp">
-                    <View
-                        android:id="@+id/separadora"
-                        android:layout_width="wrap_content"
-                        android:layout_height="4dp"
-                        android:background="@color/gris"
-                        android:gravity="center"/>
-                </LinearLayout>
-
-                <ListView
-                    android:id="@+id/list_servicios"
-                    android:layout_width="fill_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="68"
-                    android:divider="@null" />
+                android:orientation="horizontal">
+                <ImageButton
+                    android:id="@+id/image_destacada1"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="44"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:background="#fff"/>
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="4"/>
+                <ImageButton
+                    android:id="@+id/image_destacada2"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="44"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:background="#fff"/>
             </LinearLayout>
-            <View
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:layout_weight="6"/>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:paddingLeft="35dp"
+                android:paddingRight="35dp">
+                <View
+                    android:id="@+id/separadora"
+                    android:layout_width="wrap_content"
+                    android:layout_height="4dp"
+                    android:background="@color/gris"
+                    android:gravity="center"/>
+            </LinearLayout>
+
+            <ListView
+                android:id="@+id/list_servicios"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="68"
+                android:divider="@null" />
         </LinearLayout>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        <View
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="6"/>
+
+    </LinearLayout>
 </LinearLayout>

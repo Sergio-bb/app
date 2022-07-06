@@ -5,7 +5,7 @@ import java.util.List;
 import retrofit2.Response;
 import solidappservice.cm.com.presenteapp.entities.base.BaseRequest;
 import solidappservice.cm.com.presenteapp.entities.base.BaseResponse;
-import solidappservice.cm.com.presenteapp.entities.estadocuenta.response.ResponseProducto;
+import solidappservice.cm.com.presenteapp.entities.estadocuenta.response.ResponseProductos;
 import solidappservice.cm.com.presenteapp.entities.transferencias.request.RequestMakeTransfer;
 import solidappservice.cm.com.presenteapp.entities.transferencias.response.ResponseCuentasInscritas;
 
@@ -20,23 +20,17 @@ public interface FragmentMakeTransferContract {
         void fetchRegisteredAccounts();
         void showRegisteredAccounts(List<ResponseCuentasInscritas> cuentasInscritas);
         void fetchAccounts();
-        void showAccounts(List<ResponseProducto> cuentas);
+        void showAccounts(List<ResponseProductos> cuentas);
         void validateDataTransfer();
-        void showDialogConfirmTransfer(Double valorTransferencia, ResponseProducto cuentaOrigen, ResponseCuentasInscritas cuentaDestino);
-        void makeTransfer(Double valorTransferencia, ResponseProducto cuentaOrigen, ResponseCuentasInscritas cuentaDestino);
+        void showDialogConfirmTransfer(Double valorTransferencia, ResponseProductos cuentaOrigen, ResponseCuentasInscritas cuentaDestino);
+        void makeTransfer(Double valorTransferencia, ResponseProductos cuentaOrigen, ResponseCuentasInscritas cuentaDestino);
         void showResultTransfer(String resultMessage);
         void disabledMakeTransferButton();
         void enabledMakeTransferButton();
-        void showSectionMakeTransfer();
-        void hideSectionMakeTransfer();
-        void showCircularProgressBar(String message);
-        void hideCircularProgressBar();
-        void showErrorWithRefresh();
         void showProgressDialog(String message);
         void hideProgressDialog();
-        void showDialogError(String title, String message);
+        void showDataFetchError(String message);
         void showErrorTimeOut();
-        void showDataFetchError(String title, String message);
         void showExpiredToken(String message);
     }
 
@@ -56,17 +50,12 @@ public interface FragmentMakeTransferContract {
 
     interface APIListener{
         <T> void onSuccessIncompleteTransfers(Response<BaseResponse<T>> response);
-        <T> void onErrorIncompleteTransfers(Response<BaseResponse<T>> response);
-        void onFailureIncompleteTransfers(Throwable t, boolean isErrorTimeOut);
-
         <T> void onSuccessRegisteredAccounts(Response<BaseResponse<T>> response);
-
         <T> void onSuccessAccounts(Response<BaseResponse<T>> response);
         <T> void onSuccessMakeTransfer(Response<BaseResponse<T>> response);
-
+        <T> void onExpiredToken(Response<BaseResponse<T>> response);
         <T> void onError(Response<BaseResponse<T>> response);
         void onFailure(Throwable t, boolean isErrorTimeOut);
-        <T> void onExpiredToken(Response<BaseResponse<T>> response);
     }
 
 }

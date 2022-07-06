@@ -41,7 +41,7 @@ public class FragmentFinanceMenuPresenter implements FragmentFinanceMenuContract
     }
 
     @Override
-    public void onFailure(Throwable t, boolean isErrorTimeOut) {
+    public void onFailure(Throwable t) {
 
     }
 

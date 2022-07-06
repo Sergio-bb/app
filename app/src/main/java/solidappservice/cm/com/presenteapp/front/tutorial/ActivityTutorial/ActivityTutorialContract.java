@@ -18,6 +18,7 @@ public interface ActivityTutorialContract {
     interface View{
         void fetchTutorialImages();
         void showTutorialImages();
+
     }
 
     interface Presenter{

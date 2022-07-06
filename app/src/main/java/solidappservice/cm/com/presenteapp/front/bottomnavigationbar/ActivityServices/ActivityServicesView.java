@@ -1,25 +1,19 @@
 package solidappservice.cm.com.presenteapp.front.bottomnavigationbar.ActivityServices;
 
-import android.app.Dialog;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.Window;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.squareup.picasso.Picasso;
@@ -46,6 +40,7 @@ public class ActivityServicesView extends ActivityBase implements ActivityServic
     private ActivityServicesPresenter presenter;
     private ActivityBase context;
     private GlobalState state;
+    private ProgressDialog pd;
     private FirebaseAnalytics firebaseAnalytics;
     private List<ResponseServicios> servicios = null;
 
@@ -58,17 +53,6 @@ public class ActivityServicesView extends ActivityBase implements ActivityServic
     @BindView(R.id.btn_back)
     ImageButton btnBack;
 
-    @BindView(R.id.layout_circular_progress_bar)
-    LinearLayout layoutCircularProgressBar;
-    @BindView(R.id.circular_progress_bar)
-    ProgressBar circularProgressBar;
-    @BindView(R.id.text_circular_progress_Bar)
-    TextView textCircularProgressBar;
-    @BindView(R.id.imageReferesh)
-    ImageView buttonReferesh;
-    @BindView(R.id.pullToRefresh)
-    SwipeRefreshLayout pullToRefresh;
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,21 +63,14 @@ public class ActivityServicesView extends ActivityBase implements ActivityServic
 
     @Override
     protected void setControls() {
-        presenter = new ActivityServicesPresenter(this, new ActivityServicesModel());
-        context = this;
-        state = context.getState();
         firebaseAnalytics = FirebaseAnalytics.getInstance(context);
         Bundle params = new Bundle();
         params.putString("Descripción", "Interacción con pantalla del menú de otros servicios");
         firebaseAnalytics.logEvent("pantalla_menu_servicios", params);
-        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                state.setServicios(null);
-                fetchServices();
-                pullToRefresh.setRefreshing(false);
-            }
-        });
+        presenter = new ActivityServicesPresenter(this, new ActivityServicesModel());
+        context = this;
+        state = context.getState();
+        pd = new ProgressDialog(context);
     }
 
     @Override
@@ -103,13 +80,9 @@ public class ActivityServicesView extends ActivityBase implements ActivityServic
         if(state == null){
             context.salir();
         }else {
-            fetchServices();
+//            new ServiciosTask().execute();
+            presenter.fetchServices();
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        finish();
     }
 
     @OnClick(R.id.btn_back)
@@ -117,27 +90,16 @@ public class ActivityServicesView extends ActivityBase implements ActivityServic
         onBackPressed();
     }
 
-    @OnClick(R.id.imageReferesh)
-    public void onClickRefresh(){
-        state.setServicios(null);
-        fetchServices();
-    }
-
     @Override
-    public void fetchServices(){
-        if(state != null && state.getServicios() != null){
-            hideCircularProgressBar();
-            showSectionServices();
-            showServices(state.getServicios());
-        }else{
-            presenter.fetchServices();
-        }
+    public void onBackPressed() {
+        finish();
     }
 
     @Override
     public void showServices(List<ResponseServicios> servicios) {
         try {
-            state.setServicios(servicios);            for (Iterator<ResponseServicios> it = servicios.iterator(); it.hasNext();) {
+            state.setServicios(servicios);
+            for (Iterator<ResponseServicios> it = servicios.iterator(); it.hasNext();) {
                 ResponseServicios p = it.next();
                 if(p.getQ_orden() == 1){
                     showFeaturedService1(p);
@@ -152,8 +114,7 @@ public class ActivityServicesView extends ActivityBase implements ActivityServic
             ServiciosAdapter sadapter = new ServiciosAdapter(this, servicios, getState().getUsuario());
             list_servicios.setAdapter(sadapter);
         } catch (Exception ex) {
-            showDataFetchError("Lo sentimos", "");
-            showErrorWithRefresh();
+            context.makeErrorDialog("Error cargando los productos");
         }
     }
 
@@ -200,34 +161,18 @@ public class ActivityServicesView extends ActivityBase implements ActivityServic
         }
     }
 
-
     @Override
-    public void showSectionServices(){
-        pullToRefresh.setVisibility(View.VISIBLE);
-    }
-    @Override
-    public void hideSectionServices(){
-        pullToRefresh.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showCircularProgressBar(String textProgressBar) {
-        layoutCircularProgressBar.setVisibility(View.VISIBLE);
-        textCircularProgressBar.setText(textProgressBar);
+    public void showProgressDialog(String message) {
+        pd.setTitle(context.getResources().getString(R.string.app_name));
+        pd.setMessage(message);
+        pd.setIcon(R.mipmap.icon_presente);
+        pd.setCancelable(false);
+        pd.show();
     }
 
     @Override
-    public void hideCircularProgressBar() {
-        layoutCircularProgressBar.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showErrorWithRefresh(){
-        pullToRefresh.setVisibility(View.GONE);
-        layoutCircularProgressBar.setVisibility(View.VISIBLE);
-        circularProgressBar.setVisibility(View.GONE);
-        textCircularProgressBar.setText("Ha ocurrido un error, inténtalo de nuevo ");
-        buttonReferesh.setVisibility(View.VISIBLE);
+    public void hideProgressDialog() {
+        pd.dismiss();
     }
 
     @Override
@@ -240,28 +185,23 @@ public class ActivityServicesView extends ActivityBase implements ActivityServic
                 }
             }
         }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText("Lo sentimos");
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
+                finish();
             }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
-    public void showDataFetchError(String title, String message){
+    public void showDataFetchError(String message) {
         if(TextUtils.isEmpty(message)){
             message = "Ha ocurrido un error. Intenta de nuevo y si el error persiste, contacta a PRESENTE.";
             if(state != null && state.getMensajesRespuesta() != null && state.getMensajesRespuesta().size()>0){
@@ -272,44 +212,34 @@ public class ActivityServicesView extends ActivityBase implements ActivityServic
                 }
             }
         }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText(title);
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle("PRESENTE");
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
                 dialog.dismiss();
             }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
     public void showExpiredToken(String message) {
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_closedsession);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        Button buttonClosedSession = (Button) dialog.findViewById(R.id.btnVolverAIngresar);
-        buttonClosedSession.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle("Sesión finalizada");
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
                 context.salir();
             }
         });
-        dialog.show();
-
+        d.show();
     }
 
 //    private void cargarServicios(ArrayList<Servicios> servicios) {

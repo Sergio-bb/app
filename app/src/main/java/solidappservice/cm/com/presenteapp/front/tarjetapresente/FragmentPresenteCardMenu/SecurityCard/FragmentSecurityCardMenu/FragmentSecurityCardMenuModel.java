@@ -23,7 +23,7 @@ public class FragmentSecurityCardMenuModel implements FragmentSecurityCardMenuCo
     public void getPresenteCards(BaseRequest body, final FragmentSecurityCardMenuContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -50,7 +50,7 @@ public class FragmentSecurityCardMenuModel implements FragmentSecurityCardMenuCo
                     if(t instanceof IOException){
                         listener.onFailure(t, true);
                     }else{
-                        listener.onFailure(t, false);
+                        listener.onError(null);
                     }
                 }
             });

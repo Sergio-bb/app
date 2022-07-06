@@ -28,7 +28,7 @@ public class FragmentDetailModel implements FragmentDetailContract.Model {
     public void getCommissionValue(FragmentDetailContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -41,10 +41,10 @@ public class FragmentDetailModel implements FragmentDetailContract.Model {
                     if (response.isSuccessful()) {
                         if(response.body().getErrorToken() != null && !response.body().getErrorToken().isEmpty()){
                             listener.onExpiredToken(response);
-                        }else if(response.body().getDescripcionError() != null && !response.body().getDescripcionError().isEmpty()){
+                        }else if(response.body().getMensajeErrorUsuario() != null && !response.body().getMensajeErrorUsuario().isEmpty()){
                             listener.onError(response);
                         }else{
-                            listener.onSuccessCommissionValue(response);
+                            listener.onSuccess(response);
                         }
                     } else {
                         listener.onError(null);
@@ -55,8 +55,9 @@ public class FragmentDetailModel implements FragmentDetailContract.Model {
                     if(t instanceof IOException){
                         listener.onFailure(t, true);
                     }else{
-                        listener.onFailure(t, false);
+                        listener.onError(null);
                     }
+
                 }
             });
         } catch (Exception e) {
@@ -68,7 +69,7 @@ public class FragmentDetailModel implements FragmentDetailContract.Model {
     public void registerSalaryAdvance(RequestInsertarAdelantoNomina body, FragmentDetailContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -81,10 +82,10 @@ public class FragmentDetailModel implements FragmentDetailContract.Model {
                     if (response.isSuccessful()) {
                         if(response.body().getErrorToken() != null && !response.body().getErrorToken().isEmpty()){
                             listener.onExpiredToken(response);
-                        }else if(response.body().getDescripcionError() != null && !response.body().getDescripcionError().isEmpty()){
+                        }else if(response.body().getMensajeErrorUsuario() != null && !response.body().getMensajeErrorUsuario().isEmpty()){
                             listener.onError(response);
                         }else{
-                            listener.onSuccessRegisterSalaryAdvance(response);
+                            listener.onSuccess(response);
                         }
                     } else {
                         listener.onError(null);
@@ -95,8 +96,9 @@ public class FragmentDetailModel implements FragmentDetailContract.Model {
                     if(t instanceof IOException){
                         listener.onFailure(t, true);
                     }else{
-                        listener.onFailure(t, false);
+                        listener.onError(null);
                     }
+
                 }
             });
         } catch (Exception e) {
@@ -113,7 +115,7 @@ public class FragmentDetailModel implements FragmentDetailContract.Model {
                     .build();
 
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(client)
                     .build();
@@ -127,10 +129,10 @@ public class FragmentDetailModel implements FragmentDetailContract.Model {
                     if (response.isSuccessful()) {
                         if(response.body().getErrorToken() != null && !response.body().getErrorToken().isEmpty()){
                             listener.onExpiredToken(response);
-                        }else if(response.body().getDescripcionError() != null && !response.body().getDescripcionError().isEmpty()){
+                        }else if(response.body().getMensajeErrorUsuario() != null && !response.body().getMensajeErrorUsuario().isEmpty()){
                             listener.onError(response);
                         }else{
-                            listener.onSuccessProcessSalaryAdvance(response);
+                            listener.onSuccess(response);
                         }
                     } else {
                         listener.onError(null);
@@ -147,9 +149,10 @@ public class FragmentDetailModel implements FragmentDetailContract.Model {
                                 new ResponserSolicitarAdelantoNomina()
                         );
                         Response<BaseResponse<ResponserSolicitarAdelantoNomina>> response = Response.success(body);
-                        listener.onSuccessProcessSalaryAdvance(response);
+
+                        listener.onSuccess(response);
                     }else{
-                        listener.onFailure(t, false);
+                        listener.onError(null);
                     }
                 }
             });
@@ -162,7 +165,7 @@ public class FragmentDetailModel implements FragmentDetailContract.Model {
     public void sendLogs(RequestLogs body, FragmentDetailContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -175,7 +178,7 @@ public class FragmentDetailModel implements FragmentDetailContract.Model {
                     if (response.isSuccessful()) {
                         if(response.body().getErrorToken() != null && !response.body().getErrorToken().isEmpty()){
 //                            listener.onExpiredToken(response);
-                        }else if(response.body().getDescripcionError() != null && !response.body().getDescripcionError().isEmpty()){
+                        }else if(response.body().getMensajeErrorUsuario() != null && !response.body().getMensajeErrorUsuario().isEmpty()){
 //                            listener.onError(response);
                         }else{
 //                            listener.onSuccess(response);
@@ -191,15 +194,8 @@ public class FragmentDetailModel implements FragmentDetailContract.Model {
                 }
             });
         } catch (Exception e) {
-            listener.onError(null);
+            e.printStackTrace();
         }
     }
 
-
-    public static <T> Response<T> success(T body, Response rawResponse) {
-        if(rawResponse != null && body != null){
-            Response<T> response = rawResponse;
-        }
-        return rawResponse;
-    }
 }

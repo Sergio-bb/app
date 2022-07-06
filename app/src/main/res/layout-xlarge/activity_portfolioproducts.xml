@@ -65,50 +65,14 @@
         android:background="@color/gris"
         android:gravity="center"
         android:text="Productos y Servicios"
-        android:textSize="16sp"
+        android:textSize="17sp"
         android:fontFamily="@font/roboto_light"/>
 
-    <LinearLayout
-        android:id="@+id/layout_circular_progress_bar"
+
+    <ListView
+        android:id="@+id/list_portafolio"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone">
-        <ProgressBar
-            android:id="@+id/circular_progress_bar"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:indeterminateTint="#707070"
-            android:visibility="visible"/>
-        <ImageView
-            android:id="@+id/imageReferesh"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:src="@drawable/icon_refresh"
-            android:visibility="gone"/>
-        <TextView
-            android:id="@+id/text_circular_progress_Bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:gravity="center"
-            android:text="Intentar de nuevo"
-            android:textSize="12sp"
-            android:fontFamily="@font/roboto_light"
-            android:visibility="visible"/>
-    </LinearLayout>
-
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/pullToRefresh"
-        android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:visibility="gone">
-        <ListView
-            android:id="@+id/list_portafolio"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:scrollbars="none"/>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        android:scrollbars="none"/>
 
 </LinearLayout>

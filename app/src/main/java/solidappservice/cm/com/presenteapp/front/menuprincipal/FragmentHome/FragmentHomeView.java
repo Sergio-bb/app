@@ -1,66 +1,56 @@
 package solidappservice.cm.com.presenteapp.front.menuprincipal.FragmentHome;
 
-import android.animation.LayoutTransition;
-import android.app.Dialog;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.animation.BounceInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
-import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.widget.CompositePageTransformer;
-import androidx.viewpager2.widget.MarginPageTransformer;
-import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import solidappservice.cm.com.presenteapp.R;
-import solidappservice.cm.com.presenteapp.adapters.home.ImageHomeSlideAdapter;
-import solidappservice.cm.com.presenteapp.entities.banercomercial.response.ResponseBannerComercial;
+import solidappservice.cm.com.presenteapp.entities.banercomercial.response.ResponseBanerComercial;
 import solidappservice.cm.com.presenteapp.entities.base.BaseRequest;
-import solidappservice.cm.com.presenteapp.entities.base.BaseRequestNequi;
 import solidappservice.cm.com.presenteapp.entities.mensajes.response.ResponseObtenerMensajes;
 import solidappservice.cm.com.presenteapp.entities.login.Response.Usuario;
-import solidappservice.cm.com.presenteapp.entities.nequi.dto.SuscriptionData;
 import solidappservice.cm.com.presenteapp.entities.parametrosgenerales.ResponseMensajesRespuesta;
-import solidappservice.cm.com.presenteapp.front.base.ActivityBase;
-import solidappservice.cm.com.presenteapp.front.base.main.ActivityMainView;
+import solidappservice.cm.com.presenteapp.front.base.ActivityMainView;
+import solidappservice.cm.com.presenteapp.front.actualizaciondatos.ActivityUpdatePersonalData.ActivityUpdatePersonalDataView;
+import solidappservice.cm.com.presenteapp.front.bottomnavigationbar.ActivityDirectory.ActivityDirectoryView;
+import solidappservice.cm.com.presenteapp.front.bottomnavigationbar.ActivityGeoreferencing.ActivityLocationsGms.ActivityLocationsGmsView;
+import solidappservice.cm.com.presenteapp.front.bottomnavigationbar.ActivityGeoreferencing.ActivityLocationsHms.ActivityLocationsHmsView;
+import solidappservice.cm.com.presenteapp.front.bottomnavigationbar.ActivityPortfolio.ActivityPortfolioProducts.ActivityPortfolioProductsView;
+import solidappservice.cm.com.presenteapp.front.bottomnavigationbar.ActivityServices.ActivityServicesView;
 import solidappservice.cm.com.presenteapp.front.convenios.ActivityAgreements.ActivityAgreementsView;
-import solidappservice.cm.com.presenteapp.front.nequi.qr.ActivityCameraQR.ActivityQRCameraView;
-import solidappservice.cm.com.presenteapp.front.nequi.suscription.ActivitySuscription.ActivitySuscriptionView;
-import solidappservice.cm.com.presenteapp.front.popups.PopUp;
-import solidappservice.cm.com.presenteapp.front.tabs.ActivityTabs.ActivityTabsView;
 import solidappservice.cm.com.presenteapp.tools.BadgeView;
-import solidappservice.cm.com.presenteapp.tools.helpers.DialogHelpers;
 import solidappservice.cm.com.presenteapp.tools.security.Encripcion;
 import solidappservice.cm.com.presenteapp.entities.base.GlobalState;
 import solidappservice.cm.com.presenteapp.tools.IFragmentCoordinator;
@@ -73,46 +63,37 @@ public class FragmentHomeView extends Fragment implements FragmentHomeContract.V
 
     private FragmentHomePresenter presenter;
     private ActivityMainView context;
-    private ActivityBase activityBase;
     private GlobalState state;
+    private ProgressDialog pd;
     private FirebaseAnalytics firebaseAnalytics;
-    private String urlCV;
-    private Handler sliderHandler = new Handler();
-    private boolean openAlert = false;
 
     @BindView(R.id.lblHolaUsuario)
     TextView lblHolaUsuario;
     @BindView(R.id.row_cant_messages)
     ImageView row_cant_messages;
-    @BindView(R.id.layout_hola_usuario)
-    LinearLayout holaUsuario;
+    @BindView(R.id.btnElecciones)
+    ImageButton btnElecciones;
+    @BindView(R.id.btn_mi_informacion)
+    Button btnMiInformacion;
+    @BindView(R.id.tv_ultimaactualizacion)
+    TextView fechaActualizacion;
 
-    @BindView(R.id.titleBannerComercial)
-    LinearLayout titleBannerComercial;
-//    @BindView(R.id.viewPagerHome)
-    ViewPager2 viewPagerHome;
-
+    @BindView(R.id.flConvenios)
+    RelativeLayout flConvenios;
     @BindView(R.id.imgb_finanzas)
     LinearLayout imgb_finanzas;
     @BindView(R.id.imgb_alianzas)
     LinearLayout imgb_alianzas;
-    @BindView(R.id.imgb_centrosvacacionales)
-    LinearLayout imgb_centrosvacacionales;
-
-    @BindView(R.id.buttonTransferencias)
-    LinearLayout btnEnviardinero;
-    @BindView(R.id.buttonAbrirAhorro)
-    LinearLayout btnAbrirahorro;
-    @BindView(R.id.buttonMisMensajes)
-    LinearLayout btnMisMensajes;
-    @BindView(R.id.buttonPagosQR)
-    LinearLayout btnPagosQR;
-
-    GridLayout circularProgressBarOptions;
-    GridLayout contentOptions;
-
-    @BindView(R.id.relative_alerta_tarea)
-    LinearLayout lateralAlert;
+    @BindView(R.id.btn_mis_mensajes)
+    LinearLayout btn_mis_mensajes;
+    @BindView(R.id.btnPortafolio)
+    ImageButton btnPortafolio;
+    @BindView(R.id.btnPreguntasFrecuentes)
+    ImageButton btnPreguntasFrecuentes;
+    @BindView(R.id.btnDirectorio)
+    ImageButton btnDirectorio;
+    @BindView(R.id.btnEncuentranos)
+    ImageButton btnEncuentranos;
 
     @BindView(R.id.circular_progress_bar)
     ProgressBar circularProgressBar;
@@ -136,9 +117,6 @@ public class FragmentHomeView extends Fragment implements FragmentHomeContract.V
         params.putString("Descripción", "Interacción con pantalla de menu principal");
         firebaseAnalytics.logEvent("pantalla_menu_principal", params);
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-        viewPagerHome = (ViewPager2) view.findViewById(R.id.viewPagerHome);
-        circularProgressBarOptions = (GridLayout) view.findViewById(R.id.circular_progress_bar_options);
-        contentOptions = (GridLayout) view.findViewById(R.id.contentOptions);
         ButterKnife.bind(this, view);
         setControls();
         return view;
@@ -147,30 +125,80 @@ public class FragmentHomeView extends Fragment implements FragmentHomeContract.V
     protected void setControls() {
         presenter = new FragmentHomePresenter(this, new FragmentHomeModel());
         context = (ActivityMainView) getActivity();
-        activityBase = (ActivityBase)getActivity();
         state = context.getState();
+        pd = new ProgressDialog(context);
         if (context != null) {
-            context.btn_back.setVisibility(View.GONE);
-            context.header.setImageResource(R.drawable.logo_login);
+            context.btn_back.setVisibility(View.VISIBLE);
+            context.header.setImageResource(R.drawable.logo_internal);
+            context.btnSalir.setVisibility(View.VISIBLE);
         }
-        if (lblHolaUsuario != null && state != null &&
-                state.getUsuario() != null && state.getUsuario().getNombreAsociado() != null) {
-            lblHolaUsuario.setText(lblHolaUsuario.getText().toString().replace("#usuario#", state.getUsuario().getNombreAsociado()));
-        }
+        String user = "Hola " + state.getUsuario().getNombreAsociado()+", tu información personal en un solo lugar";
+        Long time = state.getUsuario().getDatosActualizados().getFechaUltimaActualizacion();
+        Date date = new Date(time);
+        SimpleDateFormat formatFecha = new SimpleDateFormat("dd/MM/yyyy");
+        String fecha = formatFecha.format(date != null ? date : new Date());
+        fechaActualizacion.setText(fecha);
+        if (lblHolaUsuario != null) lblHolaUsuario.setText(user);
+    }
 
-        if(state != null && state.isActiveButtonPaymentQR()){
-            btnPagosQR.setVisibility(View.VISIBLE);
+    @OnClick(R.id.btn_mis_mensajes)
+    public void onClickMisMensajes(View v) {
+        context.verMisMensajes();
+    }
+
+    @OnClick(R.id.btnPortafolio)
+    public void onClickPortafolio(View v) {
+        Intent intent_p = new Intent(context, ActivityPortfolioProductsView.class);
+        startActivity(intent_p);
+    }
+
+    @OnClick(R.id.btnPreguntasFrecuentes)
+    public void onClickPreguntasFrecuentes(View v) {
+        Intent intent_s = new Intent(context, ActivityServicesView.class);
+        startActivity(intent_s);
+    }
+
+    @OnClick(R.id.btnElecciones)
+    public void onClickElecciones(View v) {
+        //context.verCandidatos();
+    }
+
+    @OnClick(R.id.btnDirectorio)
+    public void onClickDirectorio(View v) {
+        Intent intent_dir = new Intent(context, ActivityDirectoryView.class);
+        startActivity(intent_dir);
+    }
+
+    @OnClick(R.id.btnEncuentranos)
+    public void onClickEncuentranos(View v) {
+        if(state != null && state.isHmsSystem()){
+            Intent intent = new Intent(context, ActivityLocationsHmsView.class);
+            startActivity(intent);
         }else{
-            btnPagosQR.setVisibility(View.GONE);
+            Intent intent = new Intent(context, ActivityLocationsGmsView.class);
+            startActivity(intent);
         }
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (state != null && state.getDatosSuscripcion() == null && state.isActiveStateSuscriptions()) {
-            validateSuscriptionNequi();
-        }
+    @OnClick(R.id.imgb_alianzas)
+    public void onClickAlianzas(View v) {
+        Intent intent_convenios = new Intent(context, ActivityAgreementsView.class);
+        startActivity(intent_convenios);
+    }
+
+    @OnClick(R.id.imgb_finanzas)
+    public void onClickFinanzas(View v) {
+        context.verMenuFinanzas();
+    }
+
+    @OnClick(R.id.btn_mi_informacion)
+    public void onClickMiInformacopn(View v) {
+        GlobalState state = context.getState();
+        Usuario usuario = state.getUsuario();
+        Intent i = new Intent(context, ActivityUpdatePersonalDataView.class);
+        i.putExtra("actualizaPrimeraVez", usuario.getDatosActualizados().getActualizaPrimeraVez());
+        i.putExtra("datosActualizados", usuario.getDatosActualizados().getTieneDatosActualizados());
+        context.startActivityForResult(i, 904);
     }
 
     @Override
@@ -183,103 +211,13 @@ public class FragmentHomeView extends Fragment implements FragmentHomeContract.V
             context.setFragment(IFragmentCoordinator.Pantalla.Ingreso);
             return;
         }
+//        new EleccionesTask().execute();
+//        new ObtenerTerminosUsuarioTask().execute(usuario.cedula, usuario.token);
         fetchButtonStateAgreements();
-        fetchButtonStateTransfers();
         fetchCommercialBanner();
-        sliderHandler.postDelayed(sliderRunnable, 5000);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        sliderHandler.removeCallbacks(sliderRunnable);
-    }
-
-    @OnClick(R.id.buttonMisMensajes)
-    public void onClickMisMensajes(View v) {
-        context.showScreenInbox();
-    }
-
-    @OnClick(R.id.buttonTransferencias)
-    public void onClickSendMoney(View v) {
-        Intent intent = new Intent(activityBase, ActivityTabsView.class);
-        intent.putExtra("TabIndex", ActivityTabsView.TAB_23_NEQUI_MENU_SEND_MONEY_TAG);
-        context.startActivityForResult(intent, GlobalState.TABS);
-    }
-
-    @OnClick(R.id.buttonAbrirAhorro)
-    public void onClickOpenSavings(View v) {
-        Intent intent = new Intent(activityBase, ActivityTabsView.class);
-        intent.putExtra("TabIndex", ActivityTabsView.TAB_4_SAVINGS_SOLICITY_TAG);
-        context.startActivityForResult(intent, GlobalState.TABS);
-    }
-
-    @OnClick(R.id.buttonPagosQR)
-    public void onClickPaymentQr(View v) {
-        Intent intentQR = new Intent(context, ActivityQRCameraView.class);
-        context.startActivityForResult(intentQR, GlobalState.QR);
-    }
-
-    @OnClick(R.id.imgb_alianzas)
-    public void onClickAlianzas(View v) {
-        Intent intent_convenios = new Intent(context, ActivityAgreementsView.class);
-        context.startActivityForResult(intent_convenios, GlobalState.ACTIVITY_AGREEMENTS);
-    }
-
-    @OnClick(R.id.imgb_finanzas)
-    public void onClickFinanzas(View v) {
-        context.showScreenFinanceMenu();
-    }
-
-    @OnClick(R.id.imgb_centrosvacacionales)
-    public void onClickResorts(View v) {
-        try{
-            if(urlCV != null && !urlCV.isEmpty()){
-                Encripcion encripcion = new Encripcion();
-                String tokenSession = encripcion.encryptAES(state.getUsuario().getCedula()+":"+state.getUsuario().getToken());
-                String url = urlCV.replace("${tokenSession}", tokenSession).replace("${origin}", "APPPRESENTE-ANDROID");
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(url));
-                startActivity(i);
-            }
-        }catch (Exception e){
-            showDataFetchError("Lo sentimos","Tenemos un problema al cargar el sitio, intentálo de nuevo más tarde.");
-            Log.d("Error", e.getMessage());
-        }
-    }
-
-    @OnClick(R.id.textViewTienesPendiente)
-    public void onClickPendientTask(View v){
-        try {
-            Intent i = new Intent(context, ActivitySuscriptionView.class);
-            context.startActivityForResult(i, GlobalState.NEQUI);
-        }catch (Exception e ){
-            String Ex = e.getMessage();
-        }
-    }
-
-    @OnClick(R.id.button_alert)
-    public void onClickButtonAlert(View v) {
-        openAlert = !openAlert;
-        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
-               0,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                60
-        );
-        holaUsuario.getLayoutTransition().enableTransitionType(LayoutTransition.CHANGING);
-        holaUsuario.setLayoutParams(param);
-    }
-
-    @OnClick(R.id.flecha_alerta)
-    public void onClickFlechaAlerta(){
-        openAlert = !openAlert;
-        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
-                0,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                94
-        );
-        holaUsuario.getLayoutTransition().enableTransitionType(LayoutTransition.CHANGING);
-        holaUsuario.setLayoutParams(param);
+//        new ButtonBannerTask().execute(usuario.cedula, usuario.token);
+        fetchMessageInbox();
+//        new BuzonTask().execute(usuario.cedula, usuario.token);
     }
 
     @Override
@@ -287,240 +225,18 @@ public class FragmentHomeView extends Fragment implements FragmentHomeContract.V
         try{
             presenter.fetchButtonStateAgreements();
         }catch (Exception ex){
-            hideCircularProgressBar();
-            hideButtonAgreements();
-            fetchButtonStateResorts();
+            showDataFetchError("");
         }
     }
 
     @Override
     public void showButtonAgreements() {
-        imgb_alianzas.setVisibility(View.VISIBLE);
+        flConvenios.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideButtonAgreements() {
-        imgb_alianzas.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void fetchButtonStateResorts(){
-        try{
-            presenter.fetchButtonStateResorts();
-        }catch (Exception ex){
-            hideCircularProgressBar();
-            hideButtonResorts();
-        }
-    }
-
-    @Override
-    public void showButtonResorts(String urlLinkResort){
-        this.urlCV = urlLinkResort;
-        imgb_centrosvacacionales.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void hideButtonResorts(){
-        imgb_centrosvacacionales.setVisibility(View.GONE);
-    }
-
-
-    @Override
-    public void fetchButtonStateTransfers() {
-        try{
-            presenter.fetchButtonStateTransfers();
-        }catch (Exception ex){
-            hideButtonTransfers();
-            fetchButtonStateSavings();
-        }
-    }
-    @Override
-    public void showButtonTransfers() {
-        btnEnviardinero.setVisibility(View.VISIBLE);
-    }
-    @Override
-    public void hideButtonTransfers() {
-        btnEnviardinero.setVisibility(View.GONE);
-    }
-
-
-    @Override
-    public void fetchButtonStateSavings() {
-        try{
-            presenter.fetchButtonStateSavings();
-        }catch (Exception ex){
-            hideButtonSavings();
-            fetchMessageInbox();
-        }
-    }
-    @Override
-    public void showButtonSavings() {
-        btnAbrirahorro.setVisibility(View.VISIBLE);
-    }
-    @Override
-    public void hideButtonSavings() {
-        btnAbrirahorro.setVisibility(View.GONE);
-    }
-
-
-    @Override
-    public void fetchMessageInbox(){
-        try{
-            Encripcion encripcion = Encripcion.getInstance();
-            presenter.fetchMessageInbox(new BaseRequest(
-                    encripcion.encriptar(state.getUsuario().getCedula()),
-                    state.getUsuario().getToken()
-            ));
-        }catch (Exception ex){
-            showButtonMessageInbox();
-            hideCircularProgressBarOptions();
-            showContentOptions();
-        }
-    }
-
-    @Override
-    public void showMessageInbox(List<ResponseObtenerMensajes> messagesInbox){
-        state.setMensajesBuzon(messagesInbox);
-        showNotificationBadge();
-    }
-    @Override
-    public void showButtonMessageInbox() {
-        btnMisMensajes.setVisibility(View.VISIBLE);
-    }
-    @Override
-    public void hideButtonMessageInbox() {
-        btnMisMensajes.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showNotificationBadge(){
-        int numberOfUnReadMessages = 0;
-        if(state.getMensajesBuzon() != null && state.getMensajesBuzon().size() > 0){
-            int counter = 0;
-            for(ResponseObtenerMensajes m : state.getMensajesBuzon()){
-                if(m.getLeido().equals("N")){
-                    counter++;
-                }
-            }
-            numberOfUnReadMessages = counter;
-        }
-        int whidth = numberOfUnReadMessages>=10 ? 60 : 45;
-        if (numberOfUnReadMessages > 0 && row_cant_messages != null) {
-            BadgeView badgeView = new BadgeView(context, row_cant_messages);
-            badgeView.setText(String.valueOf(numberOfUnReadMessages));
-            badgeView.setTextSize(10);
-            badgeView.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
-            badgeView.setGravity(Gravity.END|Gravity.TOP);
-            badgeView.setWidth(whidth);
-            badgeView.setHeight(40);
-            badgeView.setBadgeMargin(-1, -1);
-            badgeView.setBadgeBackgroundColor(Color.parseColor("#FFEA00"));
-            TranslateAnimation anim = new TranslateAnimation(-100, 0, 0, 0);
-            anim.setInterpolator(new BounceInterpolator());
-            anim.setDuration(1000);
-            badgeView.toggle(anim, null);
-        }
-    }
-
-
-    @Override
-    public void showCircularProgressBarOptions() {
-        circularProgressBarOptions.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void hideCircularProgressBarOptions() {
-        circularProgressBarOptions.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showContentOptions() {
-        contentOptions.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void hideContentOptions() {
-        contentOptions.setVisibility(View.GONE);
-    }
-
-
-    @Override
-    public void validateSuscriptionNequi(){
-        try{
-            presenter.validateSuscriptionNequi(new BaseRequest(
-                    Encripcion.getInstance().encriptar(state.getUsuario().getCedula()),
-                    state.getUsuario().getToken()
-            ));
-        }catch(Exception ex){
-            saveSuscriptionData(null, null);
-        }
-    }
-
-    @Override
-    public void saveSuscriptionData(SuscriptionData datosSuscripcion, String statusSuscription){
-        state.setDatosSuscripcion(datosSuscripcion);
-        state.setStatusSuscription(statusSuscription);
-        context.saveSuscriptionData(datosSuscripcion, statusSuscription);
-        if(state.getFragmentActual() == IFragmentCoordinator.Pantalla.MenuPrincipal &&
-                state.getStatusSuscription() != null && state.getStatusSuscription().equals("0")){
-            getTimeExpiration();
-        }else{
-            activateAlert(false);
-        }
-    }
-
-    @Override
-    public void getTimeExpiration(){
-        try{
-            presenter.getTimeExpiration();
-        }catch(Exception ex){
-            resultTimeExpiration(15);
-            getTimeOfSuscription();
-        }
-    }
-
-    @Override
-    public void resultTimeExpiration(Integer timeExpiration){
-        state.setTiempoExpiracionAutorizacion(timeExpiration);
-    }
-
-    @Override
-    public void getTimeOfSuscription(){
-        presenter.getTimeOfsuscription(new BaseRequestNequi(
-                Encripcion.getInstance().encriptar(state.getUsuario().getCedula()),
-                state.getUsuario().getToken()
-        ));
-    }
-
-    @Override
-    public void calculeMinutes(Integer days, Integer hour, Integer minute, Integer second){
-        if(days != null && days >= 0 &&
-                hour != null && hour <=0 &&
-                minute != null && minute < state.getTiempoExpiracionAutorizacion()){
-            int milisecons = hour+(minute*60000)+(second*1000);
-            activateAlert(true);
-            context.activateButtonWarning(true);
-            new android.os.Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    activateAlert(false);
-                    context.activateButtonWarning(false);
-                }
-            }, milisecons);
-        }else{
-            state.setStatusSuscription("");
-            context.activateButtonWarning(false);
-            activateAlert(false);
-        }
-    }
-
-    @Override
-    public void activateAlert(boolean activate){
-        if(activate) {
-            lateralAlert.setVisibility(View.VISIBLE);
-        }else{
-            lateralAlert.setVisibility(View.GONE);
-        }
+        flConvenios.setVisibility(View.GONE);
     }
 
     @Override
@@ -532,57 +248,67 @@ public class FragmentHomeView extends Fragment implements FragmentHomeContract.V
                     state.getUsuario().getToken()
             ));
         }catch (Exception ex){
-            hideCircularProgressBar();
-            viewPagerHome.setVisibility(View.GONE);
-            titleBannerComercial.setVisibility(View.GONE);
+            showDataFetchError("");
         }
     }
 
     @Override
-    public void showCommercialBanner(List<ResponseBannerComercial> commercialBanners){
-        if(commercialBanners != null && commercialBanners.size()>0){
-            viewPagerHome.setVisibility(View.VISIBLE);
-            viewPagerHome.setAdapter(new ImageHomeSlideAdapter(context, commercialBanners, viewPagerHome, state.getUsuario()));
-            viewPagerHome.setClipToPadding(false);
-            viewPagerHome.setClipChildren(false);
-            viewPagerHome.setOffscreenPageLimit(3);
-            viewPagerHome.getChildAt(0).setOverScrollMode(RecyclerView.OVER_SCROLL_NEVER);
-            CompositePageTransformer compositePageTransformer = new CompositePageTransformer();
-            compositePageTransformer.addTransformer(new MarginPageTransformer(40));
-            compositePageTransformer.addTransformer(new ViewPager2.PageTransformer() {
-                @Override
-                public void transformPage(@NonNull View page, float position) {
-                    float r = 1 - Math.abs(position);
-                    page.setScaleY(0.85f + r * 0.15f);
+    public void showCommercialBanner(ResponseBanerComercial commercialBanner){
+        btnElecciones.setVisibility(View.VISIBLE);
+        Picasso.get().load(commercialBanner.getN_url_imagen()).into(btnElecciones);
+        btnElecciones.setBackgroundColor(Color.TRANSPARENT);
+        btnElecciones.setScaleType(ImageView.ScaleType.CENTER);
+        btnElecciones.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(commercialBanner.getI_autenticportal() != null && commercialBanner.getI_autenticportal().equals("Y")){
+                    Encripcion encripcion = new Encripcion();
+                    String tokenSession = encripcion.encryptAES(state.getUsuario().getCedula()+":"+state.getUsuario().getToken());
+                    Uri uri = Uri.parse(commercialBanner.getN_url_enlace().replace("${tokenSession}", tokenSession));
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivity(intent);
+                }else{
+                    Uri uri = Uri.parse(commercialBanner.getN_url_enlace());
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivity(intent);
                 }
-            });
-            viewPagerHome.setPageTransformer(compositePageTransformer);
-
-            viewPagerHome.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-                @Override
-                public void onPageSelected(int position) {
-                    super.onPageSelected(position);
-                    sliderHandler.removeCallbacks(sliderRunnable);
-                    sliderHandler.postDelayed(sliderRunnable, 5000);
-                }
-            });
-        }else{
-            viewPagerHome.setVisibility(View.GONE);
-            titleBannerComercial.setVisibility(View.GONE);
-        }
-
+            }
+        });
     }
-
-    private Runnable sliderRunnable = new Runnable() {
-        @Override
-        public void run() {
-            viewPagerHome.setCurrentItem(viewPagerHome.getCurrentItem() + 1);
-        }
-    };
 
     @Override
     public void hideCommercialBanner(){
-        viewPagerHome.setVisibility(View.GONE);
+        btnElecciones.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void fetchMessageInbox(){
+        try{
+            Encripcion encripcion = Encripcion.getInstance();
+            presenter.fetchMessageInbox(new BaseRequest(
+                    encripcion.encriptar(state.getUsuario().getCedula()),
+                    state.getUsuario().getToken()
+            ));
+        }catch (Exception ex){
+            showDataFetchError("");
+        }
+    }
+
+    @Override
+    public void showMessageInbox(List<ResponseObtenerMensajes> messagesInbox){
+        state.setMensajesBuzon(messagesInbox);
+        int cant = context.getUnreadMessagesCount();
+        if (cant > 0 && row_cant_messages != null) {
+            BadgeView badgeView = new BadgeView(context, row_cant_messages);
+            badgeView.setText(String.valueOf(cant));
+            badgeView.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
+            badgeView.setBadgeMargin(40, 20);
+            badgeView.setBadgeBackgroundColor(Color.parseColor("#FFEA00"));
+            TranslateAnimation anim = new TranslateAnimation(-100, 0, 0, 0);
+            anim.setInterpolator(new BounceInterpolator());
+            anim.setDuration(1000);
+            badgeView.toggle(anim, null);
+        }
     }
 
     @Override
@@ -605,18 +331,22 @@ public class FragmentHomeView extends Fragment implements FragmentHomeContract.V
                 }
             }
         }
-        final Dialog dialog = getDialog(context, R.layout.pop_up_error);
-        TextView titleMessage = dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText("Lo sentimos");
-        TextView contentMessage =  dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(view -> dialog.dismiss());
-        dialog.show();
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        d.show();
     }
 
     @Override
-    public void showDataFetchError(String title, String message){
+    public void showDataFetchError(String message) {
         if(TextUtils.isEmpty(message)){
             message = "Ha ocurrido un error. Intenta de nuevo y si el error persiste, contacta a PRESENTE.";
             if(state != null && state.getMensajesRespuesta() != null && state.getMensajesRespuesta().size()>0){
@@ -627,35 +357,226 @@ public class FragmentHomeView extends Fragment implements FragmentHomeContract.V
                 }
             }
         }
-        final Dialog dialog = getDialog(context, R.layout.pop_up_error);
-        TextView titleMessage = dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText(title);
-        TextView contentMessage = dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose =  dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(view -> dialog.dismiss());
-        dialog.show();
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        d.show();
     }
 
     @Override
     public void showExpiredToken(String message) {
-        if(state.getUsuario() != null){
-            context.reiniciarEstado();
-            context.setFragment(IFragmentCoordinator.Pantalla.Ingreso);
-            final Dialog dialog = getDialog(context, R.layout.pop_up_closedsession);
-            Button buttonClosedSession = (Button) dialog.findViewById(R.id.btnVolverAIngresar);
-            buttonClosedSession.setOnClickListener(view -> dialog.dismiss());
-            dialog.show();
-        }
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle("Sesión finalizada");
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                context.salir();
+            }
+        });
+        d.show();
     }
+    //Valida los mensajes no leidos
+//    private void showCantMessages(){
+//        int cant = context.getUnreadMessagesCount();
+//        if (cant > 0 && row_cant_messages != null) {
+//            BadgeView badgeView = new BadgeView(context, row_cant_messages);
+//            badgeView.setText(String.valueOf(cant));
+//            badgeView.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
+//            badgeView.setBadgeMargin(40, 20);
+//            badgeView.setBadgeBackgroundColor(Color.parseColor("#FFEA00"));
+//            TranslateAnimation anim = new TranslateAnimation(-100, 0, 0, 0);
+//            anim.setInterpolator(new BounceInterpolator());
+//            anim.setDuration(1000);
+//            badgeView.toggle(anim, null);
+//        }
+//    }
+//
+//    class BuzonTask extends AsyncTask<String, String, String> {
+//
+//        String cedula = null;
+//        String token = null;
+//
+//        @Override
+//        protected String doInBackground(String... params) {
+//            try {
+//                NetworkHelper networkHelper = new NetworkHelper();
+//                Encripcion encripcion = Encripcion.getInstance();
+//                JSONObject param = new JSONObject();
+//                param.put("cedula", cedula = encripcion.encriptar(params[0]));
+//                param.put("token", token = params[1]);
+//                return networkHelper.writeService(param, SincroHelper.MENSAJES_BUZON);
+//            } catch (Exception e) {
+//                return e.getMessage();
+//            }
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            super.onPostExecute(result);
+//            procesarResultMensajesBuzon(result);
+//            pd.dismiss();
+//        }
+//    }
+//
+//    private void procesarResultMensajesBuzon(String result) {
+//        try {
+//            ArrayList<ResponseObtenerMensajes> mensajesBuzon = SincroHelper.procesarJsonMensajesBuzon(result);
+//            context.getState().setMensajesBuzon(mensajesBuzon);
+//
+//            //Mostramos la cantidad de mensajes sin leer
+//            showCantMessages();
+//
+//        } catch (ErrorTokenException e) {
+//            AlertDialog.Builder d = new AlertDialog.Builder(context);
+//            d.setTitle("Sesión finalizada");
+//            d.setIcon(R.mipmap.icon_presente);
+//            d.setMessage(e.getMessage());
+//            d.setCancelable(false);
+//            d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface dialog, int id) {
+//                    context.salir();
+//                }
+//            });
+//            d.show();
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
+//    }
+//
+//    //Valida el banner activo en el menu principal
+//    private class ButtonBannerTask extends AsyncTask<String, String, String> {
+//
+//        @Override
+//        protected void onPreExecute() {
+//            pd.setTitle(context.getResources().getString(R.string.app_name));
+//            pd.setMessage("Un momento...");
+//            pd.setIcon(R.mipmap.icon_presente);
+//            pd.setCancelable(false);
+//            pd.show();
+//        }
+//
+//        @Override
+//        protected String doInBackground(String... params) {
+//            try {
+//                NetworkHelper networkHelper = new NetworkHelper();
+//                Encripcion encripcion = Encripcion.getInstance();
+//                JSONObject param = new JSONObject();
+//
+//                param.put("cedula", encripcion.encriptar(params[0]));
+//                param.put("token", params[1]);
+//                return networkHelper.writeService(param, SincroHelper.OBTENER_BANNER_MENUP);
+//            } catch (Exception e) {
+//                return e.getMessage();
+//            }
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            super.onPostExecute(result);
+//            procesarResultJSONBannerMP(result);
+//        }
+//    }
+//
+//    private void procesarResultJSONBannerMP(String result){
+//        try {
+//            final BannerMenuPrincipal banneractivo = SincroHelper.procesarJsonObtenerBannerMenuP(result);
+//
+//            if(banneractivo != null && banneractivo.i_estado.equals("S")){
+//                btnElecciones.setVisibility(View.VISIBLE);
+//                Picasso.get().load(banneractivo.n_url_imagen).into(btnElecciones);
+//                btnElecciones.setBackgroundColor(Color.TRANSPARENT);
+//                btnElecciones.setScaleType(ImageView.ScaleType.CENTER);
+//                btnElecciones.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        Uri uri = Uri.parse(banneractivo.n_url_enlace);
+//                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+//                        startActivity(intent);
+//                    }
+//                });
+//            }else{
+//                btnElecciones.setVisibility(View.GONE);
+//            }
+//
+//        } catch (ErrorTokenException e) {
+//            AlertDialog.Builder d = new AlertDialog.Builder(context);
+//            d.setTitle("Sesión finalizada");
+//            d.setIcon(R.mipmap.icon_presente);
+//            d.setMessage(e.getMessage());
+//            d.setCancelable(false);
+//            d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface dialog, int id) {
+//                    context.salir();
+//                }
+//            });
+//            d.show();
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
+//    }
 
-    private Dialog getDialog(ActivityMainView context, Integer idPopUp){
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.setContentView(idPopUp);
-        return dialog;
-    }
+
+    //Valida los terminos y condiciones del usuario, comprueba que tenga activo los ultimos
+//    private class ObtenerTerminosUsuarioTask extends AsyncTask<String, String, String> {
+//
+//        @Override
+//        protected String doInBackground(String... params) {
+//            try {
+//                NetworkHelper networkHelper = new NetworkHelper();
+//                Encripcion encripcion = Encripcion.getInstance();
+//                JSONObject param = new JSONObject();
+//
+//                param.put("cedula", encripcion.encriptar(params[0]));
+//                param.put("token", params[1]);
+//                return networkHelper.writeService(param, SincroHelper.OBTENER_TERMINOS_ACEPTADOS);
+//            } catch (Exception e) {
+//                return e.getMessage();
+//            }
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            super.onPostExecute(result);
+//            procesarResultJSONSelectTerminosAceptados(result);
+//        }
+//    }
+
+//    private void procesarResultJSONSelectTerminosAceptados(String result){
+//        try {
+//            GlobalState state = context.getState();
+//            TerminosyCondiciones terminosactuales = state.getTerminos();
+//            TerminosyCondicionesUsuario terminosusuario = SincroHelper.procesarJsonSelectTerminos(result, terminosactuales.k_termycond);
+//
+//            if(terminosusuario == null){
+//                Intent i = new Intent(context, ActivityTerminosUso.class);
+//                startActivityForResult(i, ActivityMain.TERMS_AND_CONDITIONS);
+//            }
+//
+//        } catch (ErrorTokenException e) {
+//            AlertDialog.Builder d = new AlertDialog.Builder(context);
+//            d.setTitle("Sesión finalizada");
+//            d.setIcon(R.mipmap.icon_presente);
+//            d.setMessage(e.getMessage());
+//            d.setCancelable(false);
+//            d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface dialog, int id) {
+//                    context.salir();
+//                }
+//            });
+//            d.show();
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
+//    }
+
 }

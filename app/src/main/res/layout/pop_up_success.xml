@@ -22,7 +22,6 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/imageViewValidaMovimientoIcon"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:src="@drawable/icon_tranferexitosa"
@@ -35,25 +34,26 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Solicitud Enviada"
+                android:text="Transferencia exitosa"
                 android:textAlignment="center"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:fontFamily="@font/roboto_light"/>
 
             <TextView
-                android:id="@+id/contentSuccess"
-                android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:textSize="16sp"
-                android:fontFamily="@font/roboto_light"/>
+                    android:id="@+id/textSuccess"
+                    android:layout_width="fill_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="Exitoso"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/roboto_light"/>
 
         </LinearLayout>
     </RelativeLayout>
 
     <ImageButton
-        android:id="@+id/buttonClose"
+        android:id="@+id/button_close"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/icon_close"

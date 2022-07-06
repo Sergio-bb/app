@@ -1,23 +1,18 @@
 package solidappservice.cm.com.presenteapp.front.mismensajes.FragmentReadMessage;
 
-import android.app.Dialog;
+import android.app.AlertDialog;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.webkit.WebView;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTabHost;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
@@ -131,7 +126,7 @@ public class FragmentReadMessageView extends Fragment implements FragmentReadMes
                     idMessage
             ));
         }catch (Exception ex){
-            showDataFetchError("Lo sentimos", "");
+            showDataFetchError("");
         }
     }
 
@@ -139,60 +134,7 @@ public class FragmentReadMessageView extends Fragment implements FragmentReadMes
     public void showUpdateResultStatusMessages(){
         mensaje.setLeido("Y");
         //Contamos y mostramos los mensajes sin leer
-        showUnreadMessages(mensaje);
-    }
-
-    @Override
-    public void showUnreadMessages(ResponseObtenerMensajes inboxMessage){
-        try{
-            if(state != null){
-                if(inboxMessage != null){
-                    updateMessageRead(inboxMessage);
-                }
-                FragmentTabHost mTabHost = state.getmTabHost();
-                if(mTabHost != null){
-                    int numberOfUnReadMessages = 0;
-                    if(state.getMensajesBuzon() != null && state.getMensajesBuzon().size() > 0){
-                        int counter = 0;
-                        for(ResponseObtenerMensajes m : state.getMensajesBuzon()){
-                            if(m.getLeido().equals("N")){
-                                counter++;
-                            }
-                        }
-                        numberOfUnReadMessages = counter;
-                    }
-
-                    int currentTab = mTabHost.getCurrentTab();
-                    if(currentTab == 3) {
-                        View view_tab = mTabHost.getCurrentTabView();
-                        if(view_tab == null) return;
-                        TextView c = view_tab.findViewById(R.id.cantMessages);
-                        if(c == null) return;
-                        if (numberOfUnReadMessages > 0) {
-                            c.setText((numberOfUnReadMessages > 9 ? String.valueOf(numberOfUnReadMessages):" "+String.valueOf(numberOfUnReadMessages)+" "));
-                            c.setVisibility(View.VISIBLE);
-                        } else {
-                            c.setText("");
-                            c.setVisibility(View.GONE);
-                        }
-                    }
-                }
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void updateMessageRead(ResponseObtenerMensajes inboxMessage){
-        if(state != null && state.getMensajesBuzon() != null && state.getMensajesBuzon().size() > 0) {
-            for (ResponseObtenerMensajes m : state.getMensajesBuzon()) {
-                if(m.getIdMensaje().equals(inboxMessage.getIdMensaje())){
-                    m.setLeido("Y");
-                    break;
-                }
-            }
-        }
+        context.showUnreadMessages(mensaje);
     }
 
     @Override
@@ -205,29 +147,23 @@ public class FragmentReadMessageView extends Fragment implements FragmentReadMes
                 }
             }
         }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText("Lo sentimos");
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(DialogInterface dialog, int which) {
                 context.setFragment(IFragmentCoordinator.Pantalla.MenuPrincipal);
                 dialog.dismiss();
             }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
-    public void showDataFetchError(String title, String message){
+    public void showDataFetchError(String message) {
         if(TextUtils.isEmpty(message)){
             message = "Ha ocurrido un error. Intenta de nuevo y si el error persiste, contacta a PRESENTE.";
             if(state != null && state.getMensajesRespuesta() != null && state.getMensajesRespuesta().size()>0){
@@ -238,45 +174,34 @@ public class FragmentReadMessageView extends Fragment implements FragmentReadMes
                 }
             }
         }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText(title);
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(DialogInterface dialog, int which) {
                 context.setFragment(IFragmentCoordinator.Pantalla.MenuPrincipal);
                 dialog.dismiss();
             }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
     public void showExpiredToken(String message) {
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_closedsession);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        Button buttonClosedSession = (Button) dialog.findViewById(R.id.btnVolverAIngresar);
-        buttonClosedSession.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle("Sesión finalizada");
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
                 context.salir();
             }
         });
-        dialog.show();
-
+        d.show();
     }
 //    private void mostrarMensaje(ResponseObtenerMensajes mensaje) {
 //        txtTitle.setText(mensaje.getTitulo());

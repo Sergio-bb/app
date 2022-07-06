@@ -28,117 +28,21 @@ public class FragmentReplacementCardDetailPresenter implements FragmentReplaceme
 
     @Override
     public void fetchAssociatedDependence(BaseRequest baseRequest) {
-        view.hideSectionReplacemendCard();
-        view.showCircularProgressBar("Un momento...");
+        view.showProgressDialog("Un momento...");
         model.getAssociatedDependence(baseRequest, this);
     }
-    @Override
-    public <T> void onSuccessAssociatedDependence(Response<BaseResponse<T>> response) {
-        view.hideCircularProgressBar();
-        try{
-            ResponseDependenciasAsociado dependencias = (ResponseDependenciasAsociado) response.body().getResultado();
-            view.showSectionReplacemendCard();
-            view.showAssociatedDependence(dependencias);
-        }catch (Exception ex){
-            view.showDialogError("Lo sentimos", "");
-            view.showErrorWithRefresh();
-        }
-    }
-    @Override
-    public <T> void onErrorAssociatedDependence(Response<BaseResponse<T>> response) {
-        view.hideCircularProgressBar();
-        if(response != null){
-            view.showDialogError("Lo sentimos", response.body().getMensajeErrorUsuario());
-        }else{
-            view.showDialogError("Lo sentimos", "");
-        }
-        view.showErrorWithRefresh();
-    }
-    @Override
-    public void onFailureAssociatedDependence(Throwable t, boolean isErrorTimeOut) {
-        view.hideCircularProgressBar();
-        if(isErrorTimeOut){
-            view.showErrorTimeOut();
-        }else{
-            view.showDialogError("Lo sentimos", "");
-        }
-        view.showErrorWithRefresh();
-    }
-
 
     @Override
     public void fechReplacementCardValue() {
-        view.showCircularProgressBarCardValue();
+        view.showProgressDialog("Obteniendo valor comisión...");
         model.getReplacementCardValue(this);
     }
-    @Override
-    public <T> void onSuccessReplacementCardValue(Response<BaseResponse<T>> response) {
-        view.hideCircularProgressBarCardValue();
-        try{
-            ResponseValorReposicionTarjeta valorTarjeta = (ResponseValorReposicionTarjeta) response.body().getResultado();
-            if(valorTarjeta != null){
-                view.showReplacementCardValue(valorTarjeta.getV_numeri());
-            }
-        }catch (Exception ex){
-            view.showDataFetchError("Lo sentimos", "");
-        }
-    }
-    @Override
-    public <T> void onErrorReplacementCardValue(Response<BaseResponse<T>> response) {
-        view.hideCircularProgressBar();
-        if(response != null){
-            view.showDataFetchError("Lo sentimos", response.body().getMensajeErrorUsuario());
-        }else{
-            view.showDataFetchError("Lo sentimos", "");
-        }
-    }
-    @Override
-    public void onFailureReplacementCardValue(Throwable t, boolean isErrorTimeOut) {
-        view.hideCircularProgressBar();
-        if(isErrorTimeOut){
-            view.showErrorTimeOut();
-        }else{
-            view.showDataFetchError("Lo sentimos", "");
-        }
-    }
-
 
     @Override
     public void solicityReplacementCard(RequestReposicionTarjeta body) {
         view.showProgressDialog("Enviando solicitud...");
         model.solicityReplacementCard(body, this);
     }
-    @Override
-    public <T> void onSuccessSolicityReplacementCard(Response<BaseResponse<T>> response) {
-        view.hideProgressDialog();
-        try{
-            String resultReplacementeCard = (String) response.body().getResultado();
-            if(resultReplacementeCard != null && resultReplacementeCard.equals("OK")){
-                view.showResultReplacementCard();
-            }
-        }catch (Exception ex){
-            view.showDataFetchError("Lo sentimos", "");
-        }
-    }
-    @Override
-    public <T> void onErrorSolicityReplacementCard(Response<BaseResponse<T>> response) {
-        view.hideProgressDialog();
-        if(response != null){
-            view.showDataFetchError("Lo sentimos", response.body().getMensajeErrorUsuario());
-        }else{
-            view.showDataFetchError("Lo sentimos", "");
-        }
-    }
-    @Override
-    public void onFailureSolicityReplacementCard(Throwable t, boolean isErrorTimeOut) {
-        view.hideProgressDialog();
-        if(isErrorTimeOut){
-            view.showErrorTimeOut();
-        }else{
-            view.showDataFetchError("Lo sentimos", "");
-        }
-    }
-
 
     @Override
     public void sendMessageCardReplacementSuccessful(RequestMensajeReposicionTarjeta body) {
@@ -146,9 +50,54 @@ public class FragmentReplacementCardDetailPresenter implements FragmentReplaceme
     }
 
     @Override
+    public <T> void onSuccess(Response<BaseResponse<T>> response) {
+        view.hideProgressDialog();
+        try{
+            if(ResponseDependenciasAsociado.class.equals(response.body().getResultado().getClass())){
+                ResponseDependenciasAsociado dependencias = (ResponseDependenciasAsociado) response.body().getResultado();
+                view.showAssociatedDependence(dependencias);
+            }
+            if(ResponseValorReposicionTarjeta.class.equals(response.body().getResultado().getClass())){
+                ResponseValorReposicionTarjeta valorTarjeta = (ResponseValorReposicionTarjeta) response.body().getResultado();
+                if(valorTarjeta != null){
+                    view.showReplacementCardValue(valorTarjeta.getV_numeri());
+                }
+            }
+            if(String.class.equals(response.body().getResultado().getClass())){
+                String resultReplacementeCard = (String) response.body().getResultado();
+                if(resultReplacementeCard != null && resultReplacementeCard.equals("OK")){
+                    view.showResultReplacementCard();
+                }
+            }
+        }catch (Exception ex){
+            view.showDataFetchError("");
+        }
+    }
+
+    @Override
     public <T> void onExpiredToken(Response<BaseResponse<T>> response) {
         view.hideProgressDialog();
         view.showExpiredToken(response.body().getErrorToken());
+    }
+
+    @Override
+    public <T> void onError(Response<BaseResponse<T>> response) {
+        view.hideProgressDialog();
+        if(response != null){
+            view.showDataFetchError(response.body().getMensajeErrorUsuario());
+        }else{
+            view.showDataFetchError("");
+        }
+    }
+
+    @Override
+    public void onFailure(Throwable t, boolean isErrorTimeOut) {
+        view.hideProgressDialog();
+        if(isErrorTimeOut){
+            view.showErrorTimeOut();
+        }else{
+            view.showDataFetchError("");
+        }
     }
 
 }

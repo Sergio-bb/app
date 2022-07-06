@@ -1,8 +1,10 @@
 package solidappservice.cm.com.presenteapp.front.actualizaciondatos.FragmentVerifyCode;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
@@ -56,7 +58,7 @@ public class FragmentVerifyCodeView extends Fragment implements FragmentVerifyCo
     private ActivityUpdatePersonalDataView baseView;
     private ActivityBase context;
     private GlobalState state;
-    private Dialog pd;
+    private ProgressDialog pd;
     private Contador timer;
     private CodigoVerificacion codigo;
     private Boolean isSendToEmail;
@@ -122,6 +124,7 @@ public class FragmentVerifyCodeView extends Fragment implements FragmentVerifyCo
         baseView = (ActivityUpdatePersonalDataView) getActivity();
         context = (ActivityBase) getActivity();
         state = context.getState();
+        pd = new ProgressDialog(context);
         disabledSectionVerificationCode();
         isSendToEmail = false;
         isSendToPhone = false;
@@ -169,6 +172,7 @@ public class FragmentVerifyCodeView extends Fragment implements FragmentVerifyCo
     @OnClick(R.id.btn_enviar_celular)
     public void onClickSentVerificationCodePhone(){
         sendVerificationCodePhone();
+//        sendSms();
     }
 
     @OnTextChanged(R.id.et_codigo1)
@@ -230,10 +234,10 @@ public class FragmentVerifyCodeView extends Fragment implements FragmentVerifyCo
     protected void onFocusChangeEtCodigo1(View v, boolean hasFocus) {
         if (hasFocus) {
             etCodigo1.requestFocus();
-            if(!TextUtils.isEmpty(etCodigo1.getText())){
-                etCodigo1.setText("");
-                etCodigo1.requestFocus();
-            }
+                if(!TextUtils.isEmpty(etCodigo1.getText())){
+                    etCodigo1.setText("");
+                    etCodigo1.requestFocus();
+                }
         }
     }
 
@@ -241,10 +245,10 @@ public class FragmentVerifyCodeView extends Fragment implements FragmentVerifyCo
     protected void onFocusChangeEtCodigo2(View v, boolean hasFocus) {
         if (hasFocus) {
             etCodigo2.requestFocus();
-            if(!TextUtils.isEmpty(etCodigo2.getText())){
-                etCodigo2.setText("");
-                etCodigo2.requestFocus();
-            }
+                if(!TextUtils.isEmpty(etCodigo2.getText())){
+                    etCodigo2.setText("");
+                    etCodigo2.requestFocus();
+                }
         }
     }
 
@@ -286,7 +290,7 @@ public class FragmentVerifyCodeView extends Fragment implements FragmentVerifyCo
 
             ));
         }catch (Exception ex){
-            showDataFetchError("Lo sentimos", "");
+            showDataFetchError("");
         }
     }
 
@@ -305,7 +309,7 @@ public class FragmentVerifyCodeView extends Fragment implements FragmentVerifyCo
                     ""
             ));
         }catch(Exception ex){
-            showDataFetchError("Lo sentimos", "");
+            showDataFetchError("");
         }
     }
 
@@ -335,7 +339,7 @@ public class FragmentVerifyCodeView extends Fragment implements FragmentVerifyCo
                     codigoIngresado
             ));
         }catch(Exception ex){
-            showDataFetchError("Lo sentimos", "");
+            showDataFetchError("");
         }
     }
 
@@ -376,7 +380,7 @@ public class FragmentVerifyCodeView extends Fragment implements FragmentVerifyCo
                 ));
             }
         }catch (Exception ex){
-            showDataFetchError("Lo sentimos", "");
+            showDataFetchError("");
         }
     }
 
@@ -404,7 +408,7 @@ public class FragmentVerifyCodeView extends Fragment implements FragmentVerifyCo
                     baseView.datosAsociado.getCanal()
             ));
         }catch (Exception ex){
-            showDataFetchError("Lo sentimos", "");
+            showDataFetchError("");
         }
     }
 
@@ -465,7 +469,7 @@ public class FragmentVerifyCodeView extends Fragment implements FragmentVerifyCo
         separator.setBackgroundResource(R.drawable.separator_green);
         contentMessage.setText(String.format("Hemos enviado a tu \n %s \n el código para continuar el proceso",
                 isSendToEmail ? "correo " + baseView.datosAsociado.getEmail() :
-                        isSendToPhone ? "celular " + baseView.datosAsociado.getCelular() : ""));
+                isSendToPhone ? "celular " + baseView.datosAsociado.getCelular() : ""));
         ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
         buttonClose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -534,29 +538,23 @@ public class FragmentVerifyCodeView extends Fragment implements FragmentVerifyCo
                 }
             }
         }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText("Lo sentimos");
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 baseView.finish();
             }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
-    public void showDataFetchError(String title, String message) {
+    public void showDataFetchError(String message) {
         if(TextUtils.isEmpty(message)){
             message = "Ha ocurrido un error. Intenta de nuevo y si el error persiste, contacta a PRESENTE.";
             if(state != null && state.getMensajesRespuesta() != null && state.getMensajesRespuesta().size()>0){
@@ -567,57 +565,42 @@ public class FragmentVerifyCodeView extends Fragment implements FragmentVerifyCo
                 }
             }
         }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText(title);
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 baseView.finish();
             }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
     public void showExpiredToken(String message) {
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_closedsession);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        Button buttonClosedSession = (Button) dialog.findViewById(R.id.btnVolverAIngresar);
-        buttonClosedSession.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle("Sesión finalizada");
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
                 context.salir();
             }
         });
-        dialog.show();
-
+        d.show();
     }
 
     @Override
     public void showProgressDialog(String message) {
-        pd = new Dialog(context);
-        pd.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        pd.setCanceledOnTouchOutside(false);
-        pd.setContentView(R.layout.pop_up_loading);
+        pd.setTitle(context.getResources().getString(R.string.app_name));
+        pd.setMessage(message);
+        pd.setIcon(R.mipmap.icon_presente);
         pd.setCancelable(false);
-        pd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView contentMessage = (TextView) pd.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
         pd.show();
     }
 
@@ -643,8 +626,8 @@ public class FragmentVerifyCodeView extends Fragment implements FragmentVerifyCo
             long minutos =  millisUntilFinished / 60000;
             long segundos = millisUntilFinished % 60000 / 1000;
             tiempoExpiracion.setText(
-                    String.format("%s:%s",
-                            "Caducará en: " + (minutos < 10 ? "0" + minutos : minutos), segundos < 10 ? "0" + segundos : segundos));
+                String.format("%s:%s",
+                        "Caducará en: " + (minutos < 10 ? "0" + minutos : minutos), segundos < 10 ? "0" + segundos : segundos));
         }
     }
 

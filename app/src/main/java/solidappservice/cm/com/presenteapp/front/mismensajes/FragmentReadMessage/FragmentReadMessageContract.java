@@ -12,12 +12,10 @@ public interface FragmentReadMessageContract {
 
     interface View{
         void showMessage(ResponseObtenerMensajes inbox);
-        void showUnreadMessages(ResponseObtenerMensajes inboxMessage);
-        void updateMessageRead(ResponseObtenerMensajes inboxMessage);
         void fetchUpdateStatusMessage(String idMessage);
         void showUpdateResultStatusMessages();
+        void showDataFetchError(String message);
         void showErrorTimeOut();
-        void showDataFetchError(String title, String message);
         void showExpiredToken(String message);
     }
 

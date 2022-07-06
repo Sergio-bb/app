@@ -1,7 +1,5 @@
 package solidappservice.cm.com.presenteapp.front.bottomnavigationbar.ActivityGeoreferencing.ActivityLocationsGms;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
 import java.util.List;
@@ -36,7 +34,7 @@ public class ActivityLocationsGmsPresenter implements ActivityLocationsGmsContra
         try{
             List<ResponseLocationsAgencies> listAgencias = (List<ResponseLocationsAgencies>) response.body().getResultado();
             view.showFilters(listAgencias);
-//           view.showAgencies(listAgencias, view.getZoomDesiredByKilometros(7));
+//            view.showAgencies(listAgencias, view.getZoomDesiredByKilometros(7));
             view.showSectionLocations();
             view.hideCircularProgressBar();
         }catch (Exception ex){

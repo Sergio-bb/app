@@ -24,7 +24,7 @@ public class FragmentSavingsSolicityModel implements FragmentSavingsSolicityCont
     public void getTypesOfSavings(BaseRequest body, final FragmentSavingsSolicityContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -35,29 +35,29 @@ public class FragmentSavingsSolicityModel implements FragmentSavingsSolicityCont
                 @Override
                 public void onResponse(Call<BaseResponse<List<ResponseTiposAhorro>>> call, Response<BaseResponse<List<ResponseTiposAhorro>>> response) {
                     if (response.isSuccessful()) {
-                        assert response.body() != null;
                         if(response.body().getErrorToken() != null && !response.body().getErrorToken().isEmpty()){
                             listener.onExpiredToken(response);
                         }else if(response.body().getMensajeErrorUsuario() != null && !response.body().getMensajeErrorUsuario().isEmpty()){
-                            listener.onErrorTypesOfSaving(response);
+                            listener.onError(response);
                         }else{
                             listener.onSuccessTypesOfSavings(response);
                         }
                     } else {
-                        listener.onErrorTypesOfSaving(null);
+                        listener.onError(null);
                     }
                 }
                 @Override
                 public void onFailure(Call<BaseResponse<List<ResponseTiposAhorro>>> call, Throwable t) {
                     if(t instanceof IOException){
-                        listener.onFailureTypesOfSaving(t, true);
+                        listener.onFailure(t, true);
                     }else{
-                        listener.onFailureTypesOfSaving(t, false);
+                        listener.onError(null);
                     }
+
                 }
             });
         } catch (Exception e) {
-            listener.onErrorTypesOfSaving(null);
+            listener.onError(null);
         }
     }
 
@@ -65,7 +65,7 @@ public class FragmentSavingsSolicityModel implements FragmentSavingsSolicityCont
     public void solicitySaving(RequestEnviarSolicitudAhorro body, final FragmentSavingsSolicityContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -79,25 +79,26 @@ public class FragmentSavingsSolicityModel implements FragmentSavingsSolicityCont
                         if(response.body().getErrorToken() != null && !response.body().getErrorToken().isEmpty()){
                             listener.onExpiredToken(response);
                         }else if(response.body().getMensajeErrorUsuario() != null && !response.body().getMensajeErrorUsuario().isEmpty()){
-                            listener.onErrorSolicitySaving(response);
+                            listener.onError(response);
                         }else{
                             listener.onSuccessSolicitySaving(response);
                         }
                     } else {
-                        listener.onErrorSolicitySaving(null);
+                        listener.onError(null);
                     }
                 }
                 @Override
                 public void onFailure(Call<BaseResponse<String>> call, Throwable t) {
                     if(t instanceof IOException){
-                        listener.onFailureTypesOfSaving(t, true);
+                        listener.onFailure(t, true);
                     }else{
-                        listener.onFailureTypesOfSaving(t, false);
+                        listener.onError(null);
                     }
+
                 }
             });
         } catch (Exception e) {
-            listener.onErrorSolicitySaving(null);
+            listener.onError(null);
         }
     }
 

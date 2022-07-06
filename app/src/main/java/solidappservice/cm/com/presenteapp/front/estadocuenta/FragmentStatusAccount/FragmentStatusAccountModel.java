@@ -1,8 +1,13 @@
 package solidappservice.cm.com.presenteapp.front.estadocuenta.FragmentStatusAccount;
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -13,16 +18,10 @@ import solidappservice.cm.com.presenteapp.entities.adelantonomina.request.Reques
 import solidappservice.cm.com.presenteapp.entities.adelantonomina.request.RequestConsultarAdelantoNomina;
 import solidappservice.cm.com.presenteapp.entities.adelantonomina.response.ResponseMovimientos;
 import solidappservice.cm.com.presenteapp.entities.base.BaseRequest;
-import solidappservice.cm.com.presenteapp.entities.base.BaseRequestNequi;
 import solidappservice.cm.com.presenteapp.entities.base.BaseResponse;
-import solidappservice.cm.com.presenteapp.entities.base.BaseResponseNequi;
-import solidappservice.cm.com.presenteapp.entities.estadocuenta.response.ResponseProducto;
+import solidappservice.cm.com.presenteapp.entities.estadocuenta.response.ResponseProductos;
 import solidappservice.cm.com.presenteapp.entities.mensajes.request.RequestEnviarMensaje;
-import solidappservice.cm.com.presenteapp.entities.nequi.response.ResponseGetAuthorizacionBalance;
-import solidappservice.cm.com.presenteapp.entities.nequi.response.ResponseNequiBalance;
-import solidappservice.cm.com.presenteapp.front.nequi.transfieredinero.FragmentSuscriptionsPayment.FragmentSuscriptionsPaymentContract;
 import solidappservice.cm.com.presenteapp.rest.NetworkHelper;
-import solidappservice.cm.com.presenteapp.rest.retrofit.apinequi.ApiNequi;
 import solidappservice.cm.com.presenteapp.rest.retrofit.apipresente.ApiPresente;
 
 /**
@@ -33,40 +32,51 @@ public class FragmentStatusAccountModel implements FragmentStatusAccountContract
     @Override
     public void getSalaryAdvanceMovements(BaseRequest body, final FragmentStatusAccountContract.APIListener listener) {
         try {
+            HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor()
+                    .setLevel(HttpLoggingInterceptor.Level.BODY);
+
+            OkHttpClient client = new OkHttpClient().newBuilder()
+                    .addInterceptor(loggingInterceptor)
+                    .readTimeout(60, TimeUnit.SECONDS)
+                    .connectTimeout(60, TimeUnit.SECONDS)
+                    .writeTimeout(60, TimeUnit.SECONDS)
+                    .build();
+
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
+                    .client(client)
                     .build();
 
             ApiPresente service = retrofit.create(ApiPresente.class);
             Call<BaseResponse<List<ResponseMovimientos>>> call = service.getMoves(body);
             call.enqueue(new Callback<BaseResponse<List<ResponseMovimientos>>>() {
-
                 @Override
                 public void onResponse(Call<BaseResponse<List<ResponseMovimientos>>> call, Response<BaseResponse<List<ResponseMovimientos>>> response) {
                     if (response.isSuccessful()) {
                         if(response.body().getErrorToken() != null && !response.body().getErrorToken().isEmpty()){
                             listener.onExpiredToken(response);
                         }else if(response.body().getMensajeErrorUsuario() != null && !response.body().getMensajeErrorUsuario().isEmpty()){
-                            listener.onErrorSalaryAdvance(response);
+                            listener.onError(response);
                         }else{
                             listener.onSuccessSalaryAdvanceMovements(response);
                         }
                     } else {
-                        listener.onErrorSalaryAdvance(null);
+                        listener.onError(null);
                     }
                 }
+
                 @Override
                 public void onFailure(Call<BaseResponse<List<ResponseMovimientos>>> call, Throwable t) {
                     if(t instanceof IOException){
-                        listener.onFailureSalaryAdvance(t, true);
+                        listener.onFailure(t, true);
                     }else{
-                        listener.onFailureSalaryAdvance(t, false);
+                        listener.onError(null);
                     }
                 }
             });
         } catch (Exception e) {
-            listener.onErrorSalaryAdvance(null);
+            listener.onError(null);
         }
     }
 
@@ -74,7 +84,7 @@ public class FragmentStatusAccountModel implements FragmentStatusAccountContract
     public void processSalaryAdvancePending(RequestConsultarAdelantoNomina body, final FragmentStatusAccountContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -88,6 +98,7 @@ public class FragmentStatusAccountModel implements FragmentStatusAccountContract
                         if(response.body().getErrorToken() != null && !response.body().getErrorToken().isEmpty()){
                             listener.onExpiredToken(response);
                         }else if(response.body().getMensajeErrorUsuario() != null && !response.body().getMensajeErrorUsuario().isEmpty()){
+                            //Log.i("errorEstadoC","1");
                             listener.onErrorSalaryAdvance(response);
                         }else{
                             listener.onSuccessProcessSalaryAdvancePending(response);
@@ -106,7 +117,7 @@ public class FragmentStatusAccountModel implements FragmentStatusAccountContract
                 }
             });
         } catch (Exception e) {
-            listener.onErrorSalaryAdvance(null);
+            listener.onError(null);
         }
     }
 
@@ -114,7 +125,7 @@ public class FragmentStatusAccountModel implements FragmentStatusAccountContract
     public void updateSalaryAdvanceStatus(RequestActualizarAdelantoNomina body, final FragmentStatusAccountContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -128,25 +139,25 @@ public class FragmentStatusAccountModel implements FragmentStatusAccountContract
                         if(response.body().getErrorToken() != null && !response.body().getErrorToken().isEmpty()){
                             listener.onExpiredToken(response);
                         }else if(response.body().getMensajeErrorUsuario() != null && !response.body().getMensajeErrorUsuario().isEmpty()){
-                            listener.onErrorSalaryAdvance(response);
+                            listener.onError(response);
                         }else{
                             listener.onSuccessUpdateSalaryAdvanceStatus(response);
                         }
                     } else {
-                        listener.onErrorSalaryAdvance(null);
+                        listener.onError(null);
                     }
                 }
                 @Override
                 public void onFailure(Call<BaseResponse<String>> call, Throwable t) {
                     if(t instanceof IOException){
-                        listener.onFailureSalaryAdvance(t, true);
+                        listener.onFailure(t, true);
                     }else{
-                        listener.onFailureSalaryAdvance(t, false);
+                        listener.onError(null);
                     }
                 }
             });
         } catch (Exception e) {
-            listener.onErrorSalaryAdvance(null);
+            listener.onError(null);
         }
     }
 
@@ -154,7 +165,7 @@ public class FragmentStatusAccountModel implements FragmentStatusAccountContract
     public void sendSalaryAdvanceNotification(RequestEnviarMensaje body, final FragmentStatusAccountContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -168,26 +179,26 @@ public class FragmentStatusAccountModel implements FragmentStatusAccountContract
                         if(response.body().getErrorToken() != null && !response.body().getErrorToken().isEmpty()){
                             listener.onExpiredToken(response);
                         }else if(response.body().getMensajeErrorUsuario() != null && !response.body().getMensajeErrorUsuario().isEmpty()){
-                            listener.onErrorSalaryAdvance(response);
+                            listener.onError(response);
                         }else{
                             response.body().setResultado("MENSAJE");
                             listener.onSuccessSendSalaryAdvanceNotification(response);
                         }
                     } else {
-                        listener.onErrorSalaryAdvance(null);
+                        listener.onError(null);
                     }
                 }
                 @Override
                 public void onFailure(Call<BaseResponse<String>> call, Throwable t) {
                     if(t instanceof IOException){
-                        listener.onFailureSalaryAdvance(t, true);
+                        listener.onFailure(t, true);
                     }else{
-                        listener.onFailureSalaryAdvance(t, false);
+                        listener.onError(null);
                     }
                 }
             });
         } catch (Exception e) {
-            listener.onErrorSalaryAdvance(null);
+            listener.onError(null);
         }
     }
 
@@ -195,112 +206,69 @@ public class FragmentStatusAccountModel implements FragmentStatusAccountContract
     public void getAccountStatus(BaseRequest body, final FragmentStatusAccountContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
             ApiPresente service = retrofit.create(ApiPresente.class);
-            Call<BaseResponse<List<ResponseProducto>>> call = service.getAccounts(body);
-            call.enqueue(new Callback<BaseResponse<List<ResponseProducto>>>() {
+            Call<BaseResponse<List<ResponseProductos>>> call = service.getAccounts(body);
+            call.enqueue(new Callback<BaseResponse<List<ResponseProductos>>>() {
 
                 @Override
-                public void onResponse(Call<BaseResponse<List<ResponseProducto>>> call, Response<BaseResponse<List<ResponseProducto>>> response) {
+                public void onResponse(Call<BaseResponse<List<ResponseProductos>>> call, Response<BaseResponse<List<ResponseProductos>>> response) {
                     if (response.isSuccessful()) {
                         if(response.body().getErrorToken() != null && !response.body().getErrorToken().isEmpty()){
                             listener.onExpiredToken(response);
                         }else if(response.body().getMensajeErrorUsuario() != null && !response.body().getMensajeErrorUsuario().isEmpty()){
-                            listener.onErrorAccountStatus(response);
+                            listener.onError(response);
                         }else{
                             listener.onSuccessAccountStatus(response);
                         }
                     } else {
-                        listener.onErrorAccountStatus(null);
+                        listener.onError(null);
                     }
                 }
                 @Override
-                public void onFailure(Call<BaseResponse<List<ResponseProducto>>> call, Throwable t) {
+                public void onFailure(Call<BaseResponse<List<ResponseProductos>>> call, Throwable t) {
                     if(t instanceof IOException){
-                        listener.onFailureAccountStatus(t, true);
+                        listener.onFailure(t, true);
                     }else{
-                        listener.onFailureAccountStatus(t, false);
+                        listener.onError(null);
                     }
                 }
             });
         } catch (Exception e) {
-            listener.onErrorAccountStatus(null);
+            listener.onError(null);
         }
     }
 
-    @Override
-    public void getNequiBalance(BaseRequestNequi body, final FragmentStatusAccountContract.APIListener listener) {
-        try {
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.NEQUI_WS)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
+/*    call.enqueue(new Callback<BaseResponse<List<ResponseMovimientos>>>() {
 
-            ApiNequi service = retrofit.create(ApiNequi.class);
-            Call<BaseResponseNequi<ResponseNequiBalance>> call = service.getNequiBalance(body);
-            call.enqueue(new Callback<BaseResponseNequi<ResponseNequiBalance>>() {
-
-                @Override
-                public void onResponse(Call<BaseResponseNequi<ResponseNequiBalance>> call, Response<BaseResponseNequi<ResponseNequiBalance>> response) {
-                    if (response.isSuccessful()) {
-                        if(response.body().isResponse()){
-                            listener.onSuccessNequiBalance(response);
-                        }else if(response.body().getErrorToken() != null && !response.body().getErrorToken().isEmpty()){
-                            listener.onExpiredTokenNequi(response);
-                        }else{
-                            listener.onErrorNequiBalance(response);
-                        }
-                    } else {
-                        listener.onErrorNequiBalance(null);
-                    }
+        @Override
+        public void onResponse(Call<BaseResponse<List<ResponseMovimientos>>> call, Response<BaseResponse<List<ResponseMovimientos>>> response) {
+            if (response.isSuccessful()) {
+                if(response.body().getErrorToken() != null && !response.body().getErrorToken().isEmpty()){
+                    listener.onExpiredToken(response);
+                }else if(response.body().getMensajeErrorUsuario() != null && !response.body().getMensajeErrorUsuario().isEmpty()){
+                    Log.i("onErrorJ", "1");
+                    listener.onError(response);
+                }else{
+                    listener.onSuccessSalaryAdvanceMovements(response);
                 }
-                @Override
-                public void onFailure(Call<BaseResponseNequi<ResponseNequiBalance>> call, Throwable t) {
-                    listener.onErrorNequiBalance(null);
-                }
-            });
-        } catch (Exception e) {
-            listener.onErrorNequiBalance(null);
+            } else {
+                Log.i("onErrorJ", "2");
+                listener.onError(null);
+            }
         }
-    }
-
-    @Override
-    public void getAuthorizationNequiBalance(BaseRequestNequi body, final FragmentStatusAccountContract.APIListener listener) {
-        try {
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.NEQUI_WS)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
-
-            ApiNequi service = retrofit.create(ApiNequi.class);
-            Call<BaseResponseNequi<ResponseGetAuthorizacionBalance>> call = service.getAuthorizationNequiBalance(body);
-            call.enqueue(new Callback<BaseResponseNequi<ResponseGetAuthorizacionBalance>>() {
-
-                @Override
-                public void onResponse(Call<BaseResponseNequi<ResponseGetAuthorizacionBalance>> call, Response<BaseResponseNequi<ResponseGetAuthorizacionBalance>> response) {
-                    if (response.isSuccessful()) {
-                        if(response.body().isResponse()){
-                            listener.onSuccessAuthorizationNequiBalance(response);
-                        }else if(response.body().getErrorToken() != null && !response.body().getErrorToken().isEmpty()){
-                            listener.onExpiredTokenNequi(response);
-                        }else{
-                            listener.onErrorAuthorizationNequiBalance(response);
-                        }
-                    } else {
-                        listener.onErrorAuthorizationNequiBalance(null);
-                    }
-                }
-                @Override
-                public void onFailure(Call<BaseResponseNequi<ResponseGetAuthorizacionBalance>> call, Throwable t) {
-                    listener.onErrorAuthorizationNequiBalance(null);
-                }
-            });
-        } catch (Exception e) {
-            listener.onErrorAuthorizationNequiBalance(null);
+        @Override
+        public void onFailure(Call<BaseResponse<List<ResponseMovimientos>>> call, Throwable t) {
+            if(t instanceof IOException){
+                listener.onFailure(t, true);
+            }else{
+                Log.i("onErrorJ", "3"+ t.getMessage());
+                listener.onError(null);
+            }
         }
-    }
+    });*/
 
 }

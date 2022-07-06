@@ -1,7 +1,9 @@
 package solidappservice.cm.com.presenteapp.front.bottomnavigationbar.ActivityGeoreferencing.ActivityPointsAttention;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
@@ -63,7 +65,7 @@ public class ActivityPointsAttentionView extends ActivityBase  implements Activi
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void setControls() {
-        if (android.os.Build.VERSION.SDK_INT != Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT != Build.VERSION_CODES.O) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
         presenter = new ActivityPointsAttentionPresenter(this);
@@ -80,7 +82,7 @@ public class ActivityPointsAttentionView extends ActivityBase  implements Activi
         try {
             if(agencia != null){
                 Intent intent = new Intent(
-                        android.content.Intent.ACTION_VIEW,
+                        Intent.ACTION_VIEW,
                         Uri.parse("http://maps.google.com/maps?daddr="+agencia.getN_latitu()+","+agencia.getN_longit()));
                 startActivity(intent);
             }
@@ -132,25 +134,18 @@ public class ActivityPointsAttentionView extends ActivityBase  implements Activi
                 }
             }
         }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText(title);
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(title);
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                finish();
+            public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
         });
-        dialog.show();
+        d.show();
     }
 
     private int getMapIconId(ResponseLocationsAgencies agencia) {

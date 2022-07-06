@@ -18,8 +18,8 @@ public interface ActivityTermsAndConditionsContract {
         void disabledAcceptButton();
         void enableCancelButton();
         void disabledCancelButton();
+        void showDataFetchError(String message);
         void showErrorTimeOut();
-        void showDataFetchError(String title, String message);
         void showExpiredToken(String message);
     }
 

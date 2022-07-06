@@ -14,6 +14,8 @@ import solidappservice.cm.com.presenteapp.entities.base.BaseResponse;
 public interface FragmentEditDataContract {
 
     interface View{
+        void showProgressDialog(String message);
+        void hideProgressDialog();
         void fetchPersonalData();
         void fetchLocations();
         void fetchAddressFormat();
@@ -21,13 +23,8 @@ public interface FragmentEditDataContract {
         void showPersonalData(DatosAsociado data);
         void showLocations(ResponseUbicaciones locations);
         void showAddressFormat(ResponseFormatoDirecciones addressFormat);
-        void showContentEditData();
-        void hideContentEditData();
-        void showCircularProgressBar(String message);
-        void hideCircularProgressBar();
-        void showErrorWithRefresh();
+        void showDataFetchError(String message);
         void showErrorTimeOut();
-        void showDataFetchError(String title, String message);
         void showExpiredToken(String message);
     }
 

@@ -30,6 +30,7 @@ import solidappservice.cm.com.presenteapp.tools.IFragmentCoordinator;
 public class ActivityUpdatePersonalDataView extends ActivityBase implements ActivityUpdatePersonalDataContract.View{
 
     public ActivityUpdatePersonalDataContract.Presenter basePresenter;
+    private ProgressDialog pd;
     private ActivityBase context;
 
     public String actualizaPrimeraVez;
@@ -117,5 +118,255 @@ public class ActivityUpdatePersonalDataView extends ActivityBase implements Acti
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.container_actualizacion_datos, fragment).commit();
     }
+
+
+//    @Override
+//    protected void setControls() {
+//        context = this;
+//        state = getState();
+//        pd = new ProgressDialog(context);
+//        isDatosEditados = false;
+//        setFragment(Pantalla.ActDatosInicio);
+//    }
+//
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        GlobalState state = context.getState();
+//        if(state == null){
+//            context.salir();
+//        }
+//    }
+//
+//    @Override
+//    public void onBackPressed() {
+//        if(context != null && state != null){
+//            if(state.getFragmentActual() == Pantalla.ActDatosInicio){
+//                context.salir();
+//            }
+//            if(state.getFragmentActual() == Pantalla.ActDatosEditar){
+//                setFragment(Pantalla.ActDatosInicio);
+//            }
+//            if(state.getFragmentActual() == Pantalla.ActDatosValidar){
+//                setFragment(Pantalla.ActDatosEditar);
+//            }
+//            if(state.getFragmentActual() == Pantalla.ActDatosConfirmar){
+//            }
+//            if(state.getFragmentActual() == Pantalla.ActDatosGuardar){
+//            }
+//        }else{
+//            context.salir();
+//        }
+//    }
+//
+//
+//    @Override
+//    public void setFragment(Pantalla pantalla) {
+//        Fragment fragment;
+//        switch (pantalla) {
+//            case ActDatosInicio:
+//                fragment = new FragmentActDatosInicio();
+//                break;
+//            case ActDatosEditar:
+//                fragment = new FragmentActDatosEditar();
+//                break;
+//            case ActDatosValidar:
+//                fragment = new FragmentActDatosValidar();
+//                break;
+//            case ActDatosConfirmar:
+//                fragment = new FragmentActDatosConfirmar();
+//                break;
+//            case ActDatosGuardar:
+//                fragment = new FragmentActDatosGuardar();
+//                break;
+//            case MenuPrincipal:
+//                fragment = new FragmentMenuPrincipal();
+//                break;
+//            default:
+//                fragment = new FragmentLogin();
+//                break;
+//        }
+//
+//        if (state != null && state.getFragmentActual() != null) {
+//            state.setFragmentAnterior(state.getFragmentActual());
+//        }
+//
+//        hideKeyBoard();
+//        state.setFragmentActual(pantalla);
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        fragmentManager.beginTransaction().replace(R.id.container_actualizacion_datos, fragment).commit();
+//    }
+//
+//
+//
+//    //----------------------------------------------------------------------------------
+//    //------------------------------Registrar dispositivo-------------------------------
+//    public void registrarDispositivo(){
+//        try{
+//            Usuario usuario = state.getUsuario();
+//            Encripcion encripcion = Encripcion.getInstance();
+//            JSONObject param = new JSONObject();
+//            param.put("cedula", encripcion.encriptar(usuario.cedula));
+//            param.put("token", usuario.token);
+//            param.put("fabricante", context.getFabricante());
+//            param.put("modelo", context.getModelo());
+//            param.put("idDispositivo", context.getIdDispositivo());
+//            param.put("imei", context.getImei());
+//            param.put("celPrincipal", context.getCelPrincipal());
+//            param.put("sistemaOperativo", state.isHmsSystem() ? "Android HMS" : "Android GMS");
+//            param.put("versionSistemaOperativo", context.getVersionSistemaOperativo());
+//            new RegistrarDispositivoTask().execute(param);
+//        }catch (Exception e){
+//            context.makeSToast("Error al actualizar datos");
+//        }
+//    }
+//
+//    //Registrar nuevo dispositivo
+//    private class RegistrarDispositivoTask extends AsyncTask<JSONObject, String, String> {
+//
+//        @Override
+//        protected void onPreExecute() {
+//            pd.setTitle(context.getResources().getString(R.string.app_name));
+//            pd.setMessage("Registrando dispositivo...");
+//            pd.setIcon(R.mipmap.icon_presente);
+//            pd.setCancelable(false);
+//            pd.show();
+//        }
+//
+//        @Override
+//        protected String doInBackground(JSONObject... params) {
+//            try {
+//                NetworkHelper networkHelper = new NetworkHelper();
+//                return networkHelper.writeService(params[0], SincroHelper.REGISTRAR_DISPOSITIVO);
+//            } catch (Exception e) {
+//                return e.getMessage();
+//            }
+//        }
+//
+//        @Override
+//        protected void onProgressUpdate(String... values) {
+//            pd.setMessage(values[0]);
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            super.onPostExecute(result);
+//            procesarResultRegistrarDispositivo(result);
+//            pd.dismiss();
+//        }
+//    }
+//
+//    private void procesarResultRegistrarDispositivo(String result) {
+//        try {
+//            String idRegistroDispositivo = SincroHelper.procesarJsonRegistrarDispositivo(result);
+//            if(!TextUtils.isEmpty(idRegistroDispositivo)){
+//                state.setIdDispositivoRegistrado(idRegistroDispositivo);
+//                actualizarDatos(idRegistroDispositivo);
+//            } else {
+//                context.makeErrorDialog("Error actualizando los datos, intenta de nuevo más tarde");
+//            }
+//        } catch (ErrorTokenException e) {
+//            AlertDialog.Builder d = new AlertDialog.Builder(context);
+//            d.setTitle("Sesión finalizada");
+//            d.setIcon(R.mipmap.icon_presente);
+//            d.setMessage(e.getMessage());
+//            d.setCancelable(false);
+//            d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface dialog, int id) {
+//                    context.salir();
+//                }
+//            });
+//            d.show();
+//        } catch (Exception ex) {
+//            context.makeErrorDialog(ex.getMessage());
+//        }
+//    }
+//
+//
+//
+//
+//    //-----------------------------------------------------------------------------
+//    //------------------------------Actualizar Datos-------------------------------
+//    public void actualizarDatos(String idRegistroDispositivo){
+//        try{
+//            Usuario usuario = state.getUsuario();
+//            Encripcion encripcion = Encripcion.getInstance();
+//            JSONObject param = new JSONObject();
+//            param.put("cedula", encripcion.encriptar(usuario.cedula));
+//            param.put("token", usuario.token);
+//            param.put("idRegistroDispositivo", idRegistroDispositivo);
+//            param.put("nombreCompleto", datosAsociado.getNombreCompleto());
+//            param.put("direccion", datosAsociado.getDireccion());
+//            param.put("celular", datosAsociado.getCelular());
+//            param.put("email", datosAsociado.getEmail());
+//            param.put("barrio", datosAsociado.getBarrio());
+//            param.put("idCiudad", datosAsociado.getIdCiudad());
+//            param.put("idDepartamento", datosAsociado.getIdDepartamento());
+//            param.put("idPais", datosAsociado.getIdPais());
+//            param.put("ip", context.getLocalIpAddress());
+//            param.put("canal", "APP PRESENTE");
+//            new ActualizarDatosTask().execute(param);
+//        }catch (Exception e){
+//            context.makeSToast("Error al actualizar datos");
+//        }
+//    }
+//
+//    private class ActualizarDatosTask extends AsyncTask<JSONObject, String, String> {
+//        @Override
+//        protected void onPreExecute() {
+//            pd.setTitle(context.getResources().getString(R.string.app_name));
+//            pd.setMessage("Actualizando datos...");
+//            pd.setIcon(R.mipmap.icon_presente);
+//            pd.setCancelable(false);
+//            pd.show();
+//        }
+//
+//        @Override
+//        protected String doInBackground(JSONObject... params) {
+//            try {
+//                NetworkHelper networkHelper = new NetworkHelper();
+//                return networkHelper.writeService(params[0], SincroHelper.ACTUALIZAR_DATOS_ASOCIADO);
+//            } catch (Exception e) {
+//                return e.getMessage();
+//            }
+//        }
+//
+//        @Override
+//        protected void onProgressUpdate(String... values) {
+//            pd.setMessage(values[0]);
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            super.onPostExecute(result);
+//            procesarResultActualizarDatosAsociado(result);
+//            pd.dismiss();
+//        }
+//    }
+//
+//    private void procesarResultActualizarDatosAsociado(String result) {
+//        try {
+//            String datosActualizados = SincroHelper.procesarJsonActualizarDatos(result);
+//            if(!TextUtils.isEmpty(datosActualizados)){
+//                setFragment(Pantalla.ActDatosGuardar);
+//            } else {
+//                context.makeErrorDialog("Error actualizando los datos, intenta de nuevo más tarde");
+//            }
+//        } catch (ErrorTokenException e) {
+//            AlertDialog.Builder d = new AlertDialog.Builder(context);
+//            d.setTitle("Sesión finalizada");
+//            d.setIcon(R.mipmap.icon_presente);
+//            d.setMessage(e.getMessage());
+//            d.setCancelable(false);
+//            d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface dialog, int id) {
+//                    context.salir();
+//                }
+//            });
+//            d.show();
+//        } catch (Exception ex) {
+//            context.makeErrorDialog(ex.getMessage());
+//        }
+//    }
 
 }

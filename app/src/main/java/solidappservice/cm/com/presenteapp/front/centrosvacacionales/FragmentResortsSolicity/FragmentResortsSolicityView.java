@@ -7,20 +7,16 @@ import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -57,8 +53,7 @@ public class FragmentResortsSolicityView extends Fragment implements FragmentRes
     private FragmentResortsSolicityPresenter presenter;
     private ActivityBase context;
     private GlobalState state;
-//    private ProgressDialog pd;
-    private Dialog pd;
+    private ProgressDialog pd;
     private FirebaseAnalytics firebaseAnalytics;
     private List<ResponseCentroVacacional> centros;
 
@@ -166,7 +161,7 @@ public class FragmentResortsSolicityView extends Fragment implements FragmentRes
                     state.getUsuario().getToken()
             ));
         }catch (Exception ex){
-            showDataFetchError("Lo sentimos", "");
+            showDataFetchError("");
         }
     }
 
@@ -198,7 +193,7 @@ public class FragmentResortsSolicityView extends Fragment implements FragmentRes
                 spinner_cv_perfil.setAdapter(adapter);
             }
         } catch (Exception e) {
-            showDataFetchError("Lo sentimos", "Error cargando los perfiles del centro vacacional");
+            context.makeErrorDialog("Error cargando los perfiles del centro vacacional");
         }
     }
 
@@ -253,25 +248,26 @@ public class FragmentResortsSolicityView extends Fragment implements FragmentRes
     @Override
     public void validateData() {
         try {
-            if (spinner_cv == null || spinner_cv.getSelectedItem() == null || spinner_cv.getSelectedItemPosition() == 0) {
-                showDataFetchError("Lo sentimos", "Selecciona el destino");
+            if (spinner_cv == null || spinner_cv.getSelectedItem() == null
+                    || spinner_cv.getSelectedItemPosition() == 0) {
+                context.makeErrorDialog("Selecciona el destino");
                 return;
             }
 
             ResponseCentroVacacional c = centros.get(spinner_cv.getSelectedItemPosition());
             if (spinner_cv_perfil == null || spinner_cv_perfil.getSelectedItem() == null) {
-                showDataFetchError("Lo sentimos", "Selecciona el Tipo de unidad vacacional");
+                context.makeErrorDialog("Selecciona el Tipo de unidad vacacional");
                 return;
             }
 
             ResponseDetalleCentroVacacional p = (ResponseDetalleCentroVacacional) spinner_cv_perfil.getSelectedItem();
             if (lblFechaDesde.getText() == null || TextUtils.isEmpty(lblFechaDesde.getText())) {
-                showDataFetchError("Lo sentimos", "Ingresa la fecha de llegada en el campo \"Fecha de llegada\"");
+                context.makeErrorDialog("Ingresa la fecha de llegada en el campo \"Fecha de llegada\"");
                 return;
             }
 
             if (txtPermanencia.getText() == null || TextUtils.isEmpty(txtPermanencia.getText())) {
-                showDataFetchError("Lo sentimos", "Ingrese el número de días de estadía en el campo \"Días de permanencia\"");
+                context.makeErrorDialog("Ingresa el número de días de estadía en el campo \"Días de permanencia\"");
                 return;
             }
 
@@ -279,23 +275,23 @@ public class FragmentResortsSolicityView extends Fragment implements FragmentRes
             try {
                 dias = Integer.parseInt(txtPermanencia.getText().toString());
             } catch (Exception e) {
-                showDataFetchError("Lo sentimos", "Ingrese el número de días de estadía en el campo \"Días de permanencia\"");
+                context.makeErrorDialog("Ingrese el número de días de estadía en el campo \"Días de permanencia\"");
                 return;
             }
 
             if (dias <= 0) {
-                showDataFetchError("Lo sentimos", "Ingrese el número de días de estadía en el campo \"Días de permanencia\"");
+                context.makeErrorDialog("Ingrese el número de días de estadía en el campo \"Días de permanencia\"");
                 return;
             }
 
-            if (dias > 30) {
-                showDataFetchError("Lo sentimos", "Ingrese un número de días de estadía no mayor a " + 30);
+            if (dias > ActivityBase.MAX_DIAS_ESTADIA) {
+                context.makeErrorDialog("Ingrese un número de días de estadía no mayor a " + ActivityBase.MAX_DIAS_ESTADIA);
                 return;
             }
 
             if ((txtCantKids.getText() == null || TextUtils.isEmpty(txtCantKids.getText()))
                     && (txtCantAdultos.getText() == null || TextUtils.isEmpty(txtCantAdultos.getText()))) {
-                showDataFetchError("Lo sentimos", "Ingrese el número total de personas que visitarán el centro vacacional");
+                context.makeErrorDialog("Ingrese el número total de personas que visitarán el centro vacacional");
                 return;
             }
 
@@ -314,17 +310,17 @@ public class FragmentResortsSolicityView extends Fragment implements FragmentRes
             }
 
             if (cantA == 0 && cantK == 0) {
-                showDataFetchError("Lo sentimos", "Ingrese el número total de personas que visitarán el centro vacacional");
+                context.makeErrorDialog("Ingrese el número total de personas que visitarán el centro vacacional");
                 return;
             }
 
             if (txtEmail.getText() == null || TextUtils.isEmpty(txtEmail.getText())) {
-                showDataFetchError("Lo sentimos", "Ingrese el número total de personas que visitarán el centro vacacional");
+                context.makeErrorDialog("Ingresa tu correo electrónico en el campo \"Email de contacto\"");
                 return;
             }
 
             if(!ActivityBase.validateEmail(txtEmail.getText().toString())){
-                showDataFetchError("Lo sentimos", "Ingresa un correo electrónico válido en el campo \"Email de contacto\"");
+                context.makeErrorDialog("Ingresa un correo electrónico válido en el campo \"Email de contacto\"");
                 return;
             }
 
@@ -336,7 +332,7 @@ public class FragmentResortsSolicityView extends Fragment implements FragmentRes
             }
 
         } catch (Exception e) {
-            showDataFetchError("Lo sentimos", "");
+            context.makeErrorDialog(e.getMessage());
         }
     }
 
@@ -359,43 +355,31 @@ public class FragmentResortsSolicityView extends Fragment implements FragmentRes
                     txtEmail.getText().toString()
             ));
         }catch (Exception ex){
-            showDataFetchError("Lo sentimos", "");
+            showDataFetchError("");
         }
     }
 
     @Override
     public void showResultSolicityResort(String result){
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_success);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.titleSuccess);
-        titleMessage.setText("Solicitud Enviada");
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.contentSuccess);
-        contentMessage.setText(result);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.buttonClose);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(result);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
                 context.getState().getmTabHost().setCurrentTab(ActivityTabsView.TAB_1_TRANSACTIONS_MENU_TAG);
-                dialog.dismiss();
             }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
     public void showProgressDialog(String message) {
-        pd = new Dialog(context);
-        pd.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        pd.setCanceledOnTouchOutside(false);
-        pd.setContentView(R.layout.pop_up_loading);
+        pd.setTitle(context.getResources().getString(R.string.app_name));
+        pd.setMessage(message);
+        pd.setIcon(R.mipmap.icon_presente);
         pd.setCancelable(false);
-        pd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView contentMessage = (TextView) pd.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
         pd.show();
     }
 
@@ -414,68 +398,61 @@ public class FragmentResortsSolicityView extends Fragment implements FragmentRes
                 }
             }
         }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText("Lo sentimos");
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(DialogInterface dialog, int which) {
                 context.getState().getmTabHost().setCurrentTab(ActivityTabsView.TAB_1_TRANSACTIONS_MENU_TAG);
                 dialog.dismiss();
             }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
-    public void showDataFetchError(String title, String message){
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText(title);
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
+    public void showDataFetchError(String message) {
+        if(TextUtils.isEmpty(message)){
+            message = "Ha ocurrido un error. Intenta de nuevo y si el error persiste, contacta a PRESENTE.";
+            if(state != null && state.getMensajesRespuesta() != null && state.getMensajesRespuesta().size()>0){
+                for(ResponseMensajesRespuesta rm : state.getMensajesRespuesta()){
+                    if(rm.getIdMensaje() == 7){
+                        message = rm.getMensaje();
+                    }
+                }
+            }
+        }
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(DialogInterface dialog, int which) {
                 context.getState().getmTabHost().setCurrentTab(ActivityTabsView.TAB_1_TRANSACTIONS_MENU_TAG);
                 dialog.dismiss();
             }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
     public void showExpiredToken(String message) {
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_closedsession);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        Button buttonClosedSession = (Button) dialog.findViewById(R.id.btnVolverAIngresar);
-        buttonClosedSession.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle("Sesión finalizada");
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
                 context.salir();
             }
         });
-        dialog.show();
-
+        d.show();
     }
 
 

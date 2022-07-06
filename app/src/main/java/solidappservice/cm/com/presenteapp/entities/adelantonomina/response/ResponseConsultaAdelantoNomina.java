@@ -2,25 +2,44 @@ package solidappservice.cm.com.presenteapp.entities.adelantonomina.response;
 
 public class ResponseConsultaAdelantoNomina {
 
-    public Integer v_k_flujo;
-    public String a_numnit;
-    public String f_solici;
-    public Integer v_solici;
-    public Integer k_ano;
-    public String k_sucurs;
-    public String k_tipdoc;
-    public String f_primera;
-    public String k_numdoc;
-    public String a_tipodr;
-    public String a_obliga;
-    public String n_resultado;
-    public String n_error;
+    private String v_k_flujo;
+    private String a_numnit;
+    private String f_solici;
+    private String v_solici;
+    private String k_ano;
+    private String k_sucurs;
+    private String k_tipdoc;
+    private String f_primera;
+    private String k_numdoc;
+    private String a_tipodr;
+    private String a_obliga;
+    private String n_resultado;
+    private String n_error;
 
-    public Integer getV_k_flujo() {
+    public ResponseConsultaAdelantoNomina() {
+    }
+
+    public ResponseConsultaAdelantoNomina(String v_k_flujo, String a_numnit, String f_solici, String v_solici, String k_ano, String k_sucurs, String k_tipdoc, String f_primera, String k_numdoc, String a_tipodr, String a_obliga, String n_resultado, String n_error) {
+        this.v_k_flujo = v_k_flujo;
+        this.a_numnit = a_numnit;
+        this.f_solici = f_solici;
+        this.v_solici = v_solici;
+        this.k_ano = k_ano;
+        this.k_sucurs = k_sucurs;
+        this.k_tipdoc = k_tipdoc;
+        this.f_primera = f_primera;
+        this.k_numdoc = k_numdoc;
+        this.a_tipodr = a_tipodr;
+        this.a_obliga = a_obliga;
+        this.n_resultado = n_resultado;
+        this.n_error = n_error;
+    }
+
+    public String getV_k_flujo() {
         return v_k_flujo;
     }
 
-    public void setV_k_flujo(Integer v_k_flujo) {
+    public void setV_k_flujo(String v_k_flujo) {
         this.v_k_flujo = v_k_flujo;
     }
 
@@ -40,19 +59,19 @@ public class ResponseConsultaAdelantoNomina {
         this.f_solici = f_solici;
     }
 
-    public Integer getV_solici() {
+    public String getV_solici() {
         return v_solici;
     }
 
-    public void setV_solici(Integer v_solici) {
+    public void setV_solici(String v_solici) {
         this.v_solici = v_solici;
     }
 
-    public Integer getK_ano() {
+    public String getK_ano() {
         return k_ano;
     }
 
-    public void setK_ano(Integer k_ano) {
+    public void setK_ano(String k_ano) {
         this.k_ano = k_ano;
     }
 
@@ -119,6 +138,5 @@ public class ResponseConsultaAdelantoNomina {
     public void setN_error(String n_error) {
         this.n_error = n_error;
     }
-
 }
 

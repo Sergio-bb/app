@@ -1,8 +1,10 @@
 package solidappservice.cm.com.presenteapp.front.tarjetapresente.FragmentPresenteCardMenu.ReplacementCard.FragmentReplacementCardDetail;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -14,11 +16,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -54,8 +51,7 @@ public class FragmentReplacementCardDetailView extends Fragment implements Fragm
     private FragmentReplacementCardDetailPresenter presenter;
     private ActivityBase context;
     private GlobalState state;
-//    private ProgressDialog pd;
-    private Dialog pd;
+    private ProgressDialog pd;
     private FirebaseAnalytics firebaseAnalytics;
     private ResponseDependenciasAsociado dependenciasAsociado;
 
@@ -69,20 +65,6 @@ public class FragmentReplacementCardDetailView extends Fragment implements Fragm
     Button btnEditar;
     @BindView(R.id.btnContinuar)
     Button btnContinuar;
-    @BindView(R.id.circular_progress_bar_value)
-    ProgressBar circularProgressBarValueCard;
-
-    @BindView(R.id.contentReposicionTarjeta)
-    ScrollView contentReposicionTarjeta;
-
-    @BindView(R.id.layout_circular_progress_bar)
-    LinearLayout layoutCircularProgressBar;
-    @BindView(R.id.circular_progress_bar)
-    ProgressBar circularProgressBar;
-    @BindView(R.id.text_circular_progress_Bar)
-    TextView textCircularProgressBar;
-    @BindView(R.id.imageReferesh)
-    ImageView buttonReferesh;
 
     @Override
     public void onAttach(Context context) {
@@ -111,7 +93,7 @@ public class FragmentReplacementCardDetailView extends Fragment implements Fragm
         presenter = new FragmentReplacementCardDetailPresenter(this, new FragmentReplacementCardDetailModel());
         context = (ActivityBase) getActivity();
         state = context.getState();
-//        pd = new ProgressDialog(context);
+        pd = new ProgressDialog(context);
     }
 
     @Override
@@ -123,6 +105,8 @@ public class FragmentReplacementCardDetailView extends Fragment implements Fragm
         } else {
             fetchAssociatedDependence();
             presenter.fechReplacementCardValue();
+//            ObtenerDatosAsociado();
+//            new obtenerValorRepoTarjetaTask().execute();
         }
     }
 
@@ -132,12 +116,6 @@ public class FragmentReplacementCardDetailView extends Fragment implements Fragm
         rt_codigo_dependencia.setBackgroundResource(R.drawable.backgroun_border_radius);
         rt_nombre_dependencia.setEnabled(true);
         rt_nombre_dependencia.setBackgroundResource(R.drawable.backgroun_border_radius);
-    }
-
-    @OnClick(R.id.imageReferesh)
-    public void onClickRefresh(){
-        fetchAssociatedDependence();
-        presenter.fechReplacementCardValue();
     }
 
     @OnClick(R.id.btnContinuar)
@@ -160,57 +138,6 @@ public class FragmentReplacementCardDetailView extends Fragment implements Fragm
     }
 
     @Override
-    public void fetchAssociatedDependence(){
-        try{
-            Encripcion encripcion = Encripcion.getInstance();
-            presenter.fetchAssociatedDependence(new BaseRequest(
-                    encripcion.encriptar(state.getUsuario().getCedula()),
-                    state.getUsuario().getToken()
-            ));
-        }catch (Exception ex){
-            showDialogError("Lo sentimos", "");
-            showErrorWithRefresh();
-        }
-    }
-
-    @Override
-    public void showAssociatedDependence(ResponseDependenciasAsociado dependenciasAsociado){
-        try {
-            this.dependenciasAsociado = dependenciasAsociado;
-            if (dependenciasAsociado != null){
-                if((rt_codigo_dependencia.getText().toString().equals("")
-                        || rt_codigo_dependencia.getText().toString().equals(dependenciasAsociado.getCodigodependencia()))
-                        && (rt_nombre_dependencia.getText().toString().equals("")
-                        || rt_nombre_dependencia.getText().toString().equals(dependenciasAsociado.getN_DEPENDENCIA()))){
-                    rt_codigo_dependencia.setText(dependenciasAsociado.getCodigodependencia());
-                    rt_nombre_dependencia.setText(dependenciasAsociado.getN_DEPENDENCIA());
-                }
-            }
-        } catch (Exception ex) {
-            showDialogError("Lo sentimos", "");
-            showErrorWithRefresh();
-        }
-    }
-
-    @Override
-    public void showReplacementCardValue(int valueReplacementeCard){
-        DecimalFormat formato = new DecimalFormat("#,###");
-        String valorReposicion = formato.format(valueReplacementeCard);
-        valor_reposicion_tarjeta.setText("$"+valorReposicion);
-    }
-
-    @Override
-    public void showCircularProgressBarCardValue(){
-        circularProgressBarValueCard.setVisibility(View.VISIBLE);
-        valor_reposicion_tarjeta.setVisibility(View.GONE);
-    }
-    @Override
-    public void hideCircularProgressBarCardValue(){
-        circularProgressBarValueCard.setVisibility(View.GONE);
-        valor_reposicion_tarjeta.setVisibility(View.VISIBLE);
-    }
-
-    @Override
     public void showDialogConfirmReplacementCard(){
         final Dialog dialog = new Dialog(getContext());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -223,6 +150,7 @@ public class FragmentReplacementCardDetailView extends Fragment implements Fragm
             public void onClick(View view) {
                 dialog.dismiss();
                 solicityReplacementCard();
+//                InsertarReposicionTarjeta();
             }
         });
         buttoncancelar.setOnClickListener(new View.OnClickListener() {
@@ -232,6 +160,46 @@ public class FragmentReplacementCardDetailView extends Fragment implements Fragm
             }
         });
         dialog.show();
+    }
+
+    @Override
+    public void fetchAssociatedDependence(){
+        try{
+            Encripcion encripcion = Encripcion.getInstance();
+            presenter.fetchAssociatedDependence(new BaseRequest(
+                    encripcion.encriptar(state.getUsuario().getCedula()),
+                    state.getUsuario().getToken()
+            ));
+        }catch (Exception ex){
+            showDataFetchError(ex.getMessage()+"Upps, se ha producido un error, inténtalo nuevamente en unos minutos.");
+        }
+    }
+
+    @Override
+    public void showAssociatedDependence(ResponseDependenciasAsociado dependenciasAsociado){
+        try {
+//            reposicionTarjeta = state.getReposiciontarjeta();
+//            reposicionTarjeta = SincroHelper.procesarJsonReposicionTarjeta(jsonRequisitos, reposicionTarjeta);
+            this.dependenciasAsociado = dependenciasAsociado;
+            if (dependenciasAsociado != null){
+                if((rt_codigo_dependencia.getText().toString().equals("")
+                        || rt_codigo_dependencia.getText().toString().equals(dependenciasAsociado.getCodigodependencia()))
+                        && (rt_nombre_dependencia.getText().toString().equals("")
+                        || rt_nombre_dependencia.getText().toString().equals(dependenciasAsociado.getN_DEPENDENCIA()))){
+                    rt_codigo_dependencia.setText(dependenciasAsociado.getCodigodependencia());
+                    rt_nombre_dependencia.setText(dependenciasAsociado.getN_DEPENDENCIA());
+                }
+            }
+        } catch (Exception ex) {
+            context.makeErrorDialog(ex.getMessage());
+        }
+    }
+
+    @Override
+    public void showReplacementCardValue(int valueReplacementeCard){
+        DecimalFormat formato = new DecimalFormat("#,###");
+        String valorReposicion = formato.format(valueReplacementeCard);
+        valor_reposicion_tarjeta.setText("$"+valorReposicion);
     }
 
     @Override
@@ -249,26 +217,26 @@ public class FragmentReplacementCardDetailView extends Fragment implements Fragm
                 i_depmodificada = "N";
             }
             presenter.solicityReplacementCard(new RequestReposicionTarjeta(
-                    encripcion.encriptar(state.getUsuario().getCedula()),
-                    state.getUsuario().getToken(),
-                    dependenciasAsociado.getN_NOMBR1(),
-                    dependenciasAsociado.getN_NOMBR2(),
-                    dependenciasAsociado.getN_APELL1(),
-                    dependenciasAsociado.getN_APELL2(),
-                    "",
-                    dependenciasAsociado.getN_CIUDAD(),
-                    rt_codigo_dependencia.getText().toString(),
-                    rt_nombre_dependencia.getText().toString(),
-                    "1111111",
-                    "GERENTE Y/O ADMINISTRADOR",
-                    "2",
-                    reposicion.getD_email(),
-                    reposicion.getT_telcel(),
-                    fechasolicitud,
-                    i_depmodificada
+                encripcion.encriptar(state.getUsuario().getCedula()),
+                state.getUsuario().getToken(),
+                dependenciasAsociado.getN_NOMBR1(),
+                dependenciasAsociado.getN_NOMBR2(),
+                dependenciasAsociado.getN_APELL1(),
+                dependenciasAsociado.getN_APELL2(),
+                "",
+                dependenciasAsociado.getN_CIUDAD(),
+                rt_codigo_dependencia.getText().toString(),
+                rt_nombre_dependencia.getText().toString(),
+                "1111111",
+                "GERENTE Y/O ADMINISTRADOR",
+                "2",
+                reposicion.getD_email(),
+                reposicion.getT_telcel(),
+                fechasolicitud,
+                i_depmodificada
             ));
         }catch (Exception ex){
-            showDataFetchError("Lo sentimos", "");
+            showDataFetchError("");
         }
     }
 
@@ -316,82 +284,17 @@ public class FragmentReplacementCardDetailView extends Fragment implements Fragm
     }
 
     @Override
-    public void showSectionReplacemendCard(){
-        contentReposicionTarjeta.setVisibility(View.VISIBLE);
-    }
-    @Override
-    public void hideSectionReplacemendCard(){
-        contentReposicionTarjeta.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showCircularProgressBar(String textProgressBar) {
-        layoutCircularProgressBar.setVisibility(View.VISIBLE);
-        textCircularProgressBar.setText(textProgressBar);
-    }
-
-    @Override
-    public void hideCircularProgressBar() {
-        layoutCircularProgressBar.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showErrorWithRefresh(){
-        contentReposicionTarjeta.setVisibility(View.GONE);
-        layoutCircularProgressBar.setVisibility(View.VISIBLE);
-        circularProgressBar.setVisibility(View.GONE);
-        textCircularProgressBar.setText("Ha ocurrido un error, inténtalo de nuevo ");
-        buttonReferesh.setVisibility(View.VISIBLE);
-    }
-
-    @Override
     public void showProgressDialog(String message) {
-        pd = new Dialog(context);
-        pd.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        pd.setCanceledOnTouchOutside(false);
-        pd.setContentView(R.layout.pop_up_loading);
+        pd.setTitle(context.getResources().getString(R.string.app_name));
+        pd.setMessage(message);
+        pd.setIcon(R.mipmap.icon_presente);
         pd.setCancelable(false);
-        pd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView contentMessage = (TextView) pd.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
         pd.show();
     }
 
     @Override
     public void hideProgressDialog() {
         pd.dismiss();
-    }
-
-    @Override
-    public void showDialogError(String title, String message){
-        if(TextUtils.isEmpty(message)){
-            message = "Ha ocurrido un error. Intenta de nuevo y si el error persiste, contacta a PRESENTE.";
-            if(state != null && state.getMensajesRespuesta() != null && state.getMensajesRespuesta().size()>0){
-                for(ResponseMensajesRespuesta rm : state.getMensajesRespuesta()){
-                    if(rm.getIdMensaje() == 7){
-                        message = rm.getMensaje();
-                    }
-                }
-            }
-        }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText(title);
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
     }
 
     @Override
@@ -404,28 +307,23 @@ public class FragmentReplacementCardDetailView extends Fragment implements Fragm
                 }
             }
         }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText("Lo sentimos");
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(DialogInterface dialog, int which) {
+                state.getmTabHost().setCurrentTab(ActivityTabsView.TAB_2_PRESENTE_CARD_MENU_TAG);
                 dialog.dismiss();
             }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
-    public void showDataFetchError(String title, String message){
+    public void showDataFetchError(String message) {
         if(TextUtils.isEmpty(message)){
             message = "Ha ocurrido un error. Intenta de nuevo y si el error persiste, contacta a PRESENTE.";
             if(state != null && state.getMensajesRespuesta() != null && state.getMensajesRespuesta().size()>0){
@@ -436,46 +334,34 @@ public class FragmentReplacementCardDetailView extends Fragment implements Fragm
                 }
             }
         }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText(title);
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-
+            public void onClick(DialogInterface dialog, int which) {
                 state.getmTabHost().setCurrentTab(ActivityTabsView.TAB_2_PRESENTE_CARD_MENU_TAG);
+                dialog.dismiss();
             }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
     public void showExpiredToken(String message) {
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_closedsession);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        Button buttonClosedSession = (Button) dialog.findViewById(R.id.btnVolverAIngresar);
-        buttonClosedSession.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle("Sesión finalizada");
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
                 context.salir();
             }
         });
-        dialog.show();
-
+        d.show();
     }
 
 

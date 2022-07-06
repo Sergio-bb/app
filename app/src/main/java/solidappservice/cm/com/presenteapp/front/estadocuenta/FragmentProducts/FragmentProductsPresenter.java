@@ -24,31 +24,48 @@ public class FragmentProductsPresenter implements FragmentProductsContract.Prese
 
     @Override
     public void fetchStatusMessageMisAportes() {
+        view.showProgressDialog("Un momento...");
         model.getStatusMessageMisAportes(this);
     }
 
 
     @Override
     public <T> void onSuccess(Response<BaseResponse<T>> response) {
+        view.hideProgressDialog();
         try{
             ResponseParametrosEmail estado = (ResponseParametrosEmail) response.body().getResultado();
             if (estado != null && estado.getV_alfabe() != null && estado.getV_alfabe().equals("Y")) {
                 view.showMessageMisAportes();
             }
         }catch (Exception ex){
+            view.showDataFetchError("");
         }
-    }
-    @Override
-    public <T> void onError(Response<BaseResponse<T>> response) {
-    }
-
-    @Override
-    public void onFailure(Throwable t, boolean isErrorTimeOut) {
     }
 
     @Override
     public <T> void onExpiredToken(Response<BaseResponse<T>> response) {
+        view.hideProgressDialog();
         view.showExpiredToken(response.body().getErrorToken());
+    }
+
+    @Override
+    public <T> void onError(Response<BaseResponse<T>> response) {
+        view.hideProgressDialog();
+        if(response != null){
+            view.showDataFetchError(response.body().getMensajeErrorUsuario());
+        }else{
+            view.showDataFetchError("");
+        }
+    }
+
+    @Override
+    public void onFailure(Throwable t, boolean isErrorTimeOut) {
+        view.hideProgressDialog();
+        if(isErrorTimeOut){
+            view.showErrorTimeOut();
+        }else{
+            view.showDataFetchError("");
+        }
     }
 
 }

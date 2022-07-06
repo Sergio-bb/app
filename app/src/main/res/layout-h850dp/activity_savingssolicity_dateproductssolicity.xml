@@ -24,7 +24,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Año"
-                android:textSize="16sp"
+                android:textSize="17sp"
                 android:textStyle="bold"
                 android:fontFamily="@font/roboto_light"/>
 
@@ -38,7 +38,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Mes"
-                android:textSize="16sp"
+                android:textSize="17sp"
                 android:textStyle="bold"
                 android:fontFamily="@font/roboto_light"/>
 
@@ -53,7 +53,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Día"
-                android:textSize="16sp"
+                android:textSize="17sp"
                 android:textStyle="bold"
                 android:fontFamily="@font/roboto_light"/>
 
@@ -62,7 +62,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="38dp"
                 android:background="@drawable/background_spinner"
-                android:textSize="16sp"/>
+                android:textSize="17sp"/>
 
             <Button
                 android:id="@+id/btnAceptar"
@@ -71,12 +71,10 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="5dp"
-                android:paddingHorizontal="35dp"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="Aceptar"
                 android:textStyle="bold"
-                android:background="@drawable/backgroun_button_rounded"
-                android:backgroundTint="@color/yellow"
+                android:background="@drawable/btn_yellow_internal"
                 android:fontFamily="@font/roboto"/>
 
         </LinearLayout>

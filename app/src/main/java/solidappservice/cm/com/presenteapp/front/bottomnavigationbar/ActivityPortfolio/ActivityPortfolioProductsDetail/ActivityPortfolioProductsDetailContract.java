@@ -11,7 +11,6 @@ public interface ActivityPortfolioProductsDetailContract {
 
     interface View{
         void showPortfolioProductsDetails(ResponsePortafolio producto);
-        void showDataFetchError(String title, String message);
     }
 
     interface Presenter{
@@ -24,7 +23,7 @@ public interface ActivityPortfolioProductsDetailContract {
         <T> void onSuccess(Response<BaseResponse<T>> response);
         <T> void onExpiredToken(Response<BaseResponse<T>> response);
         <T> void onError(Response<BaseResponse<T>> response);
-        void onFailure(Throwable t, boolean isErrorTimeOut);
+        void onFailure(Throwable t);
     }
 
 }

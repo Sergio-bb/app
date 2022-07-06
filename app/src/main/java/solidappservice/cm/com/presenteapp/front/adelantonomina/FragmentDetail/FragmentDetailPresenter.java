@@ -27,18 +27,8 @@ public class FragmentDetailPresenter implements FragmentDetailContract.Presenter
 
     @Override
     public void fetchCommissionValue() {
-        view.showCircularProgressBarValue();
+        view.showProgressDialog("Obteniendo valor...");
         model.getCommissionValue(this);
-    }
-    @Override
-    public <T> void onSuccessCommissionValue(Response<BaseResponse<T>> response) {
-        view.hideCircularProgressBarValue();
-        try{
-            ResponseValorComision valorComision = (ResponseValorComision) response.body().getResultado();
-            view.showCommissionValue(valorComision.getValor());
-        }catch (Exception ex){
-            view.showDataFetchError("Lo sentimos", "");
-        }
     }
 
     @Override
@@ -46,51 +36,52 @@ public class FragmentDetailPresenter implements FragmentDetailContract.Presenter
         view.showProgressDialog("Validando datos...");
         model.registerSalaryAdvance(request, this);
     }
-    @Override
-    public <T> void onSuccessRegisterSalaryAdvance(Response<BaseResponse<T>> response) {
-        view.hideProgressDialog();
-        try{
-            String numeroTransaccion = (String) response.body().getResultado();
-            if(numeroTransaccion != null) {
-                view.fetchProcessSalaryAdvance(numeroTransaccion);
-            } else {
-                view.enterLogs("ADELANTO DE NOMINA FALLIDO", "Ha ocurrido un error al insertar la solicitud del adelanto de nómina");
-                view.showDataFetchError("Solicitud Fallida", "Tu solicitud no se ha enviado, por favor inténtalo de nuevo más tarde");
-            }
-        }catch (Exception ex){
-            view.showDataFetchError("Lo sentimos", "");
-        }
-    }
 
     @Override
     public void fetchProcessSalaryAdvance(RequestProcesarAdelantoNomina request) {
         view.showProgressDialog("Enviando solicitud...");
         model.processSalaryAdvance(request, this);
     }
-    @Override
-    public <T> void onSuccessProcessSalaryAdvance(Response<BaseResponse<T>> response) {
-        view.hideProgressDialog();
-        try{
-            ResponserSolicitarAdelantoNomina adelanto = (ResponserSolicitarAdelantoNomina) response.body().getResultado();
-            if(adelanto != null){
-                if(adelanto.getN_resultado() != null && adelanto.getN_resultado().equals("OK")){
-                    view.enterLogs("ADELANTO DE NOMINA EXITOSA", "Numero de flujo "+(adelanto.getV_k_flujo()==null || adelanto.getV_k_flujo()==0 ? "" : adelanto.getV_k_flujo()));
-                }else{
-                    view.enterLogs("ADELANTO DE NOMINA ENVIADO PERO SIN RESPUESTA", "El adelanto de nomina se envio, pero no se obtuve respuesta de la base de datos");
-                }
-            }else {
-                view.enterLogs("ADELANTO DE NOMINA ENVIADO PERO SIN RESPUESTA", "El adelanto de nomina se envio, pero no se obtuve respuesta de la base de datos");
-            }
-            view.showSuccessfulSalaryAdvance();
-        }catch (Exception ex){
-            view.hideProgressDialog();
-            view.showDataFetchError("Lo sentimos", "");
-        }
-    }
 
     @Override
     public void enterLogs(RequestLogs request){
         model.sendLogs(request, this);
+    }
+
+    @Override
+    public <T> void onSuccess(Response<BaseResponse<T>> response) {
+        view.hideProgressDialog();
+        try{
+            if(ResponseValorComision.class.equals(response.body().getResultado().getClass())){
+                ResponseValorComision valorComision = (ResponseValorComision) response.body().getResultado();
+                view.showCommissionValue(valorComision.getValor());
+            }
+            if(String.class.equals(response.body().getResultado().getClass())){
+                String numeroTransaccion = (String) response.body().getResultado();
+                if(numeroTransaccion != null) {
+                    view.fetchProcessSalaryAdvance(numeroTransaccion);
+                } else {
+                    view.enterLogs("ADELANTO DE NOMINA FALLIDO", "Ha ocurrido un error al insertar la solicitud del adelanto de nómina");
+                    view.showDataFetchError("Solicitud Fallida", "Tu solicitud no se ha enviado, por favor inténtalo de nuevo más tarde");
+                }
+            }
+            if(ResponserSolicitarAdelantoNomina.class.equals(response.body().getResultado().getClass())){
+                ResponserSolicitarAdelantoNomina adelanto = (ResponserSolicitarAdelantoNomina) response.body().getResultado();
+
+                if(adelanto != null){
+                    if(adelanto.getN_resultado() != null && adelanto.getN_resultado().equals("OK")){
+                        view.enterLogs("ADELANTO DE NOMINA EXITOSA", "Numero de flujo "+(adelanto.getV_k_flujo()==null || adelanto.getV_k_flujo()==0 ? "" : adelanto.getV_k_flujo()));
+                    }else{
+                        view.enterLogs("ADELANTO DE NOMINA ENVIADO PERO SIN RESPUESTA", "El adelanto de nomina se envio, pero no se obtuve respuesta de la base de datos");
+                    }
+                }else {
+                    view.enterLogs("ADELANTO DE NOMINA ENVIADO PERO SIN RESPUESTA", "El adelanto de nomina se envio, pero no se obtuve respuesta de la base de datos");
+                }
+                view.showSuccessfulSalaryAdvance();
+            }
+        }catch (Exception ex){
+            view.showDataFetchError("PRESENTE","");
+        }
     }
 
     @Override
@@ -103,9 +94,9 @@ public class FragmentDetailPresenter implements FragmentDetailContract.Presenter
     public <T> void onError(Response<BaseResponse<T>> response) {
         view.hideProgressDialog();
         if(response != null){
-            view.showDataFetchError("Lo sentimos", response.body().getMensajeErrorUsuario());
+            view.showDataFetchError("PRESENTE", response.body().getMensajeErrorUsuario());
         }else{
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("PRESENTE","");
         }
     }
 
@@ -115,7 +106,7 @@ public class FragmentDetailPresenter implements FragmentDetailContract.Presenter
         if(isErrorTimeOut){
             view.showErrorTimeOut();
         }else{
-            view.showDataFetchError("Lo sentimos", "Se ha producido un error, inténtalo nuevamente en unos minutos.");
+            view.showDataFetchError("PRESENTE", "");
         }
     }
 

@@ -8,7 +8,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import solidappservice.cm.com.presenteapp.entities.estadocuenta.response.ResponseProducto;
+import solidappservice.cm.com.presenteapp.entities.estadocuenta.response.ResponseProductos;
 import solidappservice.cm.com.presenteapp.entities.base.BaseRequest;
 import solidappservice.cm.com.presenteapp.entities.base.BaseResponse;
 import solidappservice.cm.com.presenteapp.entities.tarjetapresente.response.ResponseTarjeta;
@@ -24,7 +24,7 @@ public class FragmentProductsCardModel implements FragmentProductsCardContract.M
     public void getPresenteCards(BaseRequest body, final FragmentProductsCardContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -38,25 +38,66 @@ public class FragmentProductsCardModel implements FragmentProductsCardContract.M
                         if(response.body().getErrorToken() != null && !response.body().getErrorToken().isEmpty()){
                             listener.onExpiredToken(response);
                         }else if(response.body().getMensajeErrorUsuario() != null && !response.body().getMensajeErrorUsuario().isEmpty()){
-                            listener.onErrorPresenteCards(response);
+                            listener.onError(response);
                         }else{
-                            listener.onSuccessPresenteCards(response);
+                            listener.onSuccess(response);
                         }
                     } else {
-                        listener.onErrorPresenteCards(null);
+                        listener.onError(null);
                     }
                 }
                 @Override
                 public void onFailure(Call<BaseResponse<List<ResponseTarjeta>>> call, Throwable t) {
                     if(t instanceof IOException){
-                        listener.onFailurePresenteCards(t, true);
+                        listener.onFailure(t, true);
                     }else{
-                        listener.onFailurePresenteCards(t, false);
+                        listener.onError(null);
                     }
                 }
             });
         } catch (Exception e) {
-            listener.onErrorPresenteCards(null);
+            listener.onError(null);
+        }
+    }
+
+
+    @Override
+    public void getAccounts(BaseRequest body, final FragmentProductsCardContract.APIListener listener) {
+        try {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+
+            ApiPresente service = retrofit.create(ApiPresente.class);
+            Call<BaseResponse<List<ResponseProductos>>> call = service.getAccounts(body);
+            call.enqueue(new Callback<BaseResponse<List<ResponseProductos>>>() {
+
+                @Override
+                public void onResponse(Call<BaseResponse<List<ResponseProductos>>> call, Response<BaseResponse<List<ResponseProductos>>> response) {
+                    if (response.isSuccessful()) {
+                        if(response.body().getErrorToken() != null && !response.body().getErrorToken().isEmpty()){
+                            listener.onExpiredToken(response);
+                        }else if(response.body().getMensajeErrorUsuario() != null && !response.body().getMensajeErrorUsuario().isEmpty()){
+                            listener.onError(response);
+                        }else{
+                            listener.onSuccess(response);
+                        }
+                    } else {
+                        listener.onError(null);
+                    }
+                }
+                @Override
+                public void onFailure(Call<BaseResponse<List<ResponseProductos>>> call, Throwable t) {
+                    if(t instanceof IOException){
+                        listener.onFailure(t, true);
+                    }else{
+                        listener.onError(null);
+                    }
+                }
+            });
+        } catch (Exception e) {
+            listener.onError(null);
         }
     }
 

@@ -1,716 +1,684 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:background="@drawable/background_act_datos_validar">
+
+    <ImageView
+        android:id="@+id/button_close"
+        android:layout_width="160px"
+        android:layout_height="120px"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/isotipo_presente"
+        android:background="@android:color/transparent"/>
 
     <LinearLayout
-        android:id="@+id/layout_circular_progress_bar"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="visible">
-        <ProgressBar
-            android:id="@+id/circular_progress_bar"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:indeterminateTint="#707070"
-            android:visibility="visible"/>
-        <ImageView
-            android:id="@+id/imageReferesh"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:src="@drawable/icon_refresh"
-            android:visibility="gone"/>
-        <TextView
-            android:id="@+id/text_circular_progress_Bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:gravity="center"
-            android:text="Intentar de nuevo"
-            android:textSize="12sp"
-            android:fontFamily="@font/roboto_light"
-            android:visibility="visible"/>
-    </LinearLayout>
-
-    <RelativeLayout
-        android:id="@+id/contentEditData"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/background_act_datos_validar"
-        android:visibility="gone">
-
-        <ImageView
-            android:id="@+id/button_close"
-            android:layout_width="160px"
-            android:layout_height="120px"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/isotipo_presente"
-            android:background="@android:color/transparent"/>
+        android:orientation="vertical"
+        android:weightSum="100"
+        android:background="@android:color/transparent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
+            android:layout_weight="27"
+            android:gravity="center"
+            android:paddingLeft="40sp"
+            android:paddingRight="40sp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_act_datos_primernombre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/usuario"
+                android:textSize="15sp"
+                android:fontFamily="@font/roboto_light"
+                android:textColor="@color/white"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/una_comunicacion_directa"
+                android:textSize="15sp"
+                android:fontFamily="@font/roboto_light"
+                android:textColor="@color/white"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="31"
             android:weightSum="100"
-            android:background="@android:color/transparent">
+            android:gravity="center"
+            android:background="@android:color/transparent"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="39"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="22"
+                android:src="@drawable/icon_informacion"
+                android:paddingVertical="2dp">
+            </ImageView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="39"/>
+
+        </LinearLayout>
+
+        <ScrollView
+            android:id="@+id/scrollview_editar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="11"
+            android:fillViewport="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="27"
-                android:gravity="center"
-                android:paddingLeft="40sp"
-                android:paddingRight="40sp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/tv_act_datos_primernombre"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/usuario"
-                    android:textSize="15sp"
-                    android:fontFamily="@font/roboto_light"
-                    android:textColor="@color/white"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentTop="true"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/una_comunicacion_directa"
-                    android:textSize="15sp"
-                    android:fontFamily="@font/roboto_light"
-                    android:textColor="@color/white"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"/>
-
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="31"
-                android:weightSum="100"
-                android:gravity="center"
-                android:background="@android:color/transparent"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="45dp"
+                android:paddingTop="0sp"
+                android:paddingRight="45dp"
+                android:paddingBottom="50sp">
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="39"/>
+                    android:layout_height="10dp" />
 
-                <ImageView
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="22"
-                    android:src="@drawable/icon_informacion"
-                    android:paddingVertical="2dp">
-                </ImageView>
+                    android:fontFamily="@font/roboto_light"
+                    android:text="@string/a_continuacion_encuentra"
+                    android:textColor="#4A4A49"
+                    android:textSize="15sp" />
 
                 <View
                     android:layout_width="match_parent"
+                    android:layout_height="30dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_light"
+                    android:text="@string/nombre_completo"
+                    android:textColor="#4A4A49"
+                    android:textSize="17sp" />
+
+                <EditText
+                    android:id="@+id/et_act_datos_nombre"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="39"/>
+                    android:background="@drawable/backgroun_border_radius_gris"
+                    android:enabled="false"
+                    android:fontFamily="@font/roboto_light"
+                    android:padding="8dp"
+                    android:textColor="#4A4A49"
+                    android:textSize="16sp" />
 
-            </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="15dp" />
 
-            <ScrollView
-                android:id="@+id/scrollview_editar"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="11"
-                android:fillViewport="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_light"
+                    android:text="@string/celular"
+                    android:textColor="#4A4A49"
+                    android:textSize="17sp" />
+
+                <EditText
+                    android:id="@+id/et_act_datos_celular"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/backgroun_border_radius"
+                    android:digits="1234567890"
+                    android:fontFamily="@font/roboto_light"
+                    android:inputType="phone"
+                    android:maxLength="10"
+                    android:padding="8dp"
+                    android:textColor="#4A4A49"
+                    android:maxLines="1"
+                    android:textSize="16sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="15dp" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginTop="57dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/backgroun_border_radius_grisoscuro"
+                            android:fontFamily="@font/roboto_light"
+                            android:paddingHorizontal="15dp"
+                            android:paddingVertical="9dp"
+                            android:text="@string/el_correo_electronico"
+                            android:textColor="#4A4A49"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/roboto_light"
+                            android:text="@string/correo_electronico"
+                            android:textColor="#4A4A49"
+                            android:textSize="17sp" />
+
+                        <EditText
+                            android:id="@+id/et_act_datos_correo"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/backgroun_border_radius"
+                            android:fontFamily="@font/roboto_light"
+                            android:inputType="textEmailAddress"
+                            android:padding="8dp"
+                            android:textColor="#4A4A49"
+                            android:maxLines="1"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_light"
+                    android:paddingTop="17dp"
+                    android:text="@string/falta_poco"
+                    android:textColor="#4A4A49"
+                    android:textSize="19sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="15dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_light"
+                    android:text="@string/pais"
+                    android:textColor="#4A4A49"
+                    android:textSize="17sp" />
+
+                <Spinner
+                    android:id="@+id/sp_act_datos_pais"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="@drawable/background_spinner"
+                    android:fontFamily="@font/roboto_light"
+                    android:paddingRight="10dp"
+                    android:textColor="#4A4A49"
+                    android:textSize="15sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="15dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_light"
+                    android:text="@string/departamento"
+                    android:textColor="#4A4A49"
+                    android:textSize="17sp" />
+
+                <Spinner
+                    android:id="@+id/sp_act_datos_departamento"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="@drawable/background_spinner"
+                    android:fontFamily="@font/roboto_light"
+                    android:paddingRight="10dp"
+                    android:textColor="#4A4A49"
+                    android:textSize="15sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="15dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_light"
+                    android:text="@string/ciudad"
+                    android:textColor="#4A4A49"
+                    android:textSize="17sp" />
+
+                <Spinner
+                    android:id="@+id/sp_act_datos_ciudad"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="@drawable/background_spinner"
+                    android:fontFamily="@font/roboto_light"
+                    android:paddingRight="10dp"
+                    android:textColor="#4A4A49"
+                    android:textSize="15sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="15dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_light"
+                    android:text="@string/barrio"
+                    android:textColor="#4A4A49"
+                    android:textSize="17sp" />
+
+                <EditText
+                    android:id="@+id/et_act_datos_barrio"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/backgroun_border_radius"
+                    android:fontFamily="@font/roboto_light"
+                    android:padding="8dp"
+                    android:textColor="#4A4A49"
+                    android:maxLines="1"
+                    android:textSize="16sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="15dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_light"
+                    android:text="@string/direccion"
+                    android:textColor="#4A4A49"
+                    android:textSize="17sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/backgroun_border_radius_gris"
                     android:orientation="vertical"
-                    android:paddingLeft="45dp"
-                    android:paddingTop="0sp"
-                    android:paddingRight="45dp"
-                    android:paddingBottom="50sp">
+                    android:paddingHorizontal="10sp">
 
-                    <View
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="10dp" />
+                        android:layout_height="match_parent"
+                        android:fontFamily="@font/roboto_light"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:layout_gravity="center"
+                        android:paddingTop="15sp">
+
+                        <ImageView
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:src="@drawable/icon_campana" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/roboto_light"
+                            android:text="@string/selecciona_cada_uno"
+                            android:textColor="#4A4A49"
+                            android:textSize="14sp" />
+                    </LinearLayout>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/roboto_light"
-                        android:text="@string/a_continuacion_encuentra"
+                        android:paddingTop="10sp"
+                        android:text="@string/tipo_via"
+                        android:textColor="#4A4A49"
+                        android:textSize="17sp" />
+
+                    <Spinner
+                        android:id="@+id/spinner_tipoVia"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:background="@drawable/background_spinner"
+                        android:fontFamily="@font/roboto_light"
+                        android:paddingRight="10dp"
                         android:textColor="#4A4A49"
                         android:textSize="15sp" />
 
-                    <View
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="30dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_light"
-                        android:text="@string/nombre_completo"
-                        android:textColor="#4A4A49"
-                        android:textSize="16sp" />
-
-                    <EditText
-                        android:id="@+id/et_act_datos_nombre"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/backgroun_border_radius_gris"
-                        android:enabled="false"
-                        android:fontFamily="@font/roboto_light"
-                        android:padding="8dp"
-                        android:textColor="#4A4A49"
-                        android:textSize="16sp" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="15dp" />
-
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_light"
-                        android:text="@string/celular"
-                        android:textColor="#4A4A49"
-                        android:textSize="16sp" />
-
-                    <EditText
-                        android:id="@+id/et_act_datos_celular"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/backgroun_border_radius"
-                        android:digits="1234567890"
-                        android:fontFamily="@font/roboto_light"
-                        android:inputType="phone"
-                        android:maxLength="10"
-                        android:padding="8dp"
-                        android:textColor="#4A4A49"
-                        android:textSize="16sp" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="15dp" />
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:orientation="horizontal"
+                        android:paddingTop="10sp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentBottom="true"
-                            android:layout_marginTop="57dp"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/backgroun_border_radius_grisoscuro"
-                                android:fontFamily="@font/roboto_light"
-                                android:paddingHorizontal="15dp"
-                                android:paddingVertical="9dp"
-                                android:text="@string/el_correo_electronico"
-                                android:textColor="#4A4A49"
-                                android:textSize="14sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical">
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:paddingRight="2dp">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/roboto_light"
-                                android:text="@string/correo_electronico"
+                                android:text="@string/numero_via"
                                 android:textColor="#4A4A49"
-                                android:textSize="16sp" />
+                                android:textSize="17sp" />
 
                             <EditText
-                                android:id="@+id/et_act_datos_correo"
+                                android:id="@+id/et_numero_via"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:background="@drawable/backgroun_border_radius"
+                                android:digits="1234567890"
                                 android:fontFamily="@font/roboto_light"
-                                android:inputType="textEmailAddress"
+                                android:maxLength="3"
+                                android:inputType="number"
                                 android:padding="8dp"
+                                android:textColor="#4A4A49"
+                                android:maxLines="1"
+                                android:textSize="17sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:paddingLeft="2dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/roboto_light"
+                                android:text="@string/letra_via"
+                                android:textColor="#4A4A49"
+                                android:textSize="17sp" />
+
+                            <Spinner
+                                android:id="@+id/spinner_letra"
+                                android:layout_width="match_parent"
+                                android:layout_height="40dp"
+                                android:background="@drawable/background_spinner"
+                                android:fontFamily="@font/roboto_light"
+                                android:paddingRight="10dp"
+                                android:textColor="#4A4A49"
+                                android:textSize="15sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_light"
+                        android:paddingTop="10sp"
+                        android:text="@string/complemento_via"
+                        android:textColor="#4A4A49"
+                        android:textSize="17sp" />
+
+                    <Spinner
+                        android:id="@+id/spinner_complemento_via"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:background="@drawable/background_spinner"
+                        android:fontFamily="@font/roboto_light"
+                        android:paddingRight="10dp"
+                        android:textColor="#4A4A49"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_light"
+                        android:paddingTop="10sp"
+                        android:text="@string/numero_via2"
+                        android:textColor="#4A4A49"
+                        android:textSize="17sp" />
+
+                    <EditText
+                        android:id="@+id/et_numero_via2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/backgroun_border_radius"
+                        android:digits="1234567890"
+                        android:fontFamily="@font/roboto_light"
+                        android:inputType="number"
+                        android:hint="@string/si_no_aplica"
+                        android:padding="8dp"
+                        android:maxLength="3"
+                        android:textColor="#4A4A49"
+                        android:textSize="16sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingTop="10sp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:paddingRight="2dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/roboto_light"
+                                android:text="@string/letra_via2"
+                                android:textColor="#4A4A49"
+                                android:textSize="17sp" />
+
+                            <Spinner
+                                android:id="@+id/spinner_letraVia2"
+                                android:layout_width="match_parent"
+                                android:layout_height="40dp"
+                                android:background="@drawable/background_spinner"
+                                android:fontFamily="@font/roboto_light"
+                                android:paddingRight="10dp"
                                 android:textColor="#4A4A49"
                                 android:textSize="16sp" />
                         </LinearLayout>
 
-                    </RelativeLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:paddingLeft="2dp">
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_light"
-                        android:paddingTop="17dp"
-                        android:text="@string/falta_poco"
-                        android:textColor="#4A4A49"
-                        android:textSize="19sp" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/roboto_light"
+                                android:text="@string/complemento_via2"
+                                android:textColor="#4A4A49"
+                                android:textSize="17sp" />
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="15dp" />
+                            <Spinner
+                                android:id="@+id/spinner_complemento_via2"
+                                android:layout_width="match_parent"
+                                android:layout_height="40dp"
+                                android:background="@drawable/background_spinner"
+                                android:fontFamily="@font/roboto_light"
+                                android:paddingRight="10dp"
+                                android:textColor="#4A4A49"
+                                android:textSize="16sp" />
+                        </LinearLayout>
+                    </LinearLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_light"
-                        android:text="@string/pais"
-                        android:textColor="#4A4A49"
-                        android:textSize="16sp" />
-
-                    <Spinner
-                        android:id="@+id/sp_act_datos_pais"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:background="@drawable/background_spinner"
-                        android:fontFamily="@font/roboto_light"
-                        android:paddingRight="10dp"
-                        android:textColor="#4A4A49"
-                        android:textSize="15sp" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="15dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/roboto_light"
-                        android:text="@string/departamento"
+                        android:paddingTop="10sp"
+                        android:text="@string/numero_complemento"
                         android:textColor="#4A4A49"
-                        android:textSize="16sp" />
-
-                    <Spinner
-                        android:id="@+id/sp_act_datos_departamento"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:background="@drawable/background_spinner"
-                        android:fontFamily="@font/roboto_light"
-                        android:paddingRight="10dp"
-                        android:textColor="#4A4A49"
-                        android:textSize="15sp" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="15dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_light"
-                        android:text="@string/ciudad"
-                        android:textColor="#4A4A49"
-                        android:textSize="16sp" />
-
-                    <Spinner
-                        android:id="@+id/sp_act_datos_ciudad"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:background="@drawable/background_spinner"
-                        android:fontFamily="@font/roboto_light"
-                        android:paddingRight="10dp"
-                        android:textColor="#4A4A49"
-                        android:textSize="15sp" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="15dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_light"
-                        android:text="@string/barrio"
-                        android:textColor="#4A4A49"
-                        android:textSize="16sp" />
+                        android:textSize="17sp" />
 
                     <EditText
-                        android:id="@+id/et_act_datos_barrio"
+                        android:id="@+id/et_numeroComplementoVia2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/backgroun_border_radius"
+                        android:digits="1234567890"
+                        android:fontFamily="@font/roboto_light"
+                        android:inputType="number"
+                        android:maxLength="3"
+                        android:hint="@string/si_no_aplica"
+                        android:padding="8dp"
+                        android:textColor="#4A4A49"
+                        android:maxLines="1"
+                        android:textSize="16sp" />
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_light"
+                        android:paddingTop="10sp"
+                        android:text="@string/informacion_adicional"
+                        android:textColor="#4A4A49"
+                        android:textSize="17sp" />
+
+                    <EditText
+                        android:id="@+id/et_informacion_adicional"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@drawable/backgroun_border_radius"
                         android:fontFamily="@font/roboto_light"
-                        android:padding="8dp"
+                        android:hint="@string/por_ejemplo"
+                        android:padding="6dp"
+                        android:layout_marginBottom="10dp"
                         android:textColor="#4A4A49"
+                        android:maxLines="1"
                         android:textSize="16sp" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="15dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_light"
-                        android:text="@string/direccion"
-                        android:textColor="#4A4A49"
-                        android:textSize="16sp" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/backgroun_border_radius_gris"
-                        android:orientation="vertical"
-                        android:paddingHorizontal="10sp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:fontFamily="@font/roboto_light"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:layout_gravity="center"
-                            android:paddingTop="15sp">
-
-                            <ImageView
-                                android:layout_width="120dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="2"
-                                android:src="@drawable/icon_campana" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:fontFamily="@font/roboto_light"
-                                android:text="@string/selecciona_cada_uno"
-                                android:textColor="#4A4A49"
-                                android:textSize="14sp" />
-                        </LinearLayout>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/roboto_light"
-                            android:paddingTop="10sp"
-                            android:text="@string/tipo_via"
-                            android:textColor="#4A4A49"
-                            android:textSize="16sp" />
-
-                        <Spinner
-                            android:id="@+id/spinner_tipoVia"
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:background="@drawable/background_spinner"
-                            android:fontFamily="@font/roboto_light"
-                            android:paddingRight="10dp"
-                            android:textColor="#4A4A49"
-                            android:textSize="15sp" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:paddingTop="10sp">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:orientation="vertical"
-                                android:paddingRight="2dp">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:fontFamily="@font/roboto_light"
-                                    android:text="@string/numero_via"
-                                    android:textColor="#4A4A49"
-                                    android:textSize="16sp" />
-
-                                <EditText
-                                    android:id="@+id/et_numero_via"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:background="@drawable/backgroun_border_radius"
-                                    android:digits="1234567890"
-                                    android:fontFamily="@font/roboto_light"
-                                    android:maxLength="3"
-                                    android:inputType="number"
-                                    android:padding="8dp"
-                                    android:textColor="#4A4A49"
-                                    android:textSize="16sp" />
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:orientation="vertical"
-                                android:paddingLeft="2dp">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:fontFamily="@font/roboto_light"
-                                    android:text="@string/letra_via"
-                                    android:textColor="#4A4A49"
-                                    android:textSize="16sp" />
-
-                                <Spinner
-                                    android:id="@+id/spinner_letra"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="40dp"
-                                    android:background="@drawable/background_spinner"
-                                    android:fontFamily="@font/roboto_light"
-                                    android:paddingRight="10dp"
-                                    android:textColor="#4A4A49"
-                                    android:textSize="15sp" />
-                            </LinearLayout>
-                        </LinearLayout>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/roboto_light"
-                            android:paddingTop="10sp"
-                            android:text="@string/complemento_via"
-                            android:textColor="#4A4A49"
-                            android:textSize="16sp" />
-
-                        <Spinner
-                            android:id="@+id/spinner_complemento_via"
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:background="@drawable/background_spinner"
-                            android:fontFamily="@font/roboto_light"
-                            android:paddingRight="10dp"
-                            android:textColor="#4A4A49"
-                            android:textSize="16sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/roboto_light"
-                            android:paddingTop="10sp"
-                            android:text="@string/numero_via2"
-                            android:textColor="#4A4A49"
-                            android:textSize="16sp" />
-
-                        <EditText
-                            android:id="@+id/et_numero_via2"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@drawable/backgroun_border_radius"
-                            android:digits="1234567890"
-                            android:fontFamily="@font/roboto_light"
-                            android:inputType="number"
-                            android:hint="@string/si_no_aplica"
-                            android:padding="8dp"
-                            android:maxLength="3"
-                            android:textColor="#4A4A49"
-                            android:textSize="16sp" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:paddingTop="10sp">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:orientation="vertical"
-                                android:paddingRight="2dp">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:fontFamily="@font/roboto_light"
-                                    android:text="@string/letra_via2"
-                                    android:textColor="#4A4A49"
-                                    android:textSize="16sp" />
-
-                                <Spinner
-                                    android:id="@+id/spinner_letraVia2"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="40dp"
-                                    android:background="@drawable/background_spinner"
-                                    android:fontFamily="@font/roboto_light"
-                                    android:paddingRight="10dp"
-                                    android:textColor="#4A4A49"
-                                    android:textSize="16sp" />
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:orientation="vertical"
-                                android:paddingLeft="2dp">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:fontFamily="@font/roboto_light"
-                                    android:text="@string/complemento_via2"
-                                    android:textColor="#4A4A49"
-                                    android:textSize="16sp" />
-
-                                <Spinner
-                                    android:id="@+id/spinner_complemento_via2"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="40dp"
-                                    android:background="@drawable/background_spinner"
-                                    android:fontFamily="@font/roboto_light"
-                                    android:paddingRight="10dp"
-                                    android:textColor="#4A4A49"
-                                    android:textSize="16sp" />
-                            </LinearLayout>
-                        </LinearLayout>
-
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/roboto_light"
-                            android:paddingTop="10sp"
-                            android:text="@string/numero_complemento"
-                            android:textColor="#4A4A49"
-                            android:textSize="16sp" />
-
-                        <EditText
-                            android:id="@+id/et_numeroComplementoVia2"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@drawable/backgroun_border_radius"
-                            android:digits="1234567890"
-                            android:fontFamily="@font/roboto_light"
-                            android:inputType="number"
-                            android:maxLength="3"
-                            android:hint="@string/si_no_aplica"
-                            android:padding="8dp"
-                            android:textColor="#4A4A49"
-                            android:textSize="16sp" />
-
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/roboto_light"
-                            android:paddingTop="10sp"
-                            android:text="@string/informacion_adicional"
-                            android:textColor="#4A4A49"
-                            android:textSize="16sp" />
-
-                        <EditText
-                            android:id="@+id/et_informacion_adicional"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@drawable/backgroun_border_radius"
-                            android:fontFamily="@font/roboto_light"
-                            android:hint="@string/por_ejemplo"
-                            android:padding="6dp"
-                            android:layout_marginBottom="10dp"
-                            android:textColor="#4A4A49"
-                            android:textSize="16sp" />
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="15dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_light"
-                        android:text="@string/has_ingresado_la"
-                        android:textColor="#4A4A49"
-                        android:textSize="16sp" />
-
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal"
-                        android:paddingTop="10dp">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:adjustViewBounds="true"
-                            android:scaleType="centerInside"
-                            android:src="@drawable/icon_shapeyellow" />
-
-                        <TextView
-                            android:id="@+id/tv_direccion_completa"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/roboto_light"
-                            android:paddingStart="15dp"
-                            android:text=""
-                            android:textColor="#4A4A49"
-                            android:textSize="16sp" />
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginVertical="25dp"
-                        android:background="@drawable/separator_gray" />
-
-                    <Button
-                        android:id="@+id/btnGuardar_actDatos_guardar"
-                        android:layout_width="173dp"
-                        android:layout_height="36dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/btn_green"
-                        android:fontFamily="@font/roboto_light"
-                        android:text="Guardar"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="#000"
-                        android:textSize="16sp" />
-
-                    <View
-                        android:id="@+id/view_final_Editar"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp" />
-
                 </LinearLayout>
-            </ScrollView>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="31"
-                android:weightSum="100"
-                android:gravity="center"
-                android:orientation="horizontal">
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="39"/>
+                    android:layout_height="15dp" />
 
-                <ImageView
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="22"
-                    android:src="@drawable/icon_seguridad_informacion"
-                    android:paddingVertical="2dp">
-                </ImageView>
+                    android:fontFamily="@font/roboto_light"
+                    android:text="@string/has_ingresado_la"
+                    android:textColor="#4A4A49"
+                    android:textSize="16sp" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:paddingTop="10dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:adjustViewBounds="true"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/icon_shapeyellow" />
+
+                    <TextView
+                        android:id="@+id/tv_direccion_completa"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_light"
+                        android:paddingStart="15dp"
+                        android:text=""
+                        android:textColor="#4A4A49"
+                        android:textSize="17sp" />
+                </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="39"/>
-            </LinearLayout>
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="25dp"
+                    android:background="@drawable/separator_gray" />
 
+                <Button
+                    android:id="@+id/btnGuardar_actDatos_guardar"
+                    android:layout_width="173dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/btn_green"
+                    android:fontFamily="@font/roboto_light"
+                    android:text="Guardar"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="#000"
+                    android:textSize="16sp" />
+
+                <View
+                    android:id="@+id/view_final_Editar"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp" />
+
+            </LinearLayout>
+        </ScrollView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="31"
+            android:weightSum="100"
+            android:gravity="center"
+            android:orientation="horizontal">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="39"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="22"
+                android:src="@drawable/icon_seguridad_informacion"
+                android:paddingVertical="2dp">
+            </ImageView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="39"/>
         </LinearLayout>
-    </RelativeLayout>
-</LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>
+

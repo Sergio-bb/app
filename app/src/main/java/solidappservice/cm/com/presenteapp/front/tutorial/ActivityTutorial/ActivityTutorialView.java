@@ -100,10 +100,11 @@ public class ActivityTutorialView extends ActivityBase implements ActivityTutori
     @Override
     public void fetchTutorialImages() {
         resourceIds = new ArrayList<>();
-        resourceIds.add(R.drawable.tutorial_1);
-        resourceIds.add(R.drawable.tutorial_2);
-        resourceIds.add(R.drawable.tutorial_3);
-        resourceIds.add(R.drawable.tutorial_4);
+        resourceIds.add(R.drawable.tutorial1);
+        resourceIds.add(R.drawable.tutorial2);
+        resourceIds.add(R.drawable.tutorial3);
+        resourceIds.add(R.drawable.tutorial4);
+        resourceIds.add(R.drawable.tutorial5);
         showTutorialImages();
     }
 

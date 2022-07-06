@@ -1,66 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/transparent">
+    android:background="@drawable/backgroun_border_radius">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:background="@android:color/transparent">
+        android:paddingVertical="15dp"
+        android:paddingHorizontal="40dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_transfer"
+            android:layout_gravity="center"
+            android:layout_marginTop="26dp"
+            android:layout_marginBottom="10dp"/>
+
+        <TextView
+            android:id="@+id/titleLoading"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Estamos enviando tu dinero a Nequi"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/roboto_light"/>
 
         <LinearLayout
-            android:id="@+id/layout_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="30dp"
-            android:paddingRight="30dp"
-            android:orientation="vertical"
-            android:layout_centerVertical="true"
-            android:background="@drawable/backgroun_border_radius_shadow">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal">
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="25dp"
-                    android:layout_weight="50"
-                    android:src="@drawable/icon_presente2"/>
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="50"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:weightSum="100"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="30dp"
-                android:orientation="horizontal">
-                <ProgressBar
-                    android:layout_width="0dp"
-                    android:layout_height="40dp"
-                    android:layout_weight="30"
-                    android:indeterminateTint="#707070"
-                    android:visibility="visible"/>
-                <TextView
-                    android:id="@+id/lbl_content_message"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="70"
-                    android:layout_gravity="center_vertical"
-                    android:text="Contenido"
-                    android:textSize="16sp"
-                    android:fontFamily="@font/roboto_light"/>
-            </LinearLayout>
-
+            android:paddingVertical="10dp"
+            android:paddingHorizontal="80dp"
+            android:gravity="center"
+            android:orientation="vertical">
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:background="#CCCCCC"/>
         </LinearLayout>
-    </RelativeLayout>
 
+        <ProgressBar
+            android:id="@+id/circular_progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminateTint="#707070"
+            android:scaleType="centerInside"
+            android:visibility="visible"/>
+
+        <TextView
+            android:id="@+id/textLoading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:paddingTop="7dp"
+            android:paddingBottom="20dp"
+            android:text="En unos instantes podrás consultar tu nuevo saldo"
+            android:textSize="14sp"
+            android:fontFamily="@font/roboto_light"/>
+
+
+
+    </LinearLayout>
 </RelativeLayout>

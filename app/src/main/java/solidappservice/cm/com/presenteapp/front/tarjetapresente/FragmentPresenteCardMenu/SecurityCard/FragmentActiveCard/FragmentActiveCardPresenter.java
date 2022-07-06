@@ -35,7 +35,7 @@ public class FragmentActiveCardPresenter implements FragmentActiveCardContract.P
             String resultActivarTarjeta = (String) response.body().getResultado();
             view.showResultActivateCard(resultActivarTarjeta);
         }catch(Exception ex) {
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
     }
 
@@ -49,9 +49,9 @@ public class FragmentActiveCardPresenter implements FragmentActiveCardContract.P
     public <T> void onError(Response<BaseResponse<T>> response) {
         view.hideProgressDialog();
         if(response != null){
-            view.showDataFetchError("Lo sentimos", response.body().getMensajeErrorUsuario());
+            view.showDataFetchError(response.body().getMensajeErrorUsuario());
         }else{
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
     }
 
@@ -61,7 +61,7 @@ public class FragmentActiveCardPresenter implements FragmentActiveCardContract.P
         if(isErrorTimeOut){
             view.showErrorTimeOut();
         }else{
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
     }
 

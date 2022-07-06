@@ -12,20 +12,15 @@ import solidappservice.cm.com.presenteapp.entities.base.BaseResponse;
 public interface FragmentValidateDataContract {
 
     interface View{
+        void showProgressDialog(String message);
+        void hideProgressDialog();
         void fetchPersonalData();
         void updatePersonalData();
         void resultUpdatePersonalData();
         void processPersonalData();
         void showPersonalData(DatosAsociado data);
-        void showSectionValidateData();
-        void hideSectionValidateData();
-        void showCircularProgressBar(String message);
-        void hideCircularProgressBar();
-        void showProgressDialog(String message);
-        void hideProgressDialog();
-        void showErrorWithRefresh();
+        void showDataFetchError(String message);
         void showErrorTimeOut();
-        void showDataFetchError(String title, String message);
         void showExpiredToken(String message);
     }
 

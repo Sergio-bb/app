@@ -13,6 +13,8 @@ public interface IFragmentCoordinator {
         MenuPrincipal,
         MenuFinanzas,
         Tabs,
+        Candidatos,
+        Votacion,
         Mapa,
         PuntoAtencion,
         Transacciones,
@@ -23,18 +25,25 @@ public interface IFragmentCoordinator {
         ConveniosLista,
         ConveniosProductos,
         ConveniosCompraProducto,
+        ConveniosMEMostrarResumen,
+        ConveniosMELandingME,
         ActDatosStart,
         ActDatosEditData,
         ActDatosValidateData,
         ActDatosVerifyCode,
-        ActDatosFinal,
-        SuscNequiInicio,
-        SuscNequiOne,
-        SuscNequiSecond,
-        SuscNequiFinal,
-        NequiQRCamera,
-        NequiQRDetail
+        ActDatosFinal
     }
 
+    //void ingresar(Usuario usuario);
+    void verMenuFinanzas();
+    void verEstadoCuenta();
+    void verTransacciones();
+    void verTarjetaPresente();
+    void verMisMensajes();
+    void verGeoReferenciacion();
+    void verCandidatos();
+    void verVotacion();
+    void verMenuPrincipal();
+    void verRecuperarClave();
     void setFragment(Pantalla pantalla);
 }

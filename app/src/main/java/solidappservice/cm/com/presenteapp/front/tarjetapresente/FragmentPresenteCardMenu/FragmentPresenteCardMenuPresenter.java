@@ -1,5 +1,7 @@
 package solidappservice.cm.com.presenteapp.front.tarjetapresente.FragmentPresenteCardMenu;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import java.util.List;
@@ -26,9 +28,34 @@ public class FragmentPresenteCardMenuPresenter implements FragmentPresenteCardMe
     }
 
     @Override
+    public void fetchPresenteCards(BaseRequest baseRequest) {
+        view.showCircularProgressBar("Obteniendo tarjetas...");
+        model.getPresenteCards(baseRequest, this);
+    }
+
+    @Override
+    public <T> void onSuccess(Response<BaseResponse<T>> response) {
+        view.hideCircularProgressBar();
+        List<ResponseTarjeta> tarjetas = (List<ResponseTarjeta>) response.body().getResultado();
+        if(tarjetas != null){
+            Encripcion encripcion = new Encripcion();
+            for (ResponseTarjeta tarjeta : tarjetas) {
+                tarjeta.setA_numcta(encripcion.desencriptar(tarjeta.getA_numcta().trim()));
+                tarjeta.setA_obliga(encripcion.desencriptar(tarjeta.getA_obliga().trim()));
+                tarjeta.setA_tipodr(tarjeta.getA_tipodr().trim());
+                tarjeta.setF_movim(tarjeta.getF_movim().trim());
+                tarjeta.setI_estado(tarjeta.getI_estado().trim());
+                tarjeta.setK_numpla(encripcion.desencriptar(tarjeta.getK_numpla().trim()));
+                tarjeta.setK_mnumpl(encripcion.desencriptar(tarjeta.getK_mnumpl().trim()));
+                tarjeta.setN_percol(tarjeta.getN_percol().trim());
+                tarjeta.setV_cupo(tarjeta.getV_cupo());
+            }
+        }
+        view.showNumberPresenteCards(tarjetas);
+    }
+
+    @Override
     public void fetchButtonStateReplacementCard() {
-        view.hideSectionMenuPresenteCards();
-        view.showCircularProgressBar("Un momento...");
         model.getButtonStateReplacementCard(this);
     }
     @Override
@@ -40,50 +67,10 @@ public class FragmentPresenteCardMenuPresenter implements FragmentPresenteCardMe
             }else{
                 view.hideButtonReplacementCard();
             }
-            view.fetchPresenteCards();
+            view.hideCircularProgressBar();
+
         }catch (Exception ex){
-            view.hideButtonReplacementCard();
-            view.fetchPresenteCards();
-        }
-    }
-    @Override
-    public <T> void onErrorButtonStateReplacementCard(Response<BaseResponse<T>> response) {
-        view.hideButtonReplacementCard();
-        view.fetchPresenteCards();
-    }
-
-    @Override
-    public void fetchPresenteCards(BaseRequest baseRequest) {
-        view.hideSectionMenuPresenteCards();
-        view.showCircularProgressBar("Un momento...");
-        model.getPresenteCards(baseRequest, this);
-    }
-
-    @Override
-    public <T> void onSuccess(Response<BaseResponse<T>> response) {
-        try{
-            List<ResponseTarjeta> tarjetas = (List<ResponseTarjeta>) response.body().getResultado();
-            if(tarjetas != null){
-                Encripcion encripcion = new Encripcion();
-                for (ResponseTarjeta tarjeta : tarjetas) {
-                    tarjeta.setA_numcta(encripcion.desencriptar(tarjeta.getA_numcta().trim()));
-                    tarjeta.setA_obliga(encripcion.desencriptar(tarjeta.getA_obliga().trim()));
-                    tarjeta.setA_tipodr(tarjeta.getA_tipodr().trim());
-                    tarjeta.setF_movim(tarjeta.getF_movim().trim());
-                    tarjeta.setI_estado(tarjeta.getI_estado().trim());
-                    tarjeta.setK_numpla(encripcion.desencriptar(tarjeta.getK_numpla().trim()));
-                    tarjeta.setK_mnumpl(encripcion.desencriptar(tarjeta.getK_mnumpl().trim()));
-                    tarjeta.setN_percol(tarjeta.getN_percol().trim());
-                    tarjeta.setV_cupo(tarjeta.getV_cupo());
-                }
-            }
-            view.hideCircularProgressBar();
-            view.showSectionMenuPresenteCards();
-            view.showNumberPresenteCards(tarjetas);
-        }catch(Exception ex){
-            view.hideCircularProgressBar();
-            view.showDataFetchError("Lo sentimos", "");
-            view.showErrorWithRefresh();
+            view.showDataFetchError("");
         }
     }
 
@@ -97,11 +84,10 @@ public class FragmentPresenteCardMenuPresenter implements FragmentPresenteCardMe
     public <T> void onError(Response<BaseResponse<T>> response) {
         view.hideCircularProgressBar();
         if(response != null){
-            view.showDataFetchError("Lo sentimos", response.body().getMensajeErrorUsuario());
+            view.showDataFetchError(response.body().getMensajeErrorUsuario());
         }else{
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
-        view.showErrorWithRefresh();
     }
 
     @Override
@@ -110,9 +96,8 @@ public class FragmentPresenteCardMenuPresenter implements FragmentPresenteCardMe
         if(isErrorTimeOut){
             view.showErrorTimeOut();
         }else{
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
-        view.showErrorWithRefresh();
     }
 
 }

@@ -5,7 +5,7 @@ import java.util.List;
 import retrofit2.Response;
 import solidappservice.cm.com.presenteapp.entities.base.BaseRequest;
 import solidappservice.cm.com.presenteapp.entities.base.BaseResponse;
-import solidappservice.cm.com.presenteapp.entities.estadocuenta.response.ResponseProducto;
+import solidappservice.cm.com.presenteapp.entities.estadocuenta.response.ResponseProductos;
 import solidappservice.cm.com.presenteapp.entities.pagoobligaciones.request.RequestEnviarPago;
 
 /**
@@ -18,26 +18,20 @@ public interface FragmentPaymentCreditsContract {
         void fetchPendingPayments();
         void showResultPendingPayments();
         void fetchProducts();
-        void showProductstoDebit(List<ResponseProducto> products);
-        void showProductstoPay(List<ResponseProducto> products);
+        void showProductstoDebit(List<ResponseProductos> products);
+        void showProductstoPay(List<ResponseProductos> products);
         void validateDataPayment();
-        void showDialogConfirmPayment(Double paymentValue, ResponseProducto productToPay, ResponseProducto productoToDebit);
-        void makePayment(Double paymentValue, ResponseProducto productToPay, ResponseProducto productoToDebit);
+        void showDialogConfirmPayment(Double paymentValue, ResponseProductos productToPay, ResponseProductos productoToDebit);
+        void makePayment(Double paymentValue, ResponseProductos productToPay, ResponseProductos productoToDebit);
         void showResultPayment(String resultPayment);
         void enabledCheckboxSaldo(boolean enabled);
         void enabledCheckboxOtroValor(boolean enabled);
         void disabledAcceptButton();
         void enabledAcceptButton();
-        void showSectionPaymentsCredits();
-        void hideSectionPaymentsCredits();
-        void showCircularProgressBar(String message);
-        void hideCircularProgressBar();
-        void showErrorWithRefresh();
         void showProgressDialog(String message);
         void hideProgressDialog();
-        void showDialogError(String title, String message);
+        void showDataFetchError(String message);
         void showErrorTimeOut();
-        void showDataFetchError(String title, String message);
         void showExpiredToken(String message);
     }
 
@@ -55,18 +49,11 @@ public interface FragmentPaymentCreditsContract {
 
     interface APIListener{
         <T> void onSuccessPendingPayments(Response<BaseResponse<T>> response);
-        <T> void onErrorPendingPayments(Response<BaseResponse<T>> response);
-        void onFailurePendingPayments(Throwable t, boolean isErrorTimeOut);
-
         <T> void onSuccessProducts(Response<BaseResponse<T>> response);
-        <T> void onErrorProducts(Response<BaseResponse<T>> response);
-        void onFailureProducts(Throwable t, boolean isErrorTimeOut);
-
         <T> void onSuccessMakePayment(Response<BaseResponse<T>> response);
-        <T> void onErrorMakePayment(Response<BaseResponse<T>> response);
-        void onFailureMakePayment(Throwable t, boolean isErrorTimeOut);
-
         <T> void onExpiredToken(Response<BaseResponse<T>> response);
+        <T> void onError(Response<BaseResponse<T>> response);
+        void onFailure(Throwable t, boolean isErrorTimeOut);
     }
 
 }

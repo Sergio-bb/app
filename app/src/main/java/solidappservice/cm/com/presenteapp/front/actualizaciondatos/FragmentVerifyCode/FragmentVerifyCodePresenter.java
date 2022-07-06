@@ -95,7 +95,7 @@ public class FragmentVerifyCodePresenter implements FragmentVerifyCodeContract.P
                     new Date(codigo.getFechaExpiracion())
             ));
         }catch(Exception ex){
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
     }
 
@@ -115,15 +115,15 @@ public class FragmentVerifyCodePresenter implements FragmentVerifyCodeContract.P
                     new Date(codigo.getFechaExpiracion())
             ));
         }catch(Exception ex){
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
     }
 
     @Override
     public <T> void onSuccessValidateVerificationCode(Response<BaseResponse<T>> response) {
         try {
-            view.hideCircularProgressBar();
             ResponseValidarCodigo codigo = (ResponseValidarCodigo) response.body().getResultado();
+            view.hideCircularProgressBar();
             if (codigo != null && codigo.getCodigoValido().equals("Y") && codigo.getCodigoExpirado().equals("N")) {
                 view.showBoxTypesCodeSend();
                 view.updateInformation();
@@ -138,7 +138,7 @@ public class FragmentVerifyCodePresenter implements FragmentVerifyCodeContract.P
                 view.showDialogError("Lo sentimos", "Verifica si ingresaste el codigo correctamente");
             }
         }catch(Exception ex){
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
     }
 
@@ -150,10 +150,10 @@ public class FragmentVerifyCodePresenter implements FragmentVerifyCodeContract.P
                 view.resultUpdatePersonalData();
             } else {
                 view.hideProgressDialog();
-                view.showDataFetchError("Lo sentimos", "");
+                view.showDataFetchError((String) response.body().getResultado());
             }
         }catch(Exception ex){
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
     }
 
@@ -164,7 +164,7 @@ public class FragmentVerifyCodePresenter implements FragmentVerifyCodeContract.P
             ResponseRegistrarDispositivo registrarDispositivo = (ResponseRegistrarDispositivo) response.body().getResultado();
             view.resultRegisterDevice(registrarDispositivo.getIdRegistroDispositivo());
         }catch(Exception ex){
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
     }
 
@@ -177,10 +177,10 @@ public class FragmentVerifyCodePresenter implements FragmentVerifyCodeContract.P
                 view.resultUpdatePersonalData();
             } else {
                 view.hideProgressDialog();
-                view.showDataFetchError("Lo sentimos", (String) response.body().getResultado());
+                view.showDataFetchError((String) response.body().getResultado());
             }
         }catch(Exception ex){
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
     }
 
@@ -199,7 +199,11 @@ public class FragmentVerifyCodePresenter implements FragmentVerifyCodeContract.P
         view.hideCircularProgressBar();
         view.showBoxTypesCodeSend();
         view.disabledSectionVerificationCode();
-        view.showDataFetchError("Lo sentimos", "");
+        if(response != null){
+            view.showDataFetchError(response.body().getMensajeErrorUsuario());
+        }else{
+            view.showDataFetchError("");
+        }
     }
 
     @Override
@@ -211,7 +215,7 @@ public class FragmentVerifyCodePresenter implements FragmentVerifyCodeContract.P
         if(isErrorTimeOut){
             view.showErrorTimeOut();
         }else{
-            view.showDataFetchError("Lo sentimos","");
+            view.showDataFetchError("");
         }
     }
 

@@ -34,7 +34,7 @@ public class FragmentReplacementCardPresenter implements FragmentReplacementCard
     }
 
     @Override
-    public void onFailure(Throwable t, boolean isErrorTimeOut) {
+    public void onFailure(Throwable t) {
     }
 
 }

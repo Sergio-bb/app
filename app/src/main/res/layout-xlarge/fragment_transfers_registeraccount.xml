@@ -13,45 +13,12 @@
         android:gravity="center"
         android:padding="6dp"
         android:text="@string/lblInscribirNuevaCuenta"
-        android:textSize="16sp"
+        android:textSize="17sp"
         android:fontFamily="@font/roboto_light"/>
 
-    <LinearLayout
-        android:id="@+id/layout_circular_progress_bar"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone">
-        <ProgressBar
-            android:id="@+id/circular_progress_bar"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:indeterminateTint="#707070"
-            android:visibility="visible"/>
-        <ImageView
-            android:id="@+id/imageReferesh"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:src="@drawable/icon_refresh"
-            android:visibility="gone"/>
-        <TextView
-            android:id="@+id/text_circular_progress_Bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:gravity="center"
-            android:text="Intentar de nuevo"
-            android:textSize="12sp"
-            android:fontFamily="@font/roboto_light"
-            android:visibility="visible"/>
-    </LinearLayout>
-
     <ScrollView
-        android:id="@+id/contentRegistrarCuenta"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -71,6 +38,17 @@
                 android:orientation="vertical"
                 android:paddingBottom="10dp">
 
+                <!--<ImageButton
+                        android:id="@+id/btnSalirHeader"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@null"
+                        android:contentDescription="@string/app_name"
+                        android:src="@drawable/salir" /> -->
+
                 <TextView
                     android:id="@+id/tv_tipo_cuenta"
                     android:layout_width="wrap_content"
@@ -78,7 +56,7 @@
                     android:layout_marginTop="10dp"
                     android:text="Seleccione el tipo de cuenta"
                     android:textStyle="bold"
-                    android:textSize="16sp"
+                    android:textSize="17sp"
                     android:visibility="gone"
                     android:fontFamily="@font/roboto_light"/>
 
@@ -96,7 +74,7 @@
                     android:layout_marginTop="10dp"
                     android:text="Seleccione el responseBanco"
                     android:textStyle="bold"
-                    android:textSize="16sp"
+                    android:textSize="17sp"
                     android:visibility="gone"
                     android:fontFamily="@font/roboto_light"/>
 
@@ -114,7 +92,7 @@
                     android:layout_marginTop="15dp"
                     android:text="Digita el número de cuenta del destinatario"
                     android:textStyle="bold"
-                    android:textSize="16sp"
+                    android:textSize="17sp"
                     android:visibility="gone"
                     android:fontFamily="@font/roboto_light"/>
 
@@ -129,7 +107,7 @@
                     android:padding="10dp"
                     android:maxLength="34"
                     android:visibility="gone"
-                    android:textSize="16sp"
+                    android:textSize="17sp"
                     android:fontFamily="@font/roboto_light"/>
 
                 <TextView
@@ -139,7 +117,7 @@
                     android:layout_marginTop="15dp"
                     android:text="@string/digite_cedula_destinatario"
                     android:textStyle="bold"
-                    android:textSize="16sp"
+                    android:textSize="17sp"
                     android:fontFamily="@font/roboto_light"/>
 
                 <EditText
@@ -152,7 +130,7 @@
                     android:inputType="number"
                     android:padding="10dp"
                     android:maxLength="10"
-                    android:textSize="16sp"
+                    android:textSize="17sp"
                     android:fontFamily="@font/roboto_light"/>
 
                 <TextView
@@ -162,7 +140,7 @@
                     android:layout_marginTop="15dp"
                     android:text="Nombre personalizado de la cuenta a inscribir"
                     android:textStyle="bold"
-                    android:textSize="16sp"
+                    android:textSize="17sp"
                     android:fontFamily="@font/roboto_light"/>
 
                 <EditText
@@ -176,8 +154,42 @@
                     android:padding="10dp"
                     android:hint="Ej: Cuenta Diana oficina"
                     android:textColorHint="#ccc"
-                    android:textSize="16sp"
+                    android:textSize="17sp"
                     android:fontFamily="@font/roboto_light"/>
+
+                <!--<LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="10dp"
+                    android:background="#fff"
+                    android:orientation="horizontal"
+                    android:padding="7dp"
+                    android:visibility="visible" >
+
+                    <EditText
+                        android:id="@+id/txtNombreCuentaDestinatario"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_weight="8"
+                        android:background="@drawable/backgroun_border_radius"
+                        android:ems="10"
+                        android:inputType="number"
+                        android:padding="12dp" />
+
+                    <Button
+                        android:id="@+id/btnConsultarCuentasDestinatario"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="7dp"
+                        android:layout_weight="12"
+                        android:background="@drawable/button_blue"
+                        android:text="@string/consultar_cuentas"
+                        android:textColor="#fff" />
+
+                </LinearLayout>-->
 
                 <Button
                     android:id="@+id/btnInscribirCuenta"
@@ -192,6 +204,77 @@
                     android:layout_marginTop="25dp"
                     android:fontFamily="@font/roboto"/>
 
+                <!--<LinearLayout
+                    android:id="@+id/layout_cuentas"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="3dp"
+                    android:background="#fff"
+                    android:orientation="vertical"
+                    android:padding="7dp"
+                    android:visibility="visible" >
+
+                    <View
+                        android:id="@+id/separator_item_1"
+                        android:layout_width="fill_parent"
+                        android:layout_height="0.2dp"
+                        android:background="#cccccc"
+                        android:visibility="visible" />
+
+                    <TextView
+                        android:id="@+id/txt_nombre_dueno_cuenta"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/digite_cedula_destinatario"
+                        android:textColor="@color/blue"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
+                        android:paddingTop="10dp"
+                        android:gravity="center"
+                        android:paddingBottom="10dp"/>
+
+
+
+                    <View
+                        android:id="@+id/separator_item_2"
+                        android:layout_width="fill_parent"
+                        android:layout_height="0.2dp"
+                        android:background="#cccccc"
+                        android:visibility="visible" />
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/cuentas_activas"
+                        android:textColor="#444"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:layout_marginTop="10dp"/>
+
+                    <RadioGroup
+                        android:id="@+id/rdlCuentasDestinatario"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginRight="16dp"
+                        android:padding="5dp" />
+
+                    <Button
+                        android:id="@+id/btnInscribirCuenta"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/button_blue"
+                        android:text="@string/inscribir_cuenta"
+                        android:textColor="#fff" />
+
+                </LinearLayout>-->
             </LinearLayout>
             <View
                 android:layout_width="0dp"

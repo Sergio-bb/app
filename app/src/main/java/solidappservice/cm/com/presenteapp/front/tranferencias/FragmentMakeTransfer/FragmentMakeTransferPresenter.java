@@ -1,7 +1,5 @@
 package solidappservice.cm.com.presenteapp.front.tranferencias.FragmentMakeTransfer;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
 import java.util.List;
@@ -10,7 +8,7 @@ import retrofit2.Response;
 import solidappservice.cm.com.presenteapp.entities.transferencias.response.ResponseTransferenciasPendientes;
 import solidappservice.cm.com.presenteapp.entities.base.BaseRequest;
 import solidappservice.cm.com.presenteapp.entities.base.BaseResponse;
-import solidappservice.cm.com.presenteapp.entities.estadocuenta.response.ResponseProducto;
+import solidappservice.cm.com.presenteapp.entities.estadocuenta.response.ResponseProductos;
 import solidappservice.cm.com.presenteapp.entities.transferencias.request.RequestMakeTransfer;
 import solidappservice.cm.com.presenteapp.entities.transferencias.response.ResponseCuentasInscritas;
 import solidappservice.cm.com.presenteapp.tools.security.Encripcion;
@@ -31,73 +29,20 @@ public class FragmentMakeTransferPresenter implements FragmentMakeTransferContra
 
     @Override
     public void fetchIncompleteTransfers(BaseRequest baseRequest) {
-        view.hideSectionMakeTransfer();
-        view.showCircularProgressBar("Validando datos...");
+        view.showProgressDialog("Validando datos...");
         model.getIncompleteTransfers(baseRequest, this);
-    }
-    @Override
-    public <T> void onSuccessIncompleteTransfers(Response<BaseResponse<T>> response) {
-        try{
-            List<ResponseTransferenciasPendientes> responseTransferencias = (List<ResponseTransferenciasPendientes>) response.body().getResultado();
-            if(responseTransferencias != null && responseTransferencias.size() > 0){
-                view.hideCircularProgressBar();
-                view.showResultIncompleteTransfers();
-            }else{
-                view.fetchRegisteredAccounts();
-//                view.fetchAccounts();
-            }
-        } catch(Exception ex){
-            view.fetchRegisteredAccounts();
-        }
-    }
-    @Override
-    public <T> void onErrorIncompleteTransfers(Response<BaseResponse<T>> response) {
-        view.fetchRegisteredAccounts();
-    }
-    @Override
-    public void onFailureIncompleteTransfers(Throwable t, boolean isErrorTimeOut) {
-        view.fetchRegisteredAccounts();
     }
 
     @Override
     public void fetchRegisteredAccounts(BaseRequest baseRequest) {
-        view.hideSectionMakeTransfer();
-        view.showCircularProgressBar("Obteniendo cuentas inscritas...");
+        view.showProgressDialog("Obteniendo cuentas inscritas...");
         model.getRegisteredAccounts(baseRequest, this);
-    }
-    @Override
-    public <T> void onSuccessRegisteredAccounts(Response<BaseResponse<T>> response) {
-        try{
-            List<ResponseCuentasInscritas> responseCuentasInscritas = (List<ResponseCuentasInscritas>) response.body().getResultado();
-            view.showRegisteredAccounts(responseCuentasInscritas);
-            view.fetchAccounts();
-        }catch (Exception ex){
-            view.hideCircularProgressBar();
-            view.showDataFetchError("Lo sentimos", "");
-        }
     }
 
     @Override
     public void fetchAccounts(BaseRequest baseRequest) {
-        view.hideSectionMakeTransfer();
-        view.showCircularProgressBar("Obteniendo cuentas...");
+        view.showProgressDialog("Obteniendo cuentas...");
         model.getAccounts(baseRequest, this);
-    }
-    @Override
-    public <T> void onSuccessAccounts(Response<BaseResponse<T>> response) {
-        try{
-            List<ResponseProducto> responseCuentas = (List<ResponseProducto>) response.body().getResultado();
-            Encripcion encripcion = Encripcion.getInstance();
-            for (ResponseProducto producto : responseCuentas) {
-                producto.setA_numdoc(encripcion.desencriptar(producto.getA_numdoc()));
-            }
-            view.hideCircularProgressBar();
-            view.showAccounts(responseCuentas);
-            view.showSectionMakeTransfer();
-        }catch (Exception ex){
-            view.hideCircularProgressBar();
-            view.showDataFetchError("Lo sentimos", "");
-        }
     }
 
     @Override
@@ -106,6 +51,50 @@ public class FragmentMakeTransferPresenter implements FragmentMakeTransferContra
         view.showProgressDialog("Transfiriendo...");
         model.makeTransfer(request, this);
     }
+
+    @Override
+    public <T> void onSuccessIncompleteTransfers(Response<BaseResponse<T>> response) {
+        view.hideProgressDialog();
+        try{
+            List<ResponseTransferenciasPendientes> responseTransferencias = (List<ResponseTransferenciasPendientes>) response.body().getResultado();
+            if(responseTransferencias != null && responseTransferencias.size() > 0){
+                view.showResultIncompleteTransfers();
+            }else{
+                view.fetchRegisteredAccounts();
+                view.fetchAccounts();
+            }
+        } catch(Exception ex){
+            view.enabledMakeTransferButton();
+            view.showDataFetchError("");
+        }
+    }
+
+    @Override
+    public <T> void onSuccessRegisteredAccounts(Response<BaseResponse<T>> response) {
+        view.hideProgressDialog();
+        try{
+            List<ResponseCuentasInscritas> responseCuentasInscritas = (List<ResponseCuentasInscritas>) response.body().getResultado();
+            view.showRegisteredAccounts(responseCuentasInscritas);
+        }catch (Exception ex){
+            view.showDataFetchError("");
+        }
+    }
+
+    @Override
+    public <T> void onSuccessAccounts(Response<BaseResponse<T>> response) {
+        view.hideProgressDialog();
+        try{
+            List<ResponseProductos> responseCuentas = (List<ResponseProductos>) response.body().getResultado();
+            Encripcion encripcion = Encripcion.getInstance();
+            for (ResponseProductos producto : responseCuentas) {
+                producto.setA_numdoc(encripcion.desencriptar(producto.getA_numdoc()));
+            }
+            view.showAccounts(responseCuentas);
+        }catch (Exception ex){
+            view.showDataFetchError("");
+        }
+    }
+
     @Override
     public <T> void onSuccessMakeTransfer(Response<BaseResponse<T>> response) {
         view.hideProgressDialog();
@@ -113,7 +102,7 @@ public class FragmentMakeTransferPresenter implements FragmentMakeTransferContra
             String resultTransfer = (String) response.body().getResultado();
             view.showResultTransfer(resultTransfer);
         }catch (Exception ex){
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
     }
 
@@ -125,23 +114,23 @@ public class FragmentMakeTransferPresenter implements FragmentMakeTransferContra
 
     @Override
     public <T> void onError(Response<BaseResponse<T>> response) {
-        view.hideCircularProgressBar();
+        view.hideProgressDialog();
         view.enabledMakeTransferButton();
         if(response != null){
-            view.showDataFetchError("Lo sentimos", response.body().getMensajeErrorUsuario());
+            view.showDataFetchError(response.body().getMensajeErrorUsuario());
         }else{
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
     }
 
     @Override
     public void onFailure(Throwable t, boolean isErrorTimeOut) {
-        view.hideCircularProgressBar();
+        view.hideProgressDialog();
         view.enabledMakeTransferButton();
         if(isErrorTimeOut){
             view.showErrorTimeOut();
         }else{
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
     }
 

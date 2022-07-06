@@ -4,25 +4,16 @@
     package="solidappservice.cm.com.presenteapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
-    <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="com.huawei.appmarket.service.commondata.permission.GET_COMMON_DATA"/>
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_GPS"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission android:name="android.permissionv.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.FLASHLIGHT"/>
-
-    <uses-sdk tools:overrideLibrary="com.google.zxing.client.android" />
 
     <application
         android:name=".entities.base.GlobalState"
@@ -32,7 +23,8 @@
         android:icon="@mipmap/icon_presente"
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="false"
+		android:networkSecurityConfig="@xml/network_security_config">
 
         <activity
             android:name=".front.splash.ActivitySplash.ActivitySplashView"
@@ -46,9 +38,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".front.base.main.ActivityMainView"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"
+            android:name=".front.base.ActivityMainView"
+            android:label="Login"
+            android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity"/>
         <activity
@@ -65,7 +57,7 @@
             android:theme="@style/DialogTranslucentTheme"/>
         <activity
             android:name=".front.tabs.ActivityTabs.ActivityTabsView"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:label="Fecha"
             android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity"/>
@@ -131,28 +123,10 @@
             android:windowSoftInputMode="adjustPan|stateHidden"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity"/>
-        <activity
-            android:name=".front.nequi.suscription.ActivitySuscription.ActivitySuscriptionView"
-            android:label="SUSCRIPCION"
-            android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity"/>
-        <activity
-            android:name=".front.nequi.qr.ActivityCameraQR.ActivityQRCameraView"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity"/>
-        <activity
-            android:name=".front.nequi.qr.ActivityQRDetail.ActivityQRDetailView"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity"/>
-        <activity
-            android:name=".front.nequi.transfieredinero.ActivityDialogNequiBalance.ActivityDialogNequiBalanceView"
-            android:label="@string/app_name"
-            android:theme="@style/DialogTranslucentTheme"/>
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyCoII0rCq6Pfpz2ikyx3gSG6yZCS5mufcw" />
+            android:value="AIzaSyCoII0rCq6Pfpz2ikyx3gSG6yZCS5mufcw"/>
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -163,7 +137,7 @@
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity"/>
         <activity
-            android:name=".front.convenios.ActivityHtmlViewer.ActivityHtmlView"
+            android:name=".front.convenios.ActivityHtmlViewer.ActivityHtmlViewer"
             android:label="@string/app_name"
             android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait"
@@ -173,8 +147,7 @@
             android:label="@string/title_activity_activity_directorio"
             android:theme="@style/DialogTheme"
             android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity
-            android:name=".front.convenios.FragmentMainMenuAgreements.ActivitySelectCity.ActivitySelectCityView"
+        <activity android:name=".front.convenios.FragmentMainMenuAgreements.ActivitySelectCity.ActivitySelectCityView"
             android:label="@string/app_name"
             android:theme="@style/DialogTranslucentTheme"/>
 
@@ -220,7 +193,6 @@
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
-
 
     </application>
 

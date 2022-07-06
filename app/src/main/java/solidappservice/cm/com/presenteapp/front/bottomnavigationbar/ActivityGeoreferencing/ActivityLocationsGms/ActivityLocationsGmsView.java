@@ -1,14 +1,10 @@
 package solidappservice.cm.com.presenteapp.front.bottomnavigationbar.ActivityGeoreferencing.ActivityLocationsGms;
 
-import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
-
-import android.app.Dialog;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -21,9 +17,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -54,13 +48,14 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemSelected;
 import solidappservice.cm.com.presenteapp.R;
-import solidappservice.cm.com.presenteapp.entities.bottomnavigationbar.response.ResponseLocationsAgencies;
-import solidappservice.cm.com.presenteapp.entities.bottomnavigationbar.dto.FiltroMapa;
-import solidappservice.cm.com.presenteapp.entities.parametrosgenerales.ResponseMensajesRespuesta;
-import solidappservice.cm.com.presenteapp.front.bottomnavigationbar.ActivityGeoreferencing.ActivityPointsAttention.ActivityPointsAttentionView;
-import solidappservice.cm.com.presenteapp.rest.NetworkHelper;
-import solidappservice.cm.com.presenteapp.front.base.ActivityBase;
 import solidappservice.cm.com.presenteapp.entities.base.GlobalState;
+import solidappservice.cm.com.presenteapp.entities.bottomnavigationbar.dto.FiltroMapa;
+import solidappservice.cm.com.presenteapp.entities.bottomnavigationbar.response.ResponseLocationsAgencies;
+import solidappservice.cm.com.presenteapp.entities.parametrosgenerales.ResponseMensajesRespuesta;
+import solidappservice.cm.com.presenteapp.front.base.ActivityBase;
+import solidappservice.cm.com.presenteapp.front.bottomnavigationbar.ActivityGeoreferencing.ActivityPointsAttention.ActivityPointsAttentionView;
+import solidappservice.cm.com.presenteapp.front.tabs.ActivityTabs.ActivityTabsView;
+import solidappservice.cm.com.presenteapp.rest.NetworkHelper;
 import solidappservice.cm.com.presenteapp.tools.PopUpWindow;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
@@ -132,7 +127,6 @@ public class ActivityLocationsGmsView extends ActivityBase implements ActivityLo
     }
 
     protected void setControls() {
-
         presenter = new ActivityLocationsGmsPresenter(this, new ActivityLocationsGmsModel());
         context = this;
         state = context.getState();
@@ -181,6 +175,7 @@ public class ActivityLocationsGmsView extends ActivityBase implements ActivityLo
                 spinnerFiltroAlmacen.setEnabled(false);
                 spinnerFiltroAlmacen.setClickable(false);
             }
+
             listFiltroAlmacen.clear();
             listFiltroCiudad.clear();
 
@@ -200,6 +195,7 @@ public class ActivityLocationsGmsView extends ActivityBase implements ActivityLo
                     }
                 }
             }
+
             java.util.Collections.sort(listFiltroCiudad, Collator.getInstance());
             listFiltroCiudad.add(0, "TODO");
             ArrayAdapter<String> adapter_ciudad = new ArrayAdapter<>(context, R.layout.list_item_spinner, listFiltroCiudad);
@@ -281,9 +277,10 @@ public class ActivityLocationsGmsView extends ActivityBase implements ActivityLo
     public void showFilters(List<ResponseLocationsAgencies> agencias) {
         state.setAgencias(agencias);
         this.listAgencias = agencias;
+
         FiltroMapa filtro = new FiltroMapa();
         filtro.setI_tipage("TODO");
-        filtro.setDescripcion("Seleccionar");
+        filtro.setDescripcion("TODO");
         listFiltros.clear();
         listFiltros.add(filtro);
         for (ResponseLocationsAgencies a : agencias) {
@@ -304,6 +301,7 @@ public class ActivityLocationsGmsView extends ActivityBase implements ActivityLo
         ArrayAdapter<FiltroMapa> adapter = new ArrayAdapter<>(context, R.layout.list_item_spinner, listFiltros);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerFiltroTipo.setAdapter(adapter);
+
         java.util.Collections.sort(listFiltroCiudad, Collator.getInstance());
         listFiltroCiudad.add(0, "TODO");
         ArrayAdapter<String> adapter_ciudad = new ArrayAdapter<>(context, R.layout.list_item_spinner, listFiltroCiudad);
@@ -314,7 +312,9 @@ public class ActivityLocationsGmsView extends ActivityBase implements ActivityLo
         listFiltroAlmacen.add(0, "TODO");
         adapter_almacen.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerFiltroAlmacen.setAdapter(adapter_almacen);
+
         validatePermissionsLocation();
+//        showAgencies(listAgencias, view.getZoomDesiredByKilometros(7));
     }
 
     @Override
@@ -346,7 +346,11 @@ public class ActivityLocationsGmsView extends ActivityBase implements ActivityLo
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if(requestCode == GlobalState.PERMISSION_LOCATION){
-            isLocationEnabled = grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED;
+            if(grantResults[0]==PackageManager.PERMISSION_GRANTED && grantResults[1]==PackageManager.PERMISSION_GRANTED){
+                isLocationEnabled = true;
+            }else{
+                isLocationEnabled = false;
+            }
             showMap();
             drawPoints();
         }
@@ -412,6 +416,7 @@ public class ActivityLocationsGmsView extends ActivityBase implements ActivityLo
                                     zoomButtonInOut.setPadding(0,0,0,10);
                                     controlsButtons.addView(zoomButtonInOut);
                                 }
+
                             }
                         }catch (SecurityException e){
                             Log.d("GeoReferenciacion", e.getMessage());
@@ -509,14 +514,14 @@ public class ActivityLocationsGmsView extends ActivityBase implements ActivityLo
             if (googleMap == null) return;
 
             if(actual == null ){
-                actual = new LatLng(4.6832, -74.1479);
-                zoomCamera = 5;
+                actual = new LatLng(4.0830360, -73.6636180);
+                zoomCamera = 10;
             }
 
             CameraPosition camPos = new CameraPosition.Builder()
                     .target(actual) // Centramos el mapa
                     .zoom(zoomCamera) // Establecemos el zoom
-                    .bearing(0) // Establecemos la orientación con el
+                    .bearing(45) // Establecemos la orientación con el
                     .build();
 
             CameraUpdate camUpd = CameraUpdateFactory.newCameraPosition(camPos);
@@ -556,55 +561,40 @@ public class ActivityLocationsGmsView extends ActivityBase implements ActivityLo
 
     @Override
     public void showDialogPermissions(int requestCode){
-        final ActivityBase context = this;
-
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText("Permisos desactivados");
-        TextView contentMessage = dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText("Debes aceptar los permisos para el corrego funcionamiento de la APP");
-        ImageButton buttonClose = dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(view -> {
-            ActivityCompat.requestPermissions(context, new String[]{ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION}, requestCode);
-            dialog.dismiss();
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle("Permisos desactivados");
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage("Debes aceptar los permisos para el corrego funcionamiento de la APP");
+        d.setCancelable(true);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ActivityCompat.requestPermissions(context, new String[]{ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION}, requestCode);
+                dialog.dismiss();
+            }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
     public void requestLocationPermits(){
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_confirm);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText("Permisos desactivados");
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText("Desea configurar los permisos de forma manual");
-        ImageButton buttonClose = dialog.findViewById(R.id.buttonClose);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle("Permisos desactivados");
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage("Desea configurar los permisos de forma manual");
+        d.setCancelable(true);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                Uri uri = Uri.fromParts("package", getPackageName(),null);
+                intent.setData(uri);
+                startActivity(intent);
                 dialog.dismiss();
             }
         });
-        Button buttonAceptar = dialog.findViewById(R.id.btnAceptar);
-        buttonAceptar.setOnClickListener(view -> {
-            Intent intent = new Intent();
-            intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-            Uri uri = Uri.fromParts("package", getPackageName(),null);
-            intent.setData(uri);
-            startActivity(intent);
-            dialog.dismiss();
-        });
-        dialog.show();
+        d.show();
     }
 
     @Override
@@ -621,28 +611,23 @@ public class ActivityLocationsGmsView extends ActivityBase implements ActivityLo
             fetchLocationsAgencies();
             return;
         } else {
-            final Dialog dialog = new Dialog(context);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.setContentView(R.layout.pop_up_confirm);
-            dialog.setCancelable(false);
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-            titleMessage.setText("Permisos desactivados");
-            TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-            contentMessage.setText("Para poder acceder a las sucursales debe habilitar los servicios de Internet y GPS, ¿Desea configurar los permisos de forma manual?");
-            ImageButton buttonClose =  dialog.findViewById(R.id.buttonClose);
-            buttonClose.setOnClickListener(view -> dialog.dismiss());
-            Button buttonAceptar = dialog.findViewById(R.id.btnAceptar);
-            buttonAceptar.setOnClickListener(view -> {
-                Intent intent = new Intent();
-                intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                Uri uri = Uri.fromParts("package", getPackageName(),null);
-                intent.setData(uri);
-                startActivity(intent);
-                dialog.dismiss();
+            AlertDialog.Builder d = new AlertDialog.Builder(context);
+            d.setTitle("Permisos desactivados");
+            d.setIcon(R.mipmap.icon_presente);
+            d.setMessage("Para poder acceder a las sucursales debe habilitar los servicios de Internet y GPS, ¿Desea configurar los permisos de forma manual?");
+            d.setCancelable(true);
+            d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent intent = new Intent();
+                    intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    Uri uri = Uri.fromParts("package", getPackageName(),null);
+                    intent.setData(uri);
+                    startActivity(intent);
+                    dialog.dismiss();
+                }
             });
-            dialog.show();
+            d.show();
             return;
         }
 
@@ -664,6 +649,7 @@ public class ActivityLocationsGmsView extends ActivityBase implements ActivityLo
                     listadoFiltrado.add(a);
                 }
             }
+
         }
 
         if (listadoFiltrado.size() > 0) {
@@ -784,19 +770,18 @@ public class ActivityLocationsGmsView extends ActivityBase implements ActivityLo
                 }
             }
         }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText("Lo sentimos");
-        TextView contentMessage = dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(view -> dialog.dismiss());
-        dialog.show();
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        d.show();
     }
 
     @Override
@@ -811,34 +796,34 @@ public class ActivityLocationsGmsView extends ActivityBase implements ActivityLo
                 }
             }
         }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText(title);
-        TextView contentMessage = dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(view -> dialog.dismiss());
-        dialog.show();
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(title);
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        d.show();
     }
 
     @Override
     public void showExpiredToken(String message) {
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_closedsession);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        Button buttonClosedSession = dialog.findViewById(R.id.btnVolverAIngresar);
-        buttonClosedSession.setOnClickListener(view -> {
-            dialog.dismiss();
-            context.salir();
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle("Sesión finalizada");
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                context.salir();
+            }
         });
-        dialog.show();
+        d.show();
+
     }
+
 }

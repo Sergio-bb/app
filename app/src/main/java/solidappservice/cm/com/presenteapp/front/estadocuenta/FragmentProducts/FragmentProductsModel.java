@@ -21,7 +21,7 @@ public class FragmentProductsModel implements FragmentProductsContract.Model{
     public void getStatusMessageMisAportes(final FragmentProductsContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -34,7 +34,7 @@ public class FragmentProductsModel implements FragmentProductsContract.Model{
                     if (response.isSuccessful()) {
                         if(response.body().getErrorToken() != null && !response.body().getErrorToken().isEmpty()){
                             listener.onExpiredToken(response);
-                        }else if(response.body().getDescripcionError() != null && !response.body().getDescripcionError().isEmpty()){
+                        }else if(response.body().getMensajeErrorUsuario() != null && !response.body().getMensajeErrorUsuario().isEmpty()){
                             listener.onError(response);
                         }else{
                             listener.onSuccess(response);
@@ -48,7 +48,7 @@ public class FragmentProductsModel implements FragmentProductsContract.Model{
                     if(t instanceof IOException){
                         listener.onFailure(t, true);
                     }else{
-                        listener.onFailure(t, false);
+                        listener.onError(null);
                     }
 
                 }

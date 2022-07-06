@@ -1,28 +1,20 @@
 package solidappservice.cm.com.presenteapp.front.solicitudahorros.FragmentSavingsSolicity;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -62,8 +54,7 @@ public class FragmentSavingsSolicityView extends Fragment implements FragmentSav
     private FragmentSavingsSolicityPresenter presenter;
     private ActivityBase context;
     private GlobalState state;
-//    private ProgressDialog pd;
-    private Dialog pd;
+    private ProgressDialog pd;
     private FirebaseAnalytics firebaseAnalytics;
     private ResponseTiposAhorro tipo;
     private List<ResponseTiposAhorro> tipos;
@@ -93,18 +84,6 @@ public class FragmentSavingsSolicityView extends Fragment implements FragmentSav
     @BindView(R.id.FragmentAhorros)
     LinearLayout frmFragmentAhorros;
 
-    @BindView(R.id.layout_circular_progress_bar)
-    LinearLayout layoutCircularProgressBar;
-    @BindView(R.id.circular_progress_bar)
-    ProgressBar circularProgressBar;
-    @BindView(R.id.text_circular_progress_Bar)
-    TextView textCircularProgressBar;
-    @BindView(R.id.imageReferesh)
-    ImageView buttonReferesh;
-
-    @BindView(R.id.contentSolicitudAhorros)
-    ScrollView contentSolicitudAhorros;
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -133,15 +112,26 @@ public class FragmentSavingsSolicityView extends Fragment implements FragmentSav
         presenter = new FragmentSavingsSolicityPresenter(this, new FragmentSavingsSolicityModel());
         context = (ActivityBase) getActivity();
         state = context.getState();
+        pd = new ProgressDialog(context);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (state == null || state.getUsuario() == null) {
-            context.salir();
-        }else if (state.getFechaSeleccionada() == null || TextUtils.isEmpty(state.getFechaSeleccionada())) {
-            fetchTypesOfSavings();
+        if (state.getFechaSeleccionada() == null || TextUtils.isEmpty(state.getFechaSeleccionada())) {
+            List<ResponseTiposAhorro> tiposAhorros = state.getTiposAhorros();
+            if (tiposAhorros != null && tiposAhorros.size() > 0) {
+//                cargarDatosAhorro(tiposAhorros);
+                showTypesOfSavings(tiposAhorros);
+            } else {
+                if (state == null || state.getUsuario() == null) {
+                    context.salir();
+                } else {
+                    Usuario usuario = state.getUsuario();
+//                    new DatosTask().execute(usuario.cedula, usuario.token);
+                    fetchTypesOfSavings();
+                }
+            }
         } else {
             txtFecha.setText(state.getFechaSeleccionada());
         }
@@ -149,6 +139,7 @@ public class FragmentSavingsSolicityView extends Fragment implements FragmentSav
 
     @OnClick(R.id.btnEnviarSolicitud)
     public void onClickEnviarSolicitud(View v) {
+        //enviarSolicitud();
         confirmSolicitySaving();
     }
 
@@ -156,11 +147,6 @@ public class FragmentSavingsSolicityView extends Fragment implements FragmentSav
     public void onClickFecha(View v) {
         Intent intent = new Intent(getContext(), ActivityProductRequestDateView.class);
         startActivityForResult(intent, SELCCIONAR_FECHA_PAGO);
-    }
-
-    @OnClick(R.id.imageReferesh)
-    public void onClickRefresh(){
-        fetchTypesOfSavings();
     }
 
     @OnTextChanged(R.id.txtValorCuota)
@@ -198,21 +184,13 @@ public class FragmentSavingsSolicityView extends Fragment implements FragmentSav
     @Override
     public void fetchTypesOfSavings(){
         try{
-            List<ResponseTiposAhorro> tiposAhorros = state.getTiposAhorros();
-            if (tiposAhorros != null && tiposAhorros.size() > 0) {
-                hideCircularProgressBar();
-                showSectionSavings();
-                showTypesOfSavings(tiposAhorros);
-            } else {
-                Encripcion encripcion = Encripcion.getInstance();
-                presenter.fetchTypesOfSavings(new BaseRequest(
-                        encripcion.encriptar(state.getUsuario().getCedula()),
-                        state.getUsuario().getToken()
-                ));
-            }
+            Encripcion encripcion = Encripcion.getInstance();
+            presenter.fetchTypesOfSavings(new BaseRequest(
+                    encripcion.encriptar(state.getUsuario().getCedula()),
+                    state.getUsuario().getToken()
+            ));
         }catch (Exception ex){
-            showDialogError("Lo sentimos", ".");
-            showErrorWithRefresh();
+            showDataFetchError("");
         }
     }
 
@@ -291,7 +269,7 @@ public class FragmentSavingsSolicityView extends Fragment implements FragmentSav
                 cleanFields();
             }
         } catch (Exception e) {
-            showDataFetchError("Lo sentimos", "");
+            context.makeErrorDialog(e.getMessage());
         }
     }
 
@@ -309,33 +287,24 @@ public class FragmentSavingsSolicityView extends Fragment implements FragmentSav
     public void confirmSolicitySaving(){
         if (validateData()) {
             String _valorCuota = (txtValorCuota.getText().toString());
-
-            final Dialog dialog = new Dialog(context);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.setContentView(R.layout.pop_up_confirm);
-            dialog.setCancelable(false);
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-            titleMessage.setText("¿Confirma tu solicitud?");
-            TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-            contentMessage.setText("Tu ahorro será de $" +_valorCuota + " mensuales");
-            ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.buttonClose);
-            buttonClose.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dialog.dismiss();
-                }
-            });
-            Button buttonAceptar = (Button) dialog.findViewById(R.id.btnAceptar);
-            buttonAceptar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dialog.dismiss();
+            AlertDialog.Builder d = new AlertDialog.Builder(context);
+            d.setTitle(context.getResources().getString(R.string.app_name));
+            d.setIcon(R.mipmap.icon_presente);
+            d.setMessage("Tu ahorro será de $" +_valorCuota + " mensuales");
+            d.setCancelable(false);
+            _valorCuota = _valorCuota.replace(",", "");
+            _valorCuota = _valorCuota.replace(".", "");
+            final String final_valorCuota = _valorCuota;
+            d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
                     solicitySaving();
                 }
             });
-            dialog.show();
+            d.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                }
+            });
+            d.show();
         }
     }
 
@@ -364,20 +333,20 @@ public class FragmentSavingsSolicityView extends Fragment implements FragmentSav
                     context.obtenerIdDispositivo()
             ));
         } catch (Exception ex) {
-            showDataFetchError("Lo sentimos", "");
+            showDataFetchError("");
         }
     }
 
     @Override
     public boolean validateData() {
         Object tipoAhorro = spinnerTipoProd.getSelectedItem();
-        if (tipoAhorro == null || TextUtils.isEmpty(tipoAhorro.toString()) || spinnerTipoProd.getSelectedItemPosition() == 0) {
-            showDialogError("Datos incompletos", "Selecciona un tipo de ahorro");
+        if (tipoAhorro == null || TextUtils.isEmpty(tipoAhorro.toString())) {
+            context.makeErrorDialog("Selecciona un tipo de ahorro");
             return false;
         }
         Object valorCuota = txtValorCuota.getText();
         if (valorCuota == null || TextUtils.isEmpty(valorCuota.toString())) {
-            showDialogError("Datos incompletos", "Ingresa el valor de la cuota");
+            context.makeErrorDialog("Ingresa el valor de la cuota");
             txtValorCuota.setError("Ingrese un valor valido");
             return false;
         }
@@ -387,36 +356,36 @@ public class FragmentSavingsSolicityView extends Fragment implements FragmentSav
         try {
             _valorCuota = Double.parseDouble(valorCuota.toString());
         } catch (Exception ex) {
-            showDialogError("Datos incompletos", "Ingresa el valor de la cuota");
+            context.makeErrorDialog("Ingresa el valor de la cuota");
             txtValorCuota.setError("Ingrese un valor valido");
             return false;
         }
         if (_valorCuota <= 0) {
-            showDialogError("Datos incompletos", "Ingresa el valor de la cuota");
+            context.makeErrorDialog("Ingresa el valor de la cuota");
             txtValorCuota.setError("Ingrese un valor valido");
             return false;
         }
         ResponseTiposAhorro t = (ResponseTiposAhorro) tipoAhorro;
         if (_valorCuota > t.getV_cuota_max() && t.getV_cuota_max() != 0) {
-            showDialogError("Datos incompletos", "Recuerda que la cuota máxima mensual de este ahorro es " + context.getMoneda(t.getV_cuota_max()));
+            context.makeErrorDialog("Recuerda que la cuota máxima mensual de este ahorro es " + context.getMoneda(t.getV_cuota_max()));
             txtValorCuota.setError("Ingrese un valor valido");
             return false;
         } else if (_valorCuota < t.getV_cuota_min()) {
-            showDialogError("Datos incompletos", "Recuerda que la cuota mínima mensual de este ahorro es " + context.getMoneda(t.getV_cuota_min()));
+            context.makeErrorDialog("Recuerda que la cuota mínima mensual de este ahorro es " + context.getMoneda(t.getV_cuota_min()));
             txtValorCuota.setError("Ingrese un valor valido");
             return false;
         }
         if (spinnerPlazo != null && spinnerPlazo.getVisibility() == View.VISIBLE) {
             Object plazo = spinnerPlazo.getSelectedItem();
             if (plazo == null || TextUtils.isEmpty(plazo.toString())) {
-                showDialogError("Datos incompletos", "Debe seleccionar un plazo de la lista");
+                context.makeErrorDialog("Debe seleccionar un plazo de la lista");
                 return false;
             }
         }
         if (txtFecha != null && txtFecha.getVisibility() == View.VISIBLE) {
             Object fechaPago = txtFecha.getText();
             if (fechaPago == null || TextUtils.isEmpty(fechaPago.toString())) {
-                showDialogError("Datos incompletos", "Debe ingresar la fecha de pago");
+                context.makeErrorDialog("Debe ingresar la fecha de pago");
                 txtFecha.setError(null);
                 return false;
             }
@@ -426,128 +395,32 @@ public class FragmentSavingsSolicityView extends Fragment implements FragmentSav
 
     @Override
     public void showResultSolicitySaving(String resultSolicitySaving){
-        if(!TextUtils.isEmpty(resultSolicitySaving)){
-            final Dialog dialog = new Dialog(context);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.setContentView(R.layout.pop_up_success);
-            dialog.setCancelable(false);
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            TextView titleMessage = (TextView) dialog.findViewById(R.id.titleSuccess);
-            titleMessage.setText("Solicitud Enviada");
-            TextView contentMessage = (TextView) dialog.findViewById(R.id.contentSuccess);
-            contentMessage.setText(resultSolicitySaving);
-            ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.buttonClose);
-            buttonClose.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    state.setFechaSeleccionada(null);
-                    dialog.dismiss();
-                    state.getmTabHost().setCurrentTab(ActivityTabsView.TAB_1_TRANSACTIONS_MENU_TAG);
-                }
-            });
-            dialog.show();
-        }else{
-            final Dialog dialog = new Dialog(context);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.setContentView(R.layout.pop_up_error);
-            dialog.setCancelable(false);
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-            titleMessage.setText("Lo sentimos");
-            TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-            contentMessage.setText("Se ha producido un error, inténtalo nuevamente en unos minutos.");
-            ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-            buttonClose.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    state.setFechaSeleccionada(null);
-                    dialog.dismiss();
-                    state.getmTabHost().setCurrentTab(ActivityTabsView.TAB_1_TRANSACTIONS_MENU_TAG);
-                }
-            });
-            dialog.show();
-        }
-    }
-
-    @Override
-    public void showSectionSavings(){
-        contentSolicitudAhorros.setVisibility(View.VISIBLE);
-    }
-    @Override
-    public void hideSectionSavings(){
-        contentSolicitudAhorros.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showCircularProgressBar(String textProgressBar) {
-        layoutCircularProgressBar.setVisibility(View.VISIBLE);
-        textCircularProgressBar.setText(textProgressBar);
-    }
-
-    @Override
-    public void hideCircularProgressBar() {
-        layoutCircularProgressBar.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showErrorWithRefresh(){
-        contentSolicitudAhorros.setVisibility(View.GONE);
-        layoutCircularProgressBar.setVisibility(View.VISIBLE);
-        circularProgressBar.setVisibility(View.GONE);
-        textCircularProgressBar.setText("Ha ocurrido un error, inténtalo de nuevo ");
-        buttonReferesh.setVisibility(View.VISIBLE);
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(resultSolicitySaving);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                state.getmTabHost().setCurrentTab(ActivityTabsView.TAB_1_TRANSACTIONS_MENU_TAG);
+                state.setFechaSeleccionada(null);
+            }
+        });
+        d.show();
     }
 
     @Override
     public void showProgressDialog(String message) {
-        pd = new Dialog(context);
-        pd.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        pd.setCanceledOnTouchOutside(false);
-        pd.setContentView(R.layout.pop_up_loading);
+        pd.setTitle(context.getResources().getString(R.string.app_name));
+        pd.setMessage(message);
+        pd.setIcon(R.mipmap.icon_presente);
         pd.setCancelable(false);
-        pd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView contentMessage = (TextView) pd.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
         pd.show();
     }
 
     @Override
     public void hideProgressDialog() {
         pd.dismiss();
-    }
-
-    @Override
-    public void showDialogError(String title, String message){
-        if(TextUtils.isEmpty(message)){
-            message = "Ha ocurrido un error. Intenta de nuevo y si el error persiste, contacta a PRESENTE.";
-            if(state != null && state.getMensajesRespuesta() != null && state.getMensajesRespuesta().size()>0){
-                for(ResponseMensajesRespuesta rm : state.getMensajesRespuesta()){
-                    if(rm.getIdMensaje() == 7){
-                        message = rm.getMensaje();
-                    }
-                }
-            }
-        }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText(title);
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
     }
 
     @Override
@@ -560,29 +433,24 @@ public class FragmentSavingsSolicityView extends Fragment implements FragmentSav
                 }
             }
         }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText("Lo sentimos");
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(DialogInterface dialog, int which) {
                 state.getmTabHost().setCurrentTab(ActivityTabsView.TAB_1_TRANSACTIONS_MENU_TAG);
+                state.setFechaSeleccionada(null);
                 dialog.dismiss();
             }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
-    public void showDataFetchError(String title, String message){
+    public void showDataFetchError(String message) {
         if(TextUtils.isEmpty(message)){
             message = "Ha ocurrido un error. Intenta de nuevo y si el error persiste, contacta a PRESENTE.";
             if(state != null && state.getMensajesRespuesta() != null && state.getMensajesRespuesta().size()>0){
@@ -593,45 +461,35 @@ public class FragmentSavingsSolicityView extends Fragment implements FragmentSav
                 }
             }
         }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText(title);
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(DialogInterface dialog, int which) {
                 state.getmTabHost().setCurrentTab(ActivityTabsView.TAB_1_TRANSACTIONS_MENU_TAG);
+                state.setFechaSeleccionada(null);
                 dialog.dismiss();
             }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
     public void showExpiredToken(String message) {
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_closedsession);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        Button buttonClosedSession = (Button) dialog.findViewById(R.id.btnVolverAIngresar);
-        buttonClosedSession.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle("Sesión finalizada");
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
                 context.salir();
             }
         });
-        dialog.show();
-
+        d.show();
     }
 
 //    public void _formter(int len, String textToEdit, EditText txtEdit){

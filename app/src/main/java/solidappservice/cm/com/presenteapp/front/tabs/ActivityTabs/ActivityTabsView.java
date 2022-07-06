@@ -1,61 +1,60 @@
 package solidappservice.cm.com.presenteapp.front.tabs.ActivityTabs;
 
-import android.app.Dialog;
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Looper;
-import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
 
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.widget.Toolbar;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentTabHost;
-
-import com.google.android.material.navigation.NavigationView;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import solidappservice.cm.com.presenteapp.R;
-import solidappservice.cm.com.presenteapp.entities.base.BaseRequest;
-import solidappservice.cm.com.presenteapp.entities.base.BaseRequestNequi;
-import solidappservice.cm.com.presenteapp.entities.login.Response.Usuario;
-import solidappservice.cm.com.presenteapp.entities.mensajes.response.ResponseObtenerMensajes;
-import solidappservice.cm.com.presenteapp.entities.nequi.dto.SuscriptionData;
-import solidappservice.cm.com.presenteapp.entities.parametrosgenerales.ResponseMensajesRespuesta;
-import solidappservice.cm.com.presenteapp.front.actualizaciondatos.ActivityUpdatePersonalData.ActivityUpdatePersonalDataView;
-import solidappservice.cm.com.presenteapp.front.base.main.ActivityMainView;
+import solidappservice.cm.com.presenteapp.front.base.ActivityMainView;
 import solidappservice.cm.com.presenteapp.front.bottomnavigationbar.ActivityDirectory.ActivityDirectoryView;
 import solidappservice.cm.com.presenteapp.front.bottomnavigationbar.ActivityGeoreferencing.ActivityLocationsGms.ActivityLocationsGmsView;
 import solidappservice.cm.com.presenteapp.front.bottomnavigationbar.ActivityGeoreferencing.ActivityLocationsHms.ActivityLocationsHmsView;
 import solidappservice.cm.com.presenteapp.front.bottomnavigationbar.ActivityPortfolio.ActivityPortfolioProducts.ActivityPortfolioProductsView;
 import solidappservice.cm.com.presenteapp.front.bottomnavigationbar.ActivityServices.ActivityServicesView;
-import solidappservice.cm.com.presenteapp.front.nequi.suscription.ActivitySuscription.ActivitySuscriptionView;
-import solidappservice.cm.com.presenteapp.tools.IFragmentCoordinator;
-import solidappservice.cm.com.presenteapp.tools.security.Encripcion;
-import solidappservice.cm.com.presenteapp.tools.tabsbasecontainers.*;
+import solidappservice.cm.com.presenteapp.tools.tabsbasecontainers.PaymentCreditsViewContainerFragment;
+import solidappservice.cm.com.presenteapp.tools.tabsbasecontainers.PresenteCardActiveViewContainerFragment;
 import solidappservice.cm.com.presenteapp.front.base.ActivityBase;
+import solidappservice.cm.com.presenteapp.tools.tabsbasecontainers.TransfersRegisterAccountViewContainerFragment;
+import solidappservice.cm.com.presenteapp.tools.tabsbasecontainers.SalaryAdvanceSolicityViewContainerFragment;
+import solidappservice.cm.com.presenteapp.tools.tabsbasecontainers.SalaryAdvanceDetailViewContainerFragement;
+import solidappservice.cm.com.presenteapp.tools.tabsbasecontainers.BaseContainerFragment;
+import solidappservice.cm.com.presenteapp.tools.tabsbasecontainers.PresenteCardBlockViewContainerFragment;
+import solidappservice.cm.com.presenteapp.tools.tabsbasecontainers.InboxViewContainerFragment;
+import solidappservice.cm.com.presenteapp.tools.tabsbasecontainers.TransfersDeleteAccountContainerFragment;
+import solidappservice.cm.com.presenteapp.tools.tabsbasecontainers.StatusAccountProductsViewContainerFragment;
+import solidappservice.cm.com.presenteapp.tools.tabsbasecontainers.StatusAccountViewContainerFragment;
 import solidappservice.cm.com.presenteapp.entities.base.GlobalState;
+import solidappservice.cm.com.presenteapp.tools.tabsbasecontainers.InboxReadMessageViewContainerFragment;
+import solidappservice.cm.com.presenteapp.tools.tabsbasecontainers.TransfersMenuViewContainerFragment;
+import solidappservice.cm.com.presenteapp.tools.tabsbasecontainers.StatusAccountMovementsProductsViewContainerFragment;
+import solidappservice.cm.com.presenteapp.tools.tabsbasecontainers.PresenteCardMovementesProductsViewContainerFragment;
+import solidappservice.cm.com.presenteapp.tools.tabsbasecontainers.TransfersMakeViewContainerFragment;
+import solidappservice.cm.com.presenteapp.tools.tabsbasecontainers.PresenteCardReplacementViewContainerFragment;
+import solidappservice.cm.com.presenteapp.tools.tabsbasecontainers.PresenteCardReplacementeDetailViewContainerFragment;
+import solidappservice.cm.com.presenteapp.tools.tabsbasecontainers.SavingsSolicityViewContainerFragment;
+import solidappservice.cm.com.presenteapp.tools.tabsbasecontainers.ResortsSolicityViewContainerFragment;
+import solidappservice.cm.com.presenteapp.tools.tabsbasecontainers.PresenteCardMenuViewContainerFragment;
+import solidappservice.cm.com.presenteapp.tools.tabsbasecontainers.PresenteCardProductsViewContainerFragment;
+import solidappservice.cm.com.presenteapp.tools.tabsbasecontainers.PresenteCardSecurityViewContainerFragment;
+import solidappservice.cm.com.presenteapp.tools.tabsbasecontainers.TransactionsMenuViewContainerFragment;
 
 /**R
  * CREADO POR JORGE ANDRÉS DAVID CARDONA EL
@@ -91,10 +90,6 @@ public class ActivityTabsView extends ActivityBase implements ActivityTabsContra
     public static final int TAB_21_PRESENTE_CARD_REPLACEMENT_TAG = 21;//FragmentReplacementCardView
     public static final int TAB_22_PRESENTE_CARD_REPLACEMENTDETAIL_TAG = 22;//FragmentReplacementCardDetailView
 
-    public static final int TAB_23_NEQUI_MENU_SEND_MONEY_TAG = 23;//FragmentMenuSendMoneyView
-    public static final int TAB_24_NEQUI_DISPERSIONES_TAG = 24;//FragmentDispersionesView
-    public static final int TAB_25_NEQUI_SUSCRIPTIONS_PAYMENT_TAG = 25;//FragmentSuscriptionsPaymentView
-
     public static final int ITEM_TAB_INDEX_STATUSACCOUNT = 0;
     public static final int ITEM_TAB_INDEX_TRANSACTIONS = 1;
     public static final int ITEM_TAB_INDEX_PRESENTE_CARD = 2;
@@ -102,9 +97,7 @@ public class ActivityTabsView extends ActivityBase implements ActivityTabsContra
 
     private FragmentTabHost mTabHost;
     private int tabIndex;
-    private int tabSelected;
     private ViewGroup viewGroup;
-    private ActionBarDrawerToggle actionBarDrawerToggle;
 
     @BindView(R.id.btnPortafolio)
     ImageButton btnPortafolio;
@@ -115,35 +108,9 @@ public class ActivityTabsView extends ActivityBase implements ActivityTabsContra
     @BindView(R.id.btnEncuentranos)
     ImageButton btnEncuentranos;
     @BindView(R.id.btn_back)
-    public ImageButton btnBack;
-
-    @BindView(R.id.toolbarSideBar)
-    Toolbar toolbarSideBar;
-    @BindView(R.id.drawer_layout)
-    DrawerLayout drawerLayout;
-    @BindView(R.id.nav_view)
-    NavigationView navigationView;
-    @BindView(R.id.nombreUsuario)
-    TextView nombreUsuario;
-    @BindView(R.id.buttonVinculaCuentaNequi)
-    LinearLayout buttonVinculaCuentaNequi;
-    @BindView(R.id.buttonConoceTuGestor)
-    LinearLayout buttonConoceTuGestor;
-    @BindView(R.id.buttonCentroDeAyuda)
-    LinearLayout buttonCentroDeAyuda;
-    @BindView(R.id.buttonInformacionPersonal)
-    LinearLayout buttonInformacionPersonal;
-    @BindView(R.id.sectionFechaIngreso)
-    LinearLayout sectionFechaIngreso;
-    @BindView(R.id.tvFechaIngreso)
-    TextView textFechaIngreso;
-    @BindView(R.id.btnCerrarSession)
-    TextView btnCerrarSession;
-
-    @BindView(R.id.layout_buton_vincula)
-    LinearLayout containerButtonNequi;
-    @BindView(R.id.warning_icon)
-    RelativeLayout warningIcon;
+    ImageButton btnBack;
+    @BindView(R.id.btnSalir)
+    TextView btnSalir;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,7 +120,6 @@ public class ActivityTabsView extends ActivityBase implements ActivityTabsContra
         Bundle bundle = getIntent().getExtras();
         if(bundle != null){
             tabIndex = bundle.getInt("TabIndex", 0);
-            tabSelected = bundle.getInt("TabSelected", 0);
         }
         ButterKnife.bind(this);
         setControls();
@@ -161,11 +127,12 @@ public class ActivityTabsView extends ActivityBase implements ActivityTabsContra
 
     @Override
     protected void setControls() {
-        presenter = new ActivityTabsPresenter(this, new ActivityTabsModel());
+        presenter = new ActivityTabsPresenter(this);
         context = this;
         state = (GlobalState) getApplicationContext();
         mTabHost = findViewById(android.R.id.tabhost);
         mTabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
+        Resources res = getResources();
 
         //ESTADO DE CUENTA
         View tabview = createTabView(mTabHost, "Est Cuenta", viewGroup);
@@ -199,14 +166,10 @@ public class ActivityTabsView extends ActivityBase implements ActivityTabsContra
         mTabHost.addTab(mTabHost.newTabSpec(String.valueOf(TAB_20_ADVANCE_SALARY_DETAIL_TAG)).setIndicator("AD"), SalaryAdvanceDetailViewContainerFragement.class, null);
         mTabHost.addTab(mTabHost.newTabSpec(String.valueOf(TAB_21_PRESENTE_CARD_REPLACEMENT_TAG)).setIndicator("RT"), PresenteCardReplacementViewContainerFragment.class, null);
         mTabHost.addTab(mTabHost.newTabSpec(String.valueOf(TAB_22_PRESENTE_CARD_REPLACEMENTDETAIL_TAG)).setIndicator("RD"), PresenteCardReplacementeDetailViewContainerFragment.class, null);
-        mTabHost.addTab(mTabHost.newTabSpec(String.valueOf(TAB_23_NEQUI_MENU_SEND_MONEY_TAG)).setIndicator("ED"), NequiMenuSendMoneyContainerFragment.class,null);
-        mTabHost.addTab(mTabHost.newTabSpec(String.valueOf(TAB_24_NEQUI_DISPERSIONES_TAG)).setIndicator("EDN"), NequiDispersionesContainerFragment.class,null);
-        mTabHost.addTab(mTabHost.newTabSpec(String.valueOf(TAB_25_NEQUI_SUSCRIPTIONS_PAYMENT_TAG)).setIndicator("EFN"), NequiSuscriptionsPaymentContainerFragment.class,null);
         mTabHost.setCurrentTab(tabIndex);
 
         if(tabIndex == TAB_4_SAVINGS_SOLICITY_TAG ||
-                tabIndex == TAB_9_SOLICITY_RESORTS_TAG ||
-                tabIndex== TAB_23_NEQUI_MENU_SEND_MONEY_TAG){
+                tabIndex == TAB_9_SOLICITY_RESORTS_TAG){
             mTabHost.getTabWidget().getChildAt(ITEM_TAB_INDEX_TRANSACTIONS).setBackgroundColor(Color.parseColor("#333333"));
             ViewGroup view = (ViewGroup) mTabHost.getTabWidget().getChildAt(ITEM_TAB_INDEX_TRANSACTIONS);
             TextView tv = (TextView) view.getChildAt(1);
@@ -252,7 +215,6 @@ public class ActivityTabsView extends ActivityBase implements ActivityTabsContra
                 }
             }
         });
-
         for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); i++) {
 //            View tab = mTabHost.getTabWidget().getChildAt(i);
 //            final TextView tv = tab.getRootView().findViewById(android.R.id.title);
@@ -265,27 +227,75 @@ public class ActivityTabsView extends ActivityBase implements ActivityTabsContra
             }
         }
         state.setmTabHost(mTabHost);
-        configureSideBar();
-    }
-
-    @Override
-    public void onStart(){
-        super.onStart();
-        if(state != null && state.getDatosSuscripcion() != null) {
-            buttonVinculaCuentaNequi.setVisibility(View.GONE);
-        }else{
-            if(state != null && state.isActiveStateSuscriptions()){
-                validateSuscriptionNequi();
-            }
-        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         if(state!= null && !state.validarEstado()){
-            this.finish();
+            Intent intent = new Intent(this, ActivityMainView.class);
+            startActivity(intent);
         }
+    }
+
+    @OnClick(R.id.btnPortafolio)
+    public void onClickPortafolio(View v) {
+        Intent intent_p = new Intent(this, ActivityPortfolioProductsView.class);
+        startActivity(intent_p);
+    }
+    @OnClick(R.id.btnPreguntasFrecuentes)
+    public void onClickPreguntasFrecuentes(View v) {
+//        String url = "https://www.presente.com.co/contactenos";
+//        Intent intent_pr = new Intent(Intent.ACTION_VIEW);
+//        intent_pr.setData(Uri.parse(url));
+//        startActivity(intent_pr);
+        Intent intent_s = new Intent(this, ActivityServicesView.class);
+        startActivity(intent_s);
+    }
+
+    @OnClick(R.id.btnDirectorio)
+    public void onClickDirectorio(View v) {
+        Intent intent_dir = new Intent(this, ActivityDirectoryView.class);
+        startActivity(intent_dir);
+    }
+
+    @OnClick(R.id.btnEncuentranos)
+    public void onClickEncuentranos(View v) {
+        if(state != null && state.isHmsSystem()){
+            Intent intent = new Intent(this, ActivityLocationsHmsView.class);
+            startActivity(intent);
+        }else{
+            Intent intent = new Intent(this, ActivityLocationsGmsView.class);
+            startActivity(intent);
+        }
+    }
+
+    @OnClick(R.id.btn_back)
+    public void onClickBack(View v) {
+        onBackPressed();
+    }
+
+    @OnClick(R.id.btnSalir)
+    public void onClickSalir(View v) {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage("¿Desea cerrar sesión?");
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogo1, int id) {
+                        context.reiniciarEstado();
+                        state.setmTabHost(null);
+                        finish();
+                    }
+                });
+        d.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        d.show();
     }
 
     @Override
@@ -355,10 +365,6 @@ public class ActivityTabsView extends ActivityBase implements ActivityTabsContra
             case TAB_15_TRANSFERS_REGISTER_ACCOUNT_TAG:
             case TAB_16_TRANSFERS_DELETE_ACCOUNT_TAG:
             case TAB_18_TRANSFERS_MAKE_TRANSFER_TAG:
-            case TAB_24_NEQUI_DISPERSIONES_TAG:
-            case TAB_25_NEQUI_SUSCRIPTIONS_PAYMENT_TAG:
-                state.getmTabHost().setCurrentTab(TAB_23_NEQUI_MENU_SEND_MONEY_TAG);
-                return;
             case TAB_19_ADVANCE_SALARY_SOLICITY_TAG:
                 state.setRequisitos(null);
                 state.getmTabHost().setCurrentTab(TAB_1_TRANSACTIONS_MENU_TAG);
@@ -369,13 +375,6 @@ public class ActivityTabsView extends ActivityBase implements ActivityTabsContra
             case TAB_22_PRESENTE_CARD_REPLACEMENTDETAIL_TAG:
                 state.getmTabHost().setCurrentTab(TAB_21_PRESENTE_CARD_REPLACEMENT_TAG);
                 return;
-            case TAB_23_NEQUI_MENU_SEND_MONEY_TAG:
-                if(state.getFragmentActual().equals(Pantalla.MenuPrincipal)){
-                    finish();
-                }else {
-                    state.getmTabHost().setCurrentTab(TAB_1_TRANSACTIONS_MENU_TAG);
-                }
-                return;
             default:
                 state.setProductosDetalle(null);
                 state.getmTabHost().setCurrentTab(TAB_0_STATUS_ACCOUNT_TAG);
@@ -384,259 +383,6 @@ public class ActivityTabsView extends ActivityBase implements ActivityTabsContra
         if (!isPopFragment) {
             state.setmTabHost(null);
             finish();
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == GlobalState.NEQUI) {
-            if(resultCode == GlobalState.CLOSED_SESSION){
-                setFragment(IFragmentCoordinator.Pantalla.Ingreso);
-            }else{
-                setFragment(IFragmentCoordinator.Pantalla.MenuPrincipal);
-            }
-        }
-    }
-
-    @OnClick(R.id.btnPortafolio)
-    public void onClickPortafolio(View v) {
-        Intent intent_p = new Intent(this, ActivityPortfolioProductsView.class);
-        startActivity(intent_p);
-    }
-    @OnClick(R.id.btnPreguntasFrecuentes)
-    public void onClickPreguntasFrecuentes(View v) {
-        Intent intent_s = new Intent(this, ActivityServicesView.class);
-        startActivity(intent_s);
-    }
-
-    @OnClick(R.id.btnDirectorio)
-    public void onClickDirectorio(View v) {
-        Intent intent_dir = new Intent(this, ActivityDirectoryView.class);
-        startActivity(intent_dir);
-    }
-
-    @OnClick(R.id.btnEncuentranos)
-    public void onClickEncuentranos(View v) {
-        Intent intent;
-        if(state != null && state.isHmsSystem()){
-            intent = new Intent(this, ActivityLocationsHmsView.class);
-        }else{
-            intent = new Intent(this, ActivityLocationsGmsView.class);
-        }
-        startActivity(intent);
-    }
-
-    @OnClick(R.id.btn_back)
-    public void onClickBack(View v) {
-        onBackPressed();
-    }
-
-    @OnClick(R.id.toolbarSideBar)
-    public void onClickToolbar(){
-        if (drawerLayout.isDrawerOpen(Gravity.RIGHT)) {
-            drawerLayout.closeDrawer(Gravity.RIGHT);
-        } else {
-            drawerLayout.openDrawer(Gravity.RIGHT);
-        }
-    }
-
-    @OnClick(R.id.buttonInformacionPersonal)
-    public void onClickInformacionPersonal(){
-        drawerLayout.closeDrawer(Gravity.RIGHT);
-        Usuario usuario = state.getUsuario();
-        Intent intent = new Intent(context, ActivityUpdatePersonalDataView.class);
-        intent.putExtra("actualizaPrimeraVez", usuario.getDatosActualizados().getActualizaPrimeraVez());
-        intent.putExtra("datosActualizados", usuario.getDatosActualizados().getTieneDatosActualizados());
-        startActivity(intent);
-    }
-
-    @OnClick(R.id.buttonCentroDeAyuda)
-    public void onClickCentroDeAyuda(){
-        drawerLayout.closeDrawer(Gravity.RIGHT);
-        String urlCentroAyuda = GlobalState.UrlCentroAyuda;
-        Uri uri = Uri.parse(urlCentroAyuda);
-        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        startActivity(intent);
-    }
-
-    @OnClick(R.id.buttonConoceTuGestor)
-    public void onClickConoceTuGestor(){
-        drawerLayout.closeDrawer(Gravity.RIGHT);
-        String urlConoceGestor = GlobalState.UrlConoceGestor;
-        Uri uri_Gestor = Uri.parse(urlConoceGestor);
-        Intent intent_gestor = new Intent(Intent.ACTION_VIEW, uri_Gestor);
-        startActivity(intent_gestor);
-    }
-
-    @OnClick(R.id.buttonVinculaCuentaNequi)
-    public void onClickVinculaCuentaNequi(){
-        try{
-            String status = state.getStatusSuscription() == null ? "" : state.getStatusSuscription();
-            switch (status) {
-                case "1":
-                    break;
-                case "0":
-                    showSendingRequet();
-                    break;
-                default:
-                    drawerLayout.closeDrawer(Gravity.RIGHT);
-                    Intent i = new Intent(context, ActivitySuscriptionView.class);
-                    startActivityForResult(i, GlobalState.NEQUI);
-                    break;
-            }
-        }catch (Exception ex){
-            showDataFetchError("Lo sentimos", "Se ha producido un error, inténtalo nuevamente en unos minutos.");
-        }
-    }
-
-    @OnClick(R.id.btnCerrarSession)
-    public void onClickCerrarSesion(){
-        drawerLayout.closeDrawer(Gravity.RIGHT);
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_confirm);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText("Cerrar sesión");
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText("¿Estás seguro que quieres cerrar la sesión?");
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.buttonClose);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
-        Button buttonAceptar = (Button) dialog.findViewById(R.id.btnAceptar);
-        buttonAceptar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                reiniciarEstado();
-                finish();
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
-    }
-
-    @Override
-    public void configureSideBar(){
-        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
-                R.drawable.icon_menu, R.drawable.icon_close_black) {
-
-            public void onDrawerClosed(View view) {
-                super.onDrawerClosed(view);
-                toolbarSideBar.setNavigationIcon(R.drawable.icon_menu);
-            }
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                toolbarSideBar.setNavigationIcon(R.drawable.icon_close_black);
-            }
-        };
-        drawerLayout.addDrawerListener(actionBarDrawerToggle);
-
-        if(state == null || state.getUsuario() == null) {
-            toolbarSideBar.setVisibility(View.GONE);
-            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-            nombreUsuario.setVisibility(View.GONE);
-            sectionFechaIngreso.setVisibility(View.GONE);
-        }else{
-            toolbarSideBar.setVisibility(View.VISIBLE);
-            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-            nombreUsuario.setVisibility(View.VISIBLE);
-            nombreUsuario.setText(state.getUsuario().getNombreAsociado());
-            sectionFechaIngreso.setVisibility(View.VISIBLE);
-            textFechaIngreso.setText(state.getUsuario().getFechaUltimoIngreso());
-            textFechaIngreso.setVisibility(View.VISIBLE);
-        }
-    }
-
-    @Override
-    public void validateSuscriptionNequi(){
-        try{
-            presenter.validateSuscriptionNequi(new BaseRequest(
-                    Encripcion.getInstance().encriptar(state.getUsuario().getCedula()),
-                    state.getUsuario().getToken()
-            ));
-        }catch(Exception ex){
-            saveSuscriptionData(null, null);
-        }
-    }
-
-    @Override
-    public void saveSuscriptionData(SuscriptionData datosSuscripcion, String statusSuscription){
-        state.setDatosSuscripcion(datosSuscripcion);
-        state.setStatusSuscription(statusSuscription);
-        if(datosSuscripcion != null){
-            buttonVinculaCuentaNequi.setVisibility(View.GONE);
-        }else{
-            buttonVinculaCuentaNequi.setVisibility(View.VISIBLE);
-        }
-
-        if(state.getStatusSuscription() != null && state.getStatusSuscription().equals("0")){
-            getTimeExpiration();
-        }else{
-            activateButtonWarning(false);
-        }
-    }
-
-    @Override
-    public void getTimeExpiration(){
-        try{
-            if(state != null && state.getTiempoExpiracionAutorizacion() != null && state.getTiempoExpiracionAutorizacion() > 0){
-                getTimeOfSuscription();
-            }else{
-                presenter.getTimeExpiration();
-            }
-        }catch(Exception ex){
-            resultTimeExpiration(15);
-            getTimeOfSuscription();
-        }
-    }
-
-    @Override
-    public void resultTimeExpiration(Integer timeExpiration){
-        state.setTiempoExpiracionAutorizacion(timeExpiration);
-    }
-
-    @Override
-    public void getTimeOfSuscription(){
-        presenter.getTimeOfsuscription(new BaseRequestNequi(
-                Encripcion.getInstance().encriptar(state.getUsuario().getCedula()),
-                state.getUsuario().getToken()
-        ));
-    }
-
-    @Override
-    public void calculeMinutes(Integer days, Integer hour, Integer minute, Integer second){
-        if(days != null && days >= 0 &&
-                hour != null && hour <=0 &&
-                minute != null && minute < state.getTiempoExpiracionAutorizacion()){
-            int milisecons = hour+(minute*60000)+(second*1000);
-            activateButtonWarning(true);
-            new android.os.Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    activateButtonWarning(false);
-                }
-            }, milisecons);
-        }else{
-            state.setStatusSuscription("");
-            activateButtonWarning(false);
-        }
-    }
-
-    @Override
-    public void activateButtonWarning(boolean activate){
-        if(activate){
-            containerButtonNequi.setMinimumHeight(70);
-            warningIcon.setVisibility(View.VISIBLE);
-        }else{
-            containerButtonNequi.setMinimumHeight(60);
-            warningIcon.setVisibility(View.GONE);
         }
     }
 
@@ -653,9 +399,6 @@ public class ActivityTabsView extends ActivityBase implements ActivityTabsContra
             case TAB_18_TRANSFERS_MAKE_TRANSFER_TAG:
             case TAB_19_ADVANCE_SALARY_SOLICITY_TAG:
             case TAB_20_ADVANCE_SALARY_DETAIL_TAG:
-            case TAB_23_NEQUI_MENU_SEND_MONEY_TAG:
-            case TAB_24_NEQUI_DISPERSIONES_TAG:
-            case TAB_25_NEQUI_SUSCRIPTIONS_PAYMENT_TAG:
                 return 1;
             case TAB_2_PRESENTE_CARD_MENU_TAG:
             case TAB_13_PRESENTE_CARD_PRODUCTS_TAG:
@@ -701,19 +444,9 @@ public class ActivityTabsView extends ActivityBase implements ActivityTabsContra
         icon.setImageDrawable(createDrawable(text));
         TextView c = view.findViewById(R.id.cantMessages);
         if(text != null && text.equals("Mensajes")){
-            int numberOfUnReadMessages = 0;
-            if(state.getMensajesBuzon() != null && state.getMensajesBuzon().size() > 0){
-                int counter = 0;
-                for(ResponseObtenerMensajes m : state.getMensajesBuzon()){
-                    if(m.getLeido().equals("N")){
-                        counter++;
-                    }
-                }
-                numberOfUnReadMessages = counter;
-            }
-
-            if (numberOfUnReadMessages > 0) {
-                c.setText((numberOfUnReadMessages > 9 ? String.valueOf(numberOfUnReadMessages):" "+String.valueOf(numberOfUnReadMessages)+" "));
+            int ca = state.getUnreadMessagesCount();
+            if(ca > 0){
+                c.setText((ca > 9 ? String.valueOf(ca):" "+String.valueOf(ca)+" "));
                 c.setVisibility(View.VISIBLE);
             }else{
                 c.setText("");
@@ -734,100 +467,10 @@ public class ActivityTabsView extends ActivityBase implements ActivityTabsContra
         return tabSpec;
     }
 
+    @SuppressLint("MissingSuperCall")
     @Override
-    public void showErrorTimeOut() {
-        String message = "Ha ocurrido un error. Intenta de nuevo y si el error persiste, contacta a PRESENTE.";
-        if(state != null && state.getMensajesRespuesta() != null && state.getMensajesRespuesta().size()>0){
-            for(ResponseMensajesRespuesta rm : state.getMensajesRespuesta()){
-                if(rm.getIdMensaje() == 6){
-                    message = rm.getMensaje();
-                }
-            }
-        }
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText("Lo sentimos");
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
-    }
-
-    @Override
-    public void showDataFetchError(String title, String message){
-        if(TextUtils.isEmpty(message)){
-            message = "Ha ocurrido un error. Intenta de nuevo y si el error persiste, contacta a PRESENTE.";
-            if(state != null && state.getMensajesRespuesta() != null && state.getMensajesRespuesta().size()>0){
-                for(ResponseMensajesRespuesta rm : state.getMensajesRespuesta()){
-                    if(rm.getIdMensaje() == 7){
-                        message = rm.getMensaje();
-                    }
-                }
-            }
-        }
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText(title);
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
-    }
-
-    @Override
-    public void showExpiredToken(String message) {
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_closedsession);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        Button buttonClosedSession = (Button) dialog.findViewById(R.id.btnVolverAIngresar);
-        buttonClosedSession.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-                context.salir();
-            }
-        });
-        dialog.show();
-
-    }
-    public void showSendingRequet() {
-        Dialog dialogSendingRequest= new Dialog(context);
-        dialogSendingRequest.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialogSendingRequest.setCanceledOnTouchOutside(false);
-        dialogSendingRequest.setContentView(R.layout.pop_up_closedsession);
-        dialogSendingRequest.setCancelable(false);
-        dialogSendingRequest.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        Button buttonClosedSession = dialogSendingRequest.findViewById(R.id.btncerrarEnviandoSolicitud);
-        buttonClosedSession.setOnClickListener(view -> {
-            dialogSendingRequest.dismiss();
-            context.salir();
-        });
-        dialogSendingRequest.show();
+    protected void onSaveInstanceState(Bundle outState) {
+        //Let it be
     }
 
 }

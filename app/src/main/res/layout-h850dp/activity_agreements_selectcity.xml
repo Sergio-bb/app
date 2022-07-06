@@ -24,7 +24,7 @@
                 android:padding="10dp"
                 android:text="Selecciona tu regional"
                 android:textStyle="bold"
-                android:textSize="16sp"
+                android:textSize="17sp"
                 android:fontFamily="@font/roboto_light"/>
 
             <ListView

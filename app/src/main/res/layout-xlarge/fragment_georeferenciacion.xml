@@ -65,7 +65,7 @@
         android:background="@color/gris"
         android:gravity="center"
         android:text="@string/encuentranos_aqui"
-        android:textSize="16sp"
+        android:textSize="17sp"
         android:fontFamily="@font/roboto_light"/>
 
     <LinearLayout

@@ -9,11 +9,9 @@ import java.util.Date;
 import java.util.List;
 
 import retrofit2.Response;
-import solidappservice.cm.com.presenteapp.entities.base.BaseRequest;
 import solidappservice.cm.com.presenteapp.entities.estadocuenta.response.ResponseMovimientoProducto;
 import solidappservice.cm.com.presenteapp.entities.base.BaseResponse;
 import solidappservice.cm.com.presenteapp.entities.estadocuenta.request.RequestMovimientosProducto;
-import solidappservice.cm.com.presenteapp.entities.estadocuenta.response.ResponseProducto;
 import solidappservice.cm.com.presenteapp.tools.security.Encripcion;
 
 /**
@@ -31,49 +29,14 @@ public class FragmentMovementsProductsCardPresenter implements FragmentMovements
     }
 
     @Override
-    public void fetchAccounts(BaseRequest baseRequest) {
-        view.hideSectionMovementsPresenteCards();
-        view.showCircularProgressBar("Consultando Cuentas...");
-        model.getAccounts(baseRequest, this);
-    }
-    @Override
-    public <T> void onSuccessAccounts(Response<BaseResponse<T>> response) {
-        try{
-            List<ResponseProducto> productos = (List<ResponseProducto>) response.body().getResultado();
-            Encripcion encripcion = Encripcion.getInstance();
-            for (ResponseProducto producto : productos) {
-                producto.setA_numdoc(encripcion.desencriptar(producto.getA_numdoc()));
-            }
-            view.showAccountsPresenteCard(productos);
-        }catch (Exception ex){
-            view.showDialogError("Lo sentimos", "");
-            view.showErrorWithRefresh();
-        }
-    }
-    @Override
-    public <T> void onErrorAccounts(Response<BaseResponse<T>> response) {
-        view.showDialogError("Lo sentimos", "");
-        view.showErrorWithRefresh();
-    }
-    @Override
-    public void onFailureAccounts(Throwable t, boolean isErrorTimeOut) {
-        if(isErrorTimeOut){
-            view.showErrorTimeOut();
-        }else{
-            view.showDialogError("Lo sentimos", "");
-        }
-        view.showErrorWithRefresh();
-    }
-
-    @Override
     public void fetchMovementsPresenteCards(RequestMovimientosProducto request) {
-        view.hideSectionMovementsPresenteCards();
-        view.showCircularProgressBar("Consultando movimientos...");
+        view.showProgressDialog("Estamos realizando la consulta de tus saldos y productos...");
         model.getMovementsPresenteCards(request, this);
     }
 
     @Override
     public <T> void onSuccess(Response<BaseResponse<T>> response) {
+        view.hideProgressDialog();
         try{
             List<ResponseMovimientoProducto> movimientos = (List<ResponseMovimientoProducto>) response.body().getResultado();
             if(movimientos != null){
@@ -90,43 +53,36 @@ public class FragmentMovementsProductsCardPresenter implements FragmentMovements
                     movimiento.setV_valor(movimiento.getV_valor());
                 }
             }
-            view.hideCircularProgressBar();
             view.showMovementsPresenteCards(movimientos);
-            view.showSectionMovementsPresenteCards();
         }catch (Exception ex){
-            view.hideCircularProgressBar();
-            view.showDialogError("Lo sentimos", "");
-            view.showErrorWithRefresh();
+            view.showDataFetchError("");
         }
     }
 
     @Override
     public <T> void onExpiredToken(Response<BaseResponse<T>> response) {
-        view.hideCircularProgressBar();
+        view.hideProgressDialog();
         view.showExpiredToken(response.body().getErrorToken());
     }
 
     @Override
     public <T> void onError(Response<BaseResponse<T>> response) {
-        view.hideCircularProgressBar();
+        view.hideProgressDialog();
         if(response != null){
-            view.showDialogError("Lo sentimos", response.body().getMensajeErrorUsuario());
+            view.showDataFetchError(response.body().getMensajeErrorUsuario());
         }else{
-            view.showDialogError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
-        view.showErrorWithRefresh();
     }
 
     @Override
     public void onFailure(Throwable t, boolean isErrorTimeOut) {
-        view.hideCircularProgressBar();
+        view.hideProgressDialog();
         if(isErrorTimeOut){
             view.showErrorTimeOut();
         }else{
-            view.showDialogError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
-
-        view.showErrorWithRefresh();
     }
 
 }

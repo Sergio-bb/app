@@ -1,22 +1,15 @@
 package solidappservice.cm.com.presenteapp.front.actualizaciondatos.FragmentValidateData;
 
-import android.app.Dialog;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -47,19 +40,8 @@ public class FragmentValidateDataView extends Fragment implements FragmentValida
     private ActivityUpdatePersonalDataView baseView;
     private ActivityBase context;
     private GlobalState state;
-    private Dialog pd;
+    private ProgressDialog pd;
     private FirebaseAnalytics firebaseAnalytics;
-
-    @BindView(R.id.sectionValidateData)
-    RelativeLayout sectionValidateData;
-    @BindView(R.id.layout_circular_progress_bar)
-    LinearLayout layoutCircularProgressBar;
-    @BindView(R.id.circular_progress_bar)
-    ProgressBar circularProgressBar;
-    @BindView(R.id.text_circular_progress_Bar)
-    TextView textCircularProgressBar;
-    @BindView(R.id.imageReferesh)
-    ImageView buttonReferesh;
 
     @BindView(R.id.tv_act_datos_nombre)
     TextView tvNombre;
@@ -101,6 +83,7 @@ public class FragmentValidateDataView extends Fragment implements FragmentValida
         baseView = (ActivityUpdatePersonalDataView) getActivity();
         context = (ActivityBase) getActivity();
         state = context.getState();
+        pd = new ProgressDialog(context);
         if (baseView != null) {
             baseView.buttonBack.setVisibility(View.VISIBLE);
             baseView.buttonBack.setOnClickListener(this);
@@ -113,20 +96,23 @@ public class FragmentValidateDataView extends Fragment implements FragmentValida
         GlobalState state = context.getState();
         if(state == null || state.getUsuario() == null){
             context.salir();
+            return;
         } else {
-            processPersonalData();
+            processPersonalData();;
         }
     }
 
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.btn_back) {
-            if (context != null && context.getState().getFragmentAnterior() == IFragmentCoordinator.Pantalla.MenuPrincipal) {
-                context.finish();
-            } else {
-                baseView.basePresenter.loadFragmentUpdatePersonalData(IFragmentCoordinator.Pantalla.ActDatosEditData);
-            }
+        switch (id) {
+            case R.id.btn_back:
+                if(context != null && context.getState().getFragmentAnterior() == IFragmentCoordinator.Pantalla.MenuPrincipal){
+                    context.finish();
+                }else{
+                    baseView.basePresenter.loadFragmentUpdatePersonalData(IFragmentCoordinator.Pantalla.ActDatosEditData);
+                }
+                break;
         }
     }
 
@@ -164,8 +150,6 @@ public class FragmentValidateDataView extends Fragment implements FragmentValida
                         tvCiudad.setText(baseView.datosAsociado.getNombreCiudad());
                         tvCorreo.setText(baseView.datosAsociado.getEmail());
                         tvNumeroContacto.setText(baseView.datosAsociado.getCelular());
-                        hideCircularProgressBar();
-                        showSectionValidateData();
                     } else {
                         baseView.basePresenter.loadFragmentUpdatePersonalData(IFragmentCoordinator.Pantalla.ActDatosEditData);
                     }
@@ -179,8 +163,6 @@ public class FragmentValidateDataView extends Fragment implements FragmentValida
                             tvCiudad.setText(baseView.datosAsociado.getNombreCiudad());
                             tvCorreo.setText(baseView.datosAsociado.getEmail());
                             tvNumeroContacto.setText(baseView.datosAsociado.getCelular());
-                            hideCircularProgressBar();
-                            showSectionValidateData();
                         } else {
                             fetchPersonalData();
                         }
@@ -217,11 +199,11 @@ public class FragmentValidateDataView extends Fragment implements FragmentValida
             GlobalState state = context.getState();
             Encripcion encripcion = Encripcion.getInstance();
             presenterValidateData.fetchPersonalData(new BaseRequest(
-                    encripcion.encriptar(state.getUsuario().getCedula()),
-                    state.getUsuario().getToken()
+                encripcion.encriptar(state.getUsuario().getCedula()),
+                state.getUsuario().getToken()
             ));
         }catch(Exception ex){
-            showDataFetchError("Lo sentimos", "");
+            showDataFetchError("");
         }
     }
 
@@ -233,58 +215,28 @@ public class FragmentValidateDataView extends Fragment implements FragmentValida
             baseView.datosAsociado.setIdRegistroDispositivo(state.getIdDispositivoRegistrado());
             baseView.datosAsociado.setCanal("APP PRESENTE");
             presenterValidateData.updatePersonalData(new RequestActualizarDatos(
-                    encripcion.encriptar(state.getUsuario().getCedula()),
-                    state.getUsuario().getToken(),
-                    baseView.datosAsociado.getIdRegistroDispositivo(),
-                    baseView.datosAsociado.getNombreCompleto(),
-                    baseView.datosAsociado.getDireccion(),
-                    baseView.datosAsociado.getCelular(),
-                    baseView.datosAsociado.getEmail(),
-                    baseView.datosAsociado.getBarrio(),
-                    baseView.datosAsociado.getIdCiudad(),
-                    baseView.datosAsociado.getIdDepartamento(),
-                    baseView.datosAsociado.getIdPais(),
-                    baseView.datosAsociado.getIp(),
-                    baseView.datosAsociado.getCanal()
+                encripcion.encriptar(state.getUsuario().getCedula()),
+                state.getUsuario().getToken(),
+                baseView.datosAsociado.getIdRegistroDispositivo(),
+                baseView.datosAsociado.getNombreCompleto(),
+                baseView.datosAsociado.getDireccion(),
+                baseView.datosAsociado.getCelular(),
+                baseView.datosAsociado.getEmail(),
+                baseView.datosAsociado.getBarrio(),
+                baseView.datosAsociado.getIdCiudad(),
+                baseView.datosAsociado.getIdDepartamento(),
+                baseView.datosAsociado.getIdPais(),
+                baseView.datosAsociado.getIp(),
+                baseView.datosAsociado.getCanal()
             ));
         }catch(Exception ex){
-            showDataFetchError("Lo sentimos", "");
+            showDataFetchError("");
         }
     }
 
     @Override
     public void resultUpdatePersonalData() {
         baseView.basePresenter.loadFragmentUpdatePersonalData(IFragmentCoordinator.Pantalla.ActDatosFinal);
-    }
-
-    @Override
-    public void showSectionValidateData() {
-        sectionValidateData.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void hideSectionValidateData() {
-        sectionValidateData.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showCircularProgressBar(String textProgressBar) {
-        layoutCircularProgressBar.setVisibility(View.VISIBLE);
-        textCircularProgressBar.setText(textProgressBar);
-    }
-
-    @Override
-    public void hideCircularProgressBar() {
-        layoutCircularProgressBar.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showErrorWithRefresh(){
-        sectionValidateData.setVisibility(View.GONE);
-        layoutCircularProgressBar.setVisibility(View.VISIBLE);
-        circularProgressBar.setVisibility(View.GONE);
-        textCircularProgressBar.setText("Ha ocurrido un error, inténtalo de nuevo ");
-        buttonReferesh.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -297,30 +249,23 @@ public class FragmentValidateDataView extends Fragment implements FragmentValida
                 }
             }
         }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText("Lo sentimos");
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 baseView.finish();
             }
         });
-        dialog.show();
+        d.show();
     }
 
-
     @Override
-    public void showDataFetchError(String title, String message){
+    public void showDataFetchError(String message) {
         if(TextUtils.isEmpty(message)){
             message = "Ha ocurrido un error. Intenta de nuevo y si el error persiste, contacta a PRESENTE.";
             if(state != null && state.getMensajesRespuesta() != null && state.getMensajesRespuesta().size()>0){
@@ -331,64 +276,48 @@ public class FragmentValidateDataView extends Fragment implements FragmentValida
                 }
             }
         }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText(title);
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 baseView.finish();
             }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
     public void showExpiredToken(String message) {
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_closedsession);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        Button buttonClosedSession = (Button) dialog.findViewById(R.id.btnVolverAIngresar);
-        buttonClosedSession.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle("Sesión finalizada");
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
                 context.salir();
             }
         });
-        dialog.show();
-
+        d.show();
     }
 
     @Override
     public void showProgressDialog(String message) {
-        pd = new Dialog(context);
-        pd.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        pd.setCanceledOnTouchOutside(false);
-        pd.setContentView(R.layout.pop_up_loading);
+        pd.setTitle(context.getResources().getString(R.string.app_name));
+        pd.setMessage(message);
+        pd.setIcon(R.mipmap.icon_presente);
         pd.setCancelable(false);
-        pd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView contentMessage = (TextView) pd.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
         pd.show();
     }
 
     @Override
     public void hideProgressDialog() {
-        if(pd != null){
-            pd.dismiss();
-        }
+        pd.dismiss();
     }
+
 }

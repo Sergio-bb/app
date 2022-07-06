@@ -46,10 +46,10 @@ public class FragmentResortsSolicityPresenter implements FragmentResortsSolicity
             if(resorts != null && resorts.size()>0){
                 view.showResorts(resorts);
             }else{
-                view.showDataFetchError("Lo sentimos", "");
+                view.showDataFetchError("");
             }
         }catch (Exception ex){
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
     }
 
@@ -60,7 +60,7 @@ public class FragmentResortsSolicityPresenter implements FragmentResortsSolicity
             String result = (String) response.body().getResultado();
             view.showResultSolicityResort(result);
         }catch (Exception ex){
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
     }
 
@@ -74,11 +74,10 @@ public class FragmentResortsSolicityPresenter implements FragmentResortsSolicity
     public <T> void onError(Response<BaseResponse<T>> response) {
         view.hideProgressDialog();
         if(response != null){
-            view.showDataFetchError("Lo sentimos", response.body().getMensajeErrorUsuario());
+            view.showDataFetchError(response.body().getMensajeErrorUsuario());
         }else{
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
-
     }
 
     @Override
@@ -87,7 +86,7 @@ public class FragmentResortsSolicityPresenter implements FragmentResortsSolicity
         if(isErrorTimeOut){
             view.showErrorTimeOut();
         }else{
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
     }
 

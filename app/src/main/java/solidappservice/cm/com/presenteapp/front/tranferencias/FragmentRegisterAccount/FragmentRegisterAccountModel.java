@@ -25,7 +25,7 @@ public class FragmentRegisterAccountModel implements FragmentRegisterAccountCont
     public void getBanks(final FragmentRegisterAccountContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -49,7 +49,11 @@ public class FragmentRegisterAccountModel implements FragmentRegisterAccountCont
                 }
                 @Override
                 public void onFailure(Call<BaseResponse<List<ResponseBanco>>> call, Throwable t) {
-                    listener.onFailure(t, t instanceof IOException);
+                    if(t instanceof IOException){
+                        listener.onFailure(t, true);
+                    }else{
+                        listener.onError(null);
+                    }
                 }
             });
         } catch (Exception e) {
@@ -61,7 +65,7 @@ public class FragmentRegisterAccountModel implements FragmentRegisterAccountCont
     public void getRegisteredAccounts(BaseRequest body, final FragmentRegisterAccountContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -88,7 +92,7 @@ public class FragmentRegisterAccountModel implements FragmentRegisterAccountCont
                     if(t instanceof IOException){
                         listener.onFailure(t, true);
                     }else{
-                        listener.onFailure(t, false);
+                        listener.onError(null);
                     }
                 }
             });
@@ -101,7 +105,7 @@ public class FragmentRegisterAccountModel implements FragmentRegisterAccountCont
     public void registerAccount(RequestRegisterAccount body, final FragmentRegisterAccountContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -128,7 +132,7 @@ public class FragmentRegisterAccountModel implements FragmentRegisterAccountCont
                     if(t instanceof IOException){
                         listener.onFailure(t, true);
                     }else{
-                        listener.onFailure(t, false);
+                        listener.onError(null);
                     }
                 }
             });

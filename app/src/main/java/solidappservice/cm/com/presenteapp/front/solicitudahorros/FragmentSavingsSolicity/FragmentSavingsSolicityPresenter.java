@@ -28,55 +28,37 @@ public class FragmentSavingsSolicityPresenter implements FragmentSavingsSolicity
 
     @Override
     public void fetchTypesOfSavings(BaseRequest baseRequest) {
-        view.hideSectionSavings();
-        view.showCircularProgressBar("Actualizando información...");
+        view.showProgressDialog("Actualizando información...");
         model.getTypesOfSavings(baseRequest, this);
     }
-    @Override
-    public <T> void onSuccessTypesOfSavings(Response<BaseResponse<T>> response) {
-        view.hideCircularProgressBar();
-        try{
-            List<ResponseTiposAhorro>  tiposAhorro = (List<ResponseTiposAhorro>) response.body().getResultado();
-            if(tiposAhorro != null && tiposAhorro.size() > 0){
-                ResponseTiposAhorro t = new ResponseTiposAhorro();
-                t.setN_tipodr("Selecciona tu ahorro");
-                if (tiposAhorro.size() > 0 && !tiposAhorro.get(0).getN_tipodr().equals(t.getN_tipodr())) {
-                    tiposAhorro.add(0, t);
-                }
-                view.showSectionSavings();
-                view.showTypesOfSavings(tiposAhorro);
-            }else{
-                view.showDialogError("Lo sentimos", "");
-                view.showErrorWithRefresh();
-            }
-        }catch(Exception ex){
-            view.showDialogError("Lo sentimos", "");
-            view.showErrorWithRefresh();
-        }
-    }
-    @Override
-    public <T> void onErrorTypesOfSaving(Response<BaseResponse<T>> response) {
-        view.hideCircularProgressBar();
-        view.showDialogError("Lo sentimos","");
-        view.showErrorWithRefresh();
-    }
-    @Override
-    public void onFailureTypesOfSaving(Throwable t, boolean isErrorTimeOut) {
-        view.hideCircularProgressBar();
-        if(isErrorTimeOut){
-            view.showErrorTimeOut();
-        }else{
-            view.showDialogError("Lo sentimos", "");
-        }
-        view.showErrorWithRefresh();
-    }
-
 
     @Override
     public void solicitySaving(RequestEnviarSolicitudAhorro request) {
         view.showProgressDialog("Enviando solicitud...");
         model.solicitySaving(request, this);
     }
+
+
+    @Override
+    public <T> void onSuccessTypesOfSavings(Response<BaseResponse<T>> response) {
+        view.hideProgressDialog();
+        try{
+            List<ResponseTiposAhorro>  tiposAhorro = (List<ResponseTiposAhorro>) response.body().getResultado();
+                if(tiposAhorro != null && tiposAhorro.size() > 0){
+                ResponseTiposAhorro t = new ResponseTiposAhorro();
+                t.setN_tipodr("Selecciona tu ahorro");
+                if (tiposAhorro.size() > 0 && !tiposAhorro.get(0).getN_tipodr().equals(t.getN_tipodr())) {
+                    tiposAhorro.add(0, t);
+                }
+                view.showTypesOfSavings(tiposAhorro);
+            }else{
+                view.showDataFetchError("");
+            }
+        }catch(Exception ex){
+            view.showDataFetchError("");
+        }
+    }
+
     @Override
     public <T> void onSuccessSolicitySaving(Response<BaseResponse<T>> response) {
         view.hideProgressDialog();
@@ -84,21 +66,7 @@ public class FragmentSavingsSolicityPresenter implements FragmentSavingsSolicity
             String resultSolicitySaving = (String) response.body().getResultado();
             view.showResultSolicitySaving(resultSolicitySaving);
         }catch(Exception ex){
-            view.showResultSolicitySaving(null);
-        }
-    }
-    @Override
-    public <T> void onErrorSolicitySaving(Response<BaseResponse<T>> response) {
-        view.hideProgressDialog();
-        view.showResultSolicitySaving(null);
-    }
-
-    @Override
-    public void onFailureSolicitySaving(Throwable t, boolean isErrorTimeOut) {
-        if(isErrorTimeOut){
-            view.showErrorTimeOut();
-        }else{
-            view.showResultSolicitySaving(null);
+            view.showDataFetchError("");
         }
     }
 
@@ -106,6 +74,26 @@ public class FragmentSavingsSolicityPresenter implements FragmentSavingsSolicity
     public <T> void onExpiredToken(Response<BaseResponse<T>> response) {
         view.hideProgressDialog();
         view.showExpiredToken(response.body().getErrorToken());
+    }
+
+    @Override
+    public <T> void onError(Response<BaseResponse<T>> response) {
+        view.hideProgressDialog();
+        if(response != null){
+            view.showDataFetchError(response.body().getMensajeErrorUsuario());
+        }else{
+            view.showDataFetchError("");
+        }
+    }
+
+    @Override
+    public void onFailure(Throwable t, boolean isErrorTimeOut) {
+        view.hideProgressDialog();
+        if(isErrorTimeOut){
+            view.showErrorTimeOut();
+        }else{
+            view.showDataFetchError("");
+        }
     }
 
 }

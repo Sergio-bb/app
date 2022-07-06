@@ -1,27 +1,17 @@
 package solidappservice.cm.com.presenteapp.front.tarjetapresente.FragmentPresenteCardMenu.SecurityCard.FragmentBlockCard;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -53,8 +43,7 @@ public class FragmentBlockCardView extends Fragment implements FragmentBlockCard
     private FragmentBlockCardPresenter presenter;
     private ActivityBase context;
     private GlobalState state;
-//    private ProgressDialog pd;
-    private Dialog pd;
+    private ProgressDialog pd;
     private FirebaseAnalytics firebaseAnalytics;
 
     @BindView(R.id.spinnerProducto)
@@ -63,18 +52,7 @@ public class FragmentBlockCardView extends Fragment implements FragmentBlockCard
     Spinner spinnerMotivoBloqueo;
     @BindView(R.id.btnBloquearTarjeta)
     Button btnBloquearTarjeta;
-
-    @BindView(R.id.layout_circular_progress_bar)
-    LinearLayout layoutCircularProgressBar;
-    @BindView(R.id.circular_progress_bar)
-    ProgressBar circularProgressBar;
-    @BindView(R.id.text_circular_progress_Bar)
-    TextView textCircularProgressBar;
-    @BindView(R.id.imageReferesh)
-    ImageView buttonReferesh;
-
-    @BindView(R.id.contentBlockCard)
-    ScrollView contentBlockCard;
+    //private Tarjeta tarjeta = null;
 
     @Override
     public void onAttach(Context context) {
@@ -104,6 +82,7 @@ public class FragmentBlockCardView extends Fragment implements FragmentBlockCard
         presenter = new FragmentBlockCardPresenter(this, new FragmentBlockCardModel());
         context = (ActivityBase) getActivity();
         state = context.getState();
+        pd = new ProgressDialog(context);
     }
 
     @Override
@@ -116,64 +95,58 @@ public class FragmentBlockCardView extends Fragment implements FragmentBlockCard
         }
         List<ResponseTarjeta> tarjetas = state.getTarjetas();
         showPresenteCards(tarjetas);
-        fetchReasonsBlockCard();
+//        mostrarTarjetas(tarjetas);
+
+        List<String> motivos = state.getMotivosBloqueoTarjeta();
+        if (motivos != null && motivos.size() > 0) {
+            showReasonsBlockCard(motivos);
+//            mostrarMotivos(motivos);
+        } else {
+            fetchReasonsBlockCard();
+//            Usuario usuario = state.getUsuario();
+//            new MotivosTask().execute(usuario.cedula, usuario.token);
+        }
     }
 
     @OnClick(R.id.btnBloquearTarjeta)
     public void onClickBlockCard(){
         if(spinnerProducto != null && spinnerProducto.getSelectedItem() != null) {
             confirmBlockCard((ResponseTarjeta) spinnerProducto.getSelectedItem());
+//            bloquearTarjeta((ResponseTarjeta) spinnerProducto.getSelectedItem());
         }else{
-            showDataFetchError("Datos incompletos", "Selecciona la tarjeta que desea bloquear.");
-        }
-    }
-
-    @OnClick(R.id.imageReferesh)
-    public void onClickRefresh(){
-        state.setMotivosBloqueoTarjeta(null);
-        fetchReasonsBlockCard();
-    }
-
-    @Override
-    public void fetchReasonsBlockCard(){
-        try{
-            if (state != null && state.getMotivosBloqueoTarjeta() != null && state.getMotivosBloqueoTarjeta().size() > 0) {
-                hideCircularProgressBar();
-                showSectionBlockCard();
-                showReasonsBlockCard(state.getMotivosBloqueoTarjeta());
-            } else {
-                Encripcion encripcion = Encripcion.getInstance();
-                presenter.fetchReasonsBlockCard(new BaseRequest(
-                        encripcion.encriptar(state.getUsuario().getCedula()),
-                        state.getUsuario().getToken()
-                ));
-            }
-        }catch (Exception ex){
-            showDataFetchError("Lo sentimos", "Se ha producido un error, inténtalo nuevamente en unos minutos.");
-            showErrorWithRefresh();
+            context.makeErrorDialog("Selecciona la tarjeta que desea bloquear");
         }
     }
 
     @Override
     public void showPresenteCards(List<ResponseTarjeta> tarjetas) {
         try {
-            if(tarjetas != null && tarjetas.size() > 0){
-                ArrayList<ResponseTarjeta> seleccionadas = new ArrayList<>();
-                ArrayList<String> numeros = new ArrayList<>();
-                for (ResponseTarjeta t: tarjetas){
-                    if(!numeros.contains(t.getK_mnumpl()) && t.getI_estado().equalsIgnoreCase("A")){
-                        seleccionadas.add(t);
-                        numeros.add(t.getK_mnumpl());
-                    }
+            if(tarjetas == null) return;
+            ArrayList<ResponseTarjeta> seleccionadas = new ArrayList<>();
+            ArrayList<String> numeros = new ArrayList<>();
+            for (ResponseTarjeta t: tarjetas){
+                if(!numeros.contains(t.getK_mnumpl()) && t.getI_estado().equalsIgnoreCase("A")){
+                    seleccionadas.add(t);
+                    numeros.add(t.getK_mnumpl());
                 }
-                ArrayAdapter<ResponseTarjeta> adapter = new ArrayAdapter<>(context, R.layout.list_item_spinner, seleccionadas);
-                spinnerProducto.setAdapter(adapter);
-            }else{
-                showDataFetchError("No tienes tarjetas", "Actualmente no tienes tarjetas para bloquear");
             }
+            ArrayAdapter<ResponseTarjeta> adapter = new ArrayAdapter<>(context, R.layout.list_item_spinner, seleccionadas);
+            spinnerProducto.setAdapter(adapter);
         } catch (Exception e) {
-            showDialogError("Lo sentimos", "Se ha producido un error, inténtalo nuevamente en unos minutos.");
-            showErrorWithRefresh();
+            context.makeErrorDialog(e.getMessage());
+        }
+    }
+
+    @Override
+    public void fetchReasonsBlockCard(){
+        try{
+            Encripcion encripcion = Encripcion.getInstance();
+            presenter.fetchReasonsBlockCard(new BaseRequest(
+                    encripcion.encriptar(state.getUsuario().getCedula()),
+                    state.getUsuario().getToken()
+            ));
+        }catch (Exception ex){
+            showDataFetchError("");
         }
     }
 
@@ -185,7 +158,7 @@ public class FragmentBlockCardView extends Fragment implements FragmentBlockCard
             ArrayAdapter<String> adapter = new ArrayAdapter<>(context, R.layout.list_item_spinner, motivosBloqueo);
             spinnerMotivoBloqueo.setAdapter(adapter);
         } catch (Exception e) {
-            showDataFetchError("Lo sentimos", "Se ha producido un error, inténtalo nuevamente en unos minutos.");
+            context.makeErrorDialog(e.getMessage());
         }
     }
 
@@ -199,34 +172,35 @@ public class FragmentBlockCardView extends Fragment implements FragmentBlockCard
                 }
 
                 if (motivo == null || TextUtils.isEmpty(motivo)) {
-                    showDialogError("Datos incompletos", "Debe seleccionar el motivo por el cual desea bloquear su Tarjeta.");
+                    context.makeErrorDialog("Debe seleccionar el motivo por el cual desea bloquear su Tarjeta");
                     return;
                 }
-
                 final String _motivo = motivo;
-                final Dialog dialog = new Dialog(context);
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setCanceledOnTouchOutside(false);
-                dialog.setContentView(R.layout.pop_up_confirm);
-                dialog.setCancelable(false);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-                titleMessage.setText("¿Confirma tu solicitud?");
-                TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-                contentMessage.setText("¿Deseas cancelar tu Tarjeta?");
-                ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.buttonClose);
-                buttonClose.setOnClickListener(view -> dialog.dismiss());
-                Button buttonAceptar = (Button) dialog.findViewById(R.id.btnAceptar);
-                buttonAceptar.setOnClickListener(view -> {
-                    blockCard(tarjeta, _motivo);
-                    dialog.dismiss();
+                AlertDialog.Builder d = new AlertDialog.Builder(context);
+                d.setTitle(context.getResources().getString(R.string.app_name));
+                d.setIcon(R.mipmap.icon_presente);
+                d.setMessage("¿Estás seguro que deseas cancelar tu Tarjeta?");
+                d.setCancelable(false);
+                d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        try{
+                            blockCard(tarjeta, _motivo);
+//                            new BloquearTask(tarjeta).execute(obj);
+                        }catch (Exception e){
+                            context.makeErrorDialog(e.getMessage());
+                        }
+                    }
                 });
-                dialog.show();
+                d.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                });
+                d.show();
             } else {
-                showDataFetchError("Lo sentimos","No se ha cargado la Tarjeta, por favor intente de nuevo");
+                context.makeErrorDialog("No se ha cargado la Tarjeta, por favor intente de nuevo");
             }
         } catch (Exception e) {
-            showDataFetchError("Lo sentimos", "Se ha producido un error, inténtalo nuevamente en unos minutos.");
+            context.makeErrorDialog(e.getMessage());
         }
     }
 
@@ -245,7 +219,7 @@ public class FragmentBlockCardView extends Fragment implements FragmentBlockCard
             );
             presenter.blockCard(bloquearTarjeta);
         }catch (Exception e){
-            showDataFetchError("Lo sentimos", "Se ha producido un error, inténtalo nuevamente en unos minutos.");
+            showDataFetchError("");
         }
     }
 
@@ -253,116 +227,35 @@ public class FragmentBlockCardView extends Fragment implements FragmentBlockCard
     public void showResultBlockCard(String resultBlockCard) {
         try{
             ResponseTarjeta tarjeta = (ResponseTarjeta) spinnerProducto.getSelectedItem();
-            final Dialog dialog = new Dialog(context);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.setContentView(R.layout.pop_up_success);
-            dialog.setCancelable(false);
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            TextView titleMessage = (TextView) dialog.findViewById(R.id.titleSuccess);
-            titleMessage.setText("Solicitud Enviada");
-            TextView contentMessage = (TextView) dialog.findViewById(R.id.contentSuccess);
-            contentMessage.setText(resultBlockCard);
-            ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.buttonClose);
-            buttonClose.setOnClickListener(view -> {
-                updateStatePresenteCard(tarjeta, true);
-                context.getState().getmTabHost().setCurrentTab(ActivityTabsView.TAB_14_PRESENTE_CARD_SECURITY_MENU_TAG);
-                dialog.dismiss();
+            AlertDialog.Builder d = new AlertDialog.Builder(context);
+            d.setTitle(context.getResources().getString(R.string.app_name));
+            d.setIcon(R.mipmap.icon_presente);
+            d.setMessage(resultBlockCard);
+            d.setCancelable(false);
+            d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    context.getState().bloquearActivarTarjetas(tarjeta, true);
+                    context.getState().getmTabHost().setCurrentTab(ActivityTabsView.TAB_14_PRESENTE_CARD_SECURITY_MENU_TAG);
+                }
             });
-            dialog.show();
+            d.show();
         }catch (Exception e){
-            showDataFetchError("Lo sentimos", "Se ha producido un error, inténtalo nuevamente en unos minutos.");
+            context.makeErrorDialog(e.getMessage());
         }
     }
 
     @Override
-    public void showSectionBlockCard(){
-        contentBlockCard.setVisibility(View.VISIBLE);
-    }
-    @Override
-    public void hideSectionBlockCard(){
-        contentBlockCard.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showCircularProgressBar(String textProgressBar) {
-        layoutCircularProgressBar.setVisibility(View.VISIBLE);
-        textCircularProgressBar.setText(textProgressBar);
-    }
-
-    @Override
-    public void hideCircularProgressBar() {
-        layoutCircularProgressBar.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showErrorWithRefresh(){
-        contentBlockCard.setVisibility(View.GONE);
-        layoutCircularProgressBar.setVisibility(View.VISIBLE);
-        circularProgressBar.setVisibility(View.GONE);
-        textCircularProgressBar.setText("Ha ocurrido un error, inténtalo de nuevo ");
-        buttonReferesh.setVisibility(View.VISIBLE);
-    }
-
-    @Override
     public void showProgressDialog(String message) {
-        pd = new Dialog(context);
-        pd.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        pd.setCanceledOnTouchOutside(false);
-        pd.setContentView(R.layout.pop_up_loading);
+        pd.setTitle(context.getResources().getString(R.string.app_name));
+        pd.setMessage(message);
+        pd.setIcon(R.mipmap.icon_presente);
         pd.setCancelable(false);
-        pd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView contentMessage = (TextView) pd.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
         pd.show();
     }
 
     @Override
     public void hideProgressDialog() {
         pd.dismiss();
-    }
-
-    @Override
-    public void updateStatePresenteCard(ResponseTarjeta card, boolean isBlock){
-        if(state != null && state.getTarjetas() != null && state.getTarjetas().size() > 0){
-            for(ResponseTarjeta t : state.getTarjetas()){
-                if(t.getK_mnumpl().equals(card.getK_mnumpl())){
-                    t.setI_estado((isBlock?"B":"A"));;
-                }
-            }
-        }
-    }
-
-    @Override
-    public void showDialogError(String title, String message){
-        if(TextUtils.isEmpty(message)){
-            message = "Ha ocurrido un error. Intenta de nuevo y si el error persiste, contacta a PRESENTE.";
-            if(state != null && state.getMensajesRespuesta() != null && state.getMensajesRespuesta().size()>0){
-                for(ResponseMensajesRespuesta rm : state.getMensajesRespuesta()){
-                    if(rm.getIdMensaje() == 7){
-                        message = rm.getMensaje();
-                    }
-                }
-            }
-        }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText(title);
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
     }
 
     @Override
@@ -375,29 +268,23 @@ public class FragmentBlockCardView extends Fragment implements FragmentBlockCard
                 }
             }
         }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText("Lo sentimos");
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(DialogInterface dialog, int which) {
                 state.getmTabHost().setCurrentTab(ActivityTabsView.TAB_2_PRESENTE_CARD_MENU_TAG);
                 dialog.dismiss();
             }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
-    public void showDataFetchError(String title, String message){
+    public void showDataFetchError(String message) {
         if(TextUtils.isEmpty(message)){
             message = "Ha ocurrido un error. Intenta de nuevo y si el error persiste, contacta a PRESENTE.";
             if(state != null && state.getMensajesRespuesta() != null && state.getMensajesRespuesta().size()>0){
@@ -408,45 +295,34 @@ public class FragmentBlockCardView extends Fragment implements FragmentBlockCard
                 }
             }
         }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText(title);
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(DialogInterface dialog, int which) {
                 state.getmTabHost().setCurrentTab(ActivityTabsView.TAB_2_PRESENTE_CARD_MENU_TAG);
                 dialog.dismiss();
             }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
     public void showExpiredToken(String message) {
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_closedsession);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        Button buttonClosedSession = (Button) dialog.findViewById(R.id.btnVolverAIngresar);
-        buttonClosedSession.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle("Sesión finalizada");
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
                 context.salir();
             }
         });
-        dialog.show();
-
+        d.show();
     }
 
 

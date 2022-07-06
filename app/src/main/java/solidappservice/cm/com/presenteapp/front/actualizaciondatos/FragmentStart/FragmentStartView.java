@@ -26,7 +26,7 @@ import solidappservice.cm.com.presenteapp.tools.IFragmentCoordinator;
  */
 public class FragmentStartView extends Fragment implements FragmentStartContract.View{
 
-    private FragmentStartPresenter presenter;
+    private FragmentStartPresenter presenterStart;
     private ActivityUpdatePersonalDataView baseView;
     private ActivityBase context;
     private FirebaseAnalytics firebaseAnalytics;
@@ -53,7 +53,7 @@ public class FragmentStartView extends Fragment implements FragmentStartContract
     }
 
     protected void setControls() {
-        presenter = new FragmentStartPresenter(this);
+        presenterStart = new FragmentStartPresenter(this);
         baseView = (ActivityUpdatePersonalDataView) getActivity();
         context = (ActivityBase) getActivity();
         if (baseView != null) {
@@ -70,7 +70,6 @@ public class FragmentStartView extends Fragment implements FragmentStartContract
                 baseView.basePresenter.loadFragmentUpdatePersonalData(IFragmentCoordinator.Pantalla.ActDatosEditData);
             }
         } else {
-            assert false;
             context.salir();
         }
     }
@@ -81,6 +80,7 @@ public class FragmentStartView extends Fragment implements FragmentStartContract
         GlobalState state = context.getState();
         if(state == null || state.getUsuario() == null){
             context.salir();
+            return;
         }
     }
 

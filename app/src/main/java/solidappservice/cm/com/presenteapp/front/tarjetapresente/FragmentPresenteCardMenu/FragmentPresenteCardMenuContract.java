@@ -15,18 +15,18 @@ public interface FragmentPresenteCardMenuContract {
     interface View{
         void fetchPresenteCards();
         void showNumberPresenteCards(List<ResponseTarjeta> tarjetas);
+        void hideNumberPresenteCards();
 
         void fetchButtonStateReplacementCard();
         void showButtonReplacementCard();
         void hideButtonReplacementCard();
 
-        void showSectionMenuPresenteCards();
-        void hideSectionMenuPresenteCards();
+        void showProgressDialog(String message);
+        void hideProgressDialog();
         void showCircularProgressBar(String message);
         void hideCircularProgressBar();
-        void showErrorWithRefresh();
+        void showDataFetchError(String message);
         void showErrorTimeOut();
-        void showDataFetchError(String title, String message);
         void showExpiredToken(String message);
     }
 
@@ -42,10 +42,7 @@ public interface FragmentPresenteCardMenuContract {
 
     interface APIListener{
         <T> void onSuccess(Response<BaseResponse<T>> response);
-
         <T> void onSuccessButtonStateReplacementCard(Response<BaseResponse<T>> response);
-        <T> void onErrorButtonStateReplacementCard(Response<BaseResponse<T>> response);
-
         <T> void onExpiredToken(Response<BaseResponse<T>> response);
         <T> void onError(Response<BaseResponse<T>> response);
         void onFailure(Throwable t, boolean isErrorTimeOut);

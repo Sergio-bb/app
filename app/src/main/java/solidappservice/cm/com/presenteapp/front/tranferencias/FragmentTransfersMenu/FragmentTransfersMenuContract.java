@@ -21,7 +21,7 @@ public interface FragmentTransfersMenuContract {
         <T> void onSuccess(Response<BaseResponse<T>> response);
         <T> void onExpiredToken(Response<BaseResponse<T>> response);
         <T> void onError(Response<BaseResponse<T>> response);
-        void onFailure(Throwable t, boolean isErrorTimeOut);
+        void onFailure(Throwable t);
     }
 
 }

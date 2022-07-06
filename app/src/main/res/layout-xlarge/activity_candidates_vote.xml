@@ -132,13 +132,11 @@
             android:layout_width="wrap_content"
             android:layout_height="37dp"
             android:layout_gravity="top"
-            android:paddingHorizontal="25dp"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Votar por este candidato"
             android:textStyle="bold"
-            android:background="@drawable/backgroun_button_rounded"
-            android:backgroundTint="@color/yellow"
-            android:fontFamily="@font/roboto_light"/>
+            android:background="@drawable/btn_yellow_internal"
+            android:fontFamily="@font/roboto"/>
     </LinearLayout>
 
 </LinearLayout>

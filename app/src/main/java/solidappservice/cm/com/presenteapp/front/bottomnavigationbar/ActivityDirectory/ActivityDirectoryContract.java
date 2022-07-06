@@ -12,16 +12,12 @@ import solidappservice.cm.com.presenteapp.entities.base.BaseResponse;
 public interface ActivityDirectoryContract {
 
     interface View{
-        void fetchDirectory();
         void showDirectory(List<ResponseDirectorio> directorio);
         void callDirectoryContact(ResponseDirectorio directorio);
-        void showSectionDirectory();
-        void hideSectionDirectory();
-        void showCircularProgressBar(String message);
-        void hideCircularProgressBar();
-        void showErrorWithRefresh();
+        void showProgressDialog(String message);
+        void hideProgressDialog();
+        void showDataFetchError(String message);
         void showErrorTimeOut();
-        void showDataFetchError(String title, String message);
         void showExpiredToken(String message);
     }
 

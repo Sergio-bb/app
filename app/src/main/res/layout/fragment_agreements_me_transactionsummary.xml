@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/layout_circular_progress_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:id="@+id/circular_progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminateTint="#707070" />
+
+        <TextView
+            android:id="@+id/text_circular_progress_Bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:fontFamily="@font/roboto_light"
+            android:gravity="center"
+            android:text="Un momento..."
+            android:textSize="17sp" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/contentTransactionSummary"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fillViewport="true"
+            android:paddingBottom="080dp"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingHorizontal="20dp"
+                android:paddingTop="20dp"
+                android:paddingBottom="10dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_light"
+                    android:text="@string/antes_de_realizar"
+                    android:textSize="17sp" />
+
+                <LinearLayout
+                    android:id="@+id/lyResumenCompra"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/box_gray_transactionsummaryme"
+                    android:orientation="horizontal"
+                    android:weightSum="100">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="38"
+                        android:fontFamily="@font/roboto_light"
+                        android:paddingHorizontal="10dp"
+                        android:text="@string/resumen_de_tu"
+                        android:textSize="16sp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+                        android:layout_weight="62"
+                        android:background="@drawable/box_white_transactionsummaryme"
+                        android:orientation="vertical"
+                        android:padding="8dp">
+
+                        <TextView
+                            android:id="@+id/txtPrecioPaquete"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/roboto_light"
+                            android:text="@string/paquete"
+                            android:textAlignment="textStart"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/txtPlu"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="2dp"
+                            android:text="@string/plu"
+                            android:textSize="11sp" />
+
+
+                        <TextView
+                            android:id="@+id/detallePaquete"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:fontFamily="@font/roboto_light"
+                            android:text="@string/texto_one_paquete"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:id="@+id/vigenciaPaquete"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:fontFamily="@font/roboto_light"
+                            android:text="@string/texto_two_paquete"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:id="@+id/txtFormaPago"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:fontFamily="@font/roboto_light"
+                            android:text="@string/texto_forma_pagoR"
+                            android:textAlignment="textStart"
+                            android:textSize="15sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lyRecurrente"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/box_gray_transactionsummaryme"
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:fontFamily="@font/roboto_light"
+                        android:text="@string/pago_recurrente"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:fontFamily="@font/roboto_light"
+                        android:text="@string/debitaremos_automaticamente_el"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/box_gray_transactionsummaryme"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="2dp"
+                        android:background="@drawable/box_gray_transactionsummaryme"
+                        android:fontFamily="@font/roboto_light"
+                        android:padding="10dp"
+                        android:text="@string/forma_de_pago"
+                        android:textAlignment="center"
+                        android:textSize="17sp" />
+
+                    <Spinner
+                        android:id="@+id/spnrBolsillos"
+                        android:layout_width="match_parent"
+                        android:layout_height="38dp"
+                        android:layout_margin="2dp"
+                        android:background="@drawable/background_spinner_without_border" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/box_gray_transactionsummaryme"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="2dp"
+                        android:background="@drawable/box_gray_transactionsummaryme"
+                        android:fontFamily="@font/roboto_light"
+                        android:padding="10dp"
+                        android:text="@string/informacion_personal"
+                        android:textAlignment="center"
+                        android:textSize="17sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+                        android:background="@drawable/box2_white_transactionsummaryme"
+                        android:orientation="vertical"
+                        android:paddingVertical="10dp">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:fontFamily="@font/roboto_light"
+                                android:text="Correo:"
+                                android:textSize="17sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/txtCorreo"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginBottom="5dp"
+                                android:fontFamily="@font/roboto_light"
+                                android:text="example@example.com"
+                                android:textSize="17sp" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:fontFamily="@font/roboto_light"
+                                android:text="Línea Móvil Éxito a recargar:"
+                                android:textSize="17sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/txtLineas"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:fontFamily="@font/roboto_light"
+                                android:text="3000000000"
+                                android:textSize="17sp" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:fontFamily="@font/roboto_light"
+                        android:text="@string/terminos_y_condiciones"
+                        android:textAlignment="center"
+                        android:textColor="@color/orange"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:fontFamily="@font/roboto_light"
+                        android:text="@string/texto_terminos_y_condiciones"
+                        android:textSize="15sp" />
+
+                    <CheckBox
+                        android:id="@+id/checkboxAceptarTyC"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/roboto_light"
+                        android:text="Acepto" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:orientation="vertical">
+
+                    <!--                        android:backgroundTint="#1BC44B"-->
+                    <Button
+                        android:id="@+id/btnContinuar"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="25dp"
+                        android:background="@drawable/backgroun_button_rounded"
+                        android:backgroundTint="#D7D7D7"
+                        android:enabled="false"
+                        android:fontFamily="@font/roboto_light"
+                        android:layout_marginHorizontal="100dp"
+                        android:text="Continuar"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/white"
+                        android:textSize="17sp"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/btnCancelarCompra"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/backgroun_button_rounded"
+                        android:backgroundTint="@color/grey_button"
+                        android:fontFamily="@font/roboto_light"
+                        android:layout_marginHorizontal="100dp"
+                        android:text="Cancelar"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="#4A4A49"
+                        android:textSize="17sp"/>
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/icon_compra_segura2" />
+
+    </RelativeLayout>
+</LinearLayout>

@@ -14,47 +14,14 @@
         android:background="@color/gris"
         android:text="Reposición Tarjeta PRESENTE"
         android:gravity="center"
-        android:textSize="16sp"
+        android:textSize="17sp"
         android:fontFamily="@font/roboto_light"/>
 
-    <LinearLayout
-        android:id="@+id/layout_circular_progress_bar"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone">
-        <ProgressBar
-            android:id="@+id/circular_progress_bar"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:indeterminateTint="#707070"
-            android:visibility="visible"/>
-        <ImageView
-            android:id="@+id/imageReferesh"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:src="@drawable/icon_refresh"
-            android:visibility="gone"/>
-        <TextView
-            android:id="@+id/text_circular_progress_Bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:gravity="center"
-            android:text="Intentar de nuevo"
-            android:textSize="12sp"
-            android:fontFamily="@font/roboto_light"
-            android:visibility="visible"/>
-    </LinearLayout>
-
     <ScrollView
-        android:id="@+id/contentReposicionTarjeta"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:fillViewport="true"
-        android:scrollbars="none"
-        android:visibility="gone">
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -80,7 +47,7 @@
                     android:layout_marginTop="20dp"
                     android:gravity="center"
                     android:text="Tu nueva tarjeta PRESENTE \n será enviada a:"
-                    android:textSize="16sp"
+                    android:textSize="17sp"
                     android:fontFamily="@font/roboto_light"/>
 
                 <LinearLayout
@@ -96,7 +63,7 @@
                         android:layout_height="wrap_content"
                         android:text="Código dependencia:"
                         android:gravity="center"
-                        android:textSize="16sp"
+                        android:textSize="17sp"
                         android:textStyle="bold"
                         android:layout_marginTop="15dp"
                         android:fontFamily="@font/roboto_light"/>
@@ -118,7 +85,7 @@
                         android:layout_height="wrap_content"
                         android:text="Nombre dependencia:"
                         android:gravity="center"
-                        android:textSize="16sp"
+                        android:textSize="17sp"
                         android:textStyle="bold"
                         android:layout_marginTop="15dp"
                         android:fontFamily="@font/roboto_light"/>
@@ -142,7 +109,7 @@
                     android:layout_marginTop="20dp"
                     android:gravity="center"
                     android:text="@string/dependenciadiferente"
-                    android:textSize="16sp"
+                    android:textSize="17sp"
                     android:fontFamily="@font/roboto_light"/>
 
                 <Button
@@ -153,7 +120,7 @@
                     android:layout_marginTop="15dp"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="Editar"
-                    android:textSize="16sp"
+                    android:textSize="17sp"
                     android:textStyle="bold"
                     android:background="@drawable/btn_yellow_internal"
                     android:fontFamily="@font/roboto_light"/>
@@ -173,24 +140,17 @@
                     android:layout_marginTop="20dp"
                     android:gravity="center"
                     android:text="El valor de la reposición de tu Tarjeta es:"
-                    android:textSize="16sp"
+                    android:textSize="17sp"
                     android:fontFamily="@font/roboto_light"/>
 
-                <ProgressBar
-                    android:id="@+id/circular_progress_bar_value"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:indeterminateTint="#707070"
-                    android:visibility="visible"/>
                 <TextView
                     android:id="@+id/valor_reposicion_tarjeta"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="$0.0"
-                    android:textSize="16sp"
+                    android:textSize="17sp"
                     android:textStyle="bold"
-                    android:visibility="gone"
                     android:fontFamily="@font/roboto_light"/>
 
                 <Button
@@ -198,10 +158,10 @@
                     android:layout_width="120dp"
                     android:layout_height="35dp"
                     android:layout_gravity="center"
-                    android:layout_marginVertical="25dp"
+                    android:layout_marginTop="15dp"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="Continuar"
-                    android:textSize="16sp"
+                    android:textSize="17sp"
                     android:textStyle="bold"
                     android:background="@drawable/btn_yellow_internal"
                     android:fontFamily="@font/roboto_light"/>

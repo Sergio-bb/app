@@ -22,16 +22,10 @@ public interface FragmentSavingsSolicityContract {
         boolean validateData();
         void solicitySaving();
         void showResultSolicitySaving(String resultSolicitySaving);
-        void showCircularProgressBar(String message);
-        void showSectionSavings();
-        void hideSectionSavings();
-        void hideCircularProgressBar();
-        void showErrorWithRefresh();
         void showProgressDialog(String message);
         void hideProgressDialog();
+        void showDataFetchError(String message);
         void showErrorTimeOut();
-        void showDataFetchError(String title, String message);
-        void showDialogError(String title, String message);
         void showExpiredToken(String message);
     }
 
@@ -47,14 +41,10 @@ public interface FragmentSavingsSolicityContract {
 
     interface APIListener{
         <T> void onSuccessTypesOfSavings(Response<BaseResponse<T>> response);
-        <T> void onErrorTypesOfSaving(Response<BaseResponse<T>> response);
-        void onFailureTypesOfSaving(Throwable t, boolean isErrorTimeOut);
-
         <T> void onSuccessSolicitySaving(Response<BaseResponse<T>> response);
-        <T> void onErrorSolicitySaving(Response<BaseResponse<T>> response);
-        void onFailureSolicitySaving(Throwable t, boolean isErrorTimeOut);
-
         <T> void onExpiredToken(Response<BaseResponse<T>> response);
+        <T> void onError(Response<BaseResponse<T>> response);
+        void onFailure(Throwable t, boolean isErrorTimeOut);
     }
 
 }

@@ -13,42 +13,10 @@
         android:gravity="center"
         android:padding="6dp"
         android:text="Transferencias"
-        android:textSize="16sp"
+        android:textSize="17sp"
         android:fontFamily="@font/roboto_light"/>
 
-    <LinearLayout
-        android:id="@+id/layout_circular_progress_bar"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone">
-        <ProgressBar
-            android:id="@+id/circular_progress_bar"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:indeterminateTint="#707070"
-            android:visibility="visible"/>
-        <ImageView
-            android:id="@+id/imageReferesh"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:src="@drawable/icon_refresh"
-            android:visibility="gone"/>
-        <TextView
-            android:id="@+id/text_circular_progress_Bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:gravity="center"
-            android:text="Intentar de nuevo"
-            android:textSize="12sp"
-            android:fontFamily="@font/roboto_light"
-            android:visibility="visible"/>
-    </LinearLayout>
-
     <ScrollView
-        android:id="@+id/contentMakeTransfer"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:fillViewport="true"
@@ -79,7 +47,7 @@
                     android:layout_marginRight="16dp"
                     android:layout_marginTop="10dp"
                     android:text="Tope máximo de transacciones: "
-                    android:textSize="15sp"
+                    android:textSize="17sp"
                     android:fontFamily="@font/roboto_light"/>
 
                 <LinearLayout
@@ -96,7 +64,7 @@
                         android:layout_marginRight="0dp"
                         android:layout_marginTop="2dp"
                         android:text="Valor disponible: "
-                        android:textSize="15sp"
+                        android:textSize="17sp"
                         android:fontFamily="@font/roboto_light"/>
 
                     <TextView
@@ -108,7 +76,7 @@
                         android:layout_marginTop="2dp"
                         android:text="$0.00"
                         android:textStyle="bold"
-                        android:textSize="15sp"
+                        android:textSize="17sp"
                         android:fontFamily="@font/roboto_light"/>
                 </LinearLayout>
 
@@ -117,15 +85,14 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/cuenta_origen"
-                    android:textSize="16sp"
+                    android:textSize="17sp"
                     android:fontFamily="@font/roboto_light"/>
 
                 <Spinner
                     android:id="@+id/spCuentaOrigen"
                     android:background="@drawable/background_spinner"
                     android:layout_width="match_parent"
-                    android:paddingStart="2dp"
-                    android:layout_height="36dp"/>
+                    android:layout_height="38dp"/>
 
                 <TextView
                     android:id="@+id/tv_cuenta_destino"
@@ -133,7 +100,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:text="@string/cuenta_destino"
-                    android:textSize="16sp"
+                    android:textSize="17sp"
                     android:textStyle="bold"
                     android:textColor="#ccc"
                     android:visibility="visible"
@@ -183,7 +150,7 @@
                     android:text="@string/valor_transferencia"
                     android:textColor="#ccc"
                     android:textStyle="bold"
-                    android:textSize="16sp"
+                    android:textSize="17sp"
                     android:fontFamily="@font/roboto_light"/>
 
                 <com.santalu.maskedittext.MaskEditText
@@ -196,7 +163,7 @@
                     android:inputType="number|numberDecimal"
                     android:padding="10dp"
                     android:enabled="false"
-                    android:textSize="16sp"
+                    android:textSize="17sp"
                     android:fontFamily="@font/roboto_light"/>
 
                 <Button
@@ -206,14 +173,11 @@
                     android:layout_gravity="center"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="@string/btn_realizar_transferencia"
-                    android:textSize="16sp"
                     android:enabled="false"
                     android:textStyle="bold"
-                    android:background="@drawable/backgroun_button_rounded"
-                    android:backgroundTint="@color/yellow"
-                    android:paddingHorizontal="25dp"
+                    android:background="@drawable/btn_yellow_internal"
                     android:layout_marginTop="25dp"
-                    android:fontFamily="@font/roboto_light"/>
+                    android:fontFamily="@font/roboto"/>
 
             </LinearLayout>
 

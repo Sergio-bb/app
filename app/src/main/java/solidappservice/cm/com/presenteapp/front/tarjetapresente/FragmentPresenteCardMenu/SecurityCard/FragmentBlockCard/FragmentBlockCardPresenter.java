@@ -28,41 +28,8 @@ public class FragmentBlockCardPresenter implements FragmentBlockCardContract.Pre
 
     @Override
     public void fetchReasonsBlockCard(BaseRequest baseRequest) {
-        view.hideSectionBlockCard();
-        view.showCircularProgressBar("Un momento...");
+        view.showProgressDialog("Un momento...");
         model.getReasonsBlockCard(baseRequest, this);
-    }
-    @Override
-    public <T> void onSuccessReasonsBlockCard(Response<BaseResponse<T>> response) {
-        view.hideCircularProgressBar();
-        try{
-            List<String> motivosBloqueo = (List<String>) response.body().getResultado();
-            view.showSectionBlockCard();
-            view.showReasonsBlockCard(motivosBloqueo);
-        }catch(Exception ex){
-            view.showDialogError("Lo sentimos", "");
-            view.showErrorWithRefresh();
-        }
-    }
-    @Override
-    public <T> void onErrorReasonsBlockCard(Response<BaseResponse<T>> response) {
-        view.hideCircularProgressBar();
-        if(response != null){
-            view.showDialogError("Lo sentimos", response.body().getMensajeErrorUsuario());
-        }else{
-            view.showDialogError("Lo sentimos", "");
-        }
-        view.showErrorWithRefresh();
-    }
-    @Override
-    public void onFailureReasonsBlockCard(Throwable t, boolean isErrorTimeOut) {
-        view.hideCircularProgressBar();
-        if(isErrorTimeOut){
-            view.showErrorTimeOut();
-        }else{
-            view.showDialogError("Lo sentimos", "");
-        }
-        view.showErrorWithRefresh();
     }
 
     @Override
@@ -70,32 +37,28 @@ public class FragmentBlockCardPresenter implements FragmentBlockCardContract.Pre
         view.showProgressDialog("Cancelando tarjeta...");
         model.blockCard(request, this);
     }
+
     @Override
-    public <T> void onSuccessBlockCard(Response<BaseResponse<T>> response) {
+    public <T> void onSuccess(Response<BaseResponse<T>> response) {
         view.hideProgressDialog();
         try{
-            String resulBloqueoTarjeta = (String) response.body().getResultado();
-            view.showResultBlockCard(resulBloqueoTarjeta);
+            if(ArrayList.class.equals(response.body().getResultado().getClass())){
+                List<Object> listValidate = (List<Object>) response.body().getResultado();
+                if(listValidate.size() <= 0){
+                    listValidate.add(new Object());
+                }
+                if(String.class.equals(listValidate.get(0).getClass())){
+                    List<String> motivosBloqueo = (List<String>) response.body().getResultado();
+                    view.showReasonsBlockCard(motivosBloqueo);
+                }
+            }
+
+            if(String.class.equals(response.body().getResultado().getClass())){
+                String resulBloqueoTarjeta = (String) response.body().getResultado();
+                view.showResultBlockCard(resulBloqueoTarjeta);
+            }
         }catch(Exception ex){
-            view.showDataFetchError("Lo sentimos", "");
-        }
-    }
-    @Override
-    public <T> void onErrorBlockCard(Response<BaseResponse<T>> response) {
-        view.hideProgressDialog();
-        if(response != null){
-            view.showDataFetchError("Lo sentimos", response.body().getMensajeErrorUsuario());
-        }else{
-            view.showDataFetchError("Lo sentimos", "");
-        }
-    }
-    @Override
-    public void onFailureBlockCard(Throwable t, boolean isErrorTimeOut) {
-        view.hideProgressDialog();
-        if(isErrorTimeOut){
-            view.showErrorTimeOut();
-        }else{
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
     }
 
@@ -103,6 +66,26 @@ public class FragmentBlockCardPresenter implements FragmentBlockCardContract.Pre
     public <T> void onExpiredToken(Response<BaseResponse<T>> response) {
         view.hideProgressDialog();
         view.showExpiredToken(response.body().getErrorToken());
+    }
+
+    @Override
+    public <T> void onError(Response<BaseResponse<T>> response) {
+        view.hideProgressDialog();
+        if(response != null){
+            view.showDataFetchError(response.body().getMensajeErrorUsuario());
+        }else{
+            view.showDataFetchError("");
+        }
+    }
+
+    @Override
+    public void onFailure(Throwable t, boolean isErrorTimeOut) {
+        view.hideProgressDialog();
+        if(isErrorTimeOut){
+            view.showErrorTimeOut();
+        }else{
+            view.showDataFetchError("");
+        }
     }
 
 }

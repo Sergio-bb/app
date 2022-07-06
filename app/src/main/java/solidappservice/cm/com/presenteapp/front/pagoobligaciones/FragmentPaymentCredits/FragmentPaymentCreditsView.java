@@ -1,26 +1,20 @@
 package solidappservice.cm.com.presenteapp.front.pagoobligaciones.FragmentPaymentCredits;
 
-import android.app.Dialog;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RadioButton;
-import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -42,7 +36,7 @@ import butterknife.OnTextChanged;
 import solidappservice.cm.com.presenteapp.R;
 import solidappservice.cm.com.presenteapp.adapters.pagoobligaciones.ProductoSpinnerAdapter;
 import solidappservice.cm.com.presenteapp.entities.base.BaseRequest;
-import solidappservice.cm.com.presenteapp.entities.estadocuenta.response.ResponseProducto;
+import solidappservice.cm.com.presenteapp.entities.estadocuenta.response.ResponseProductos;
 import solidappservice.cm.com.presenteapp.entities.pagoobligaciones.request.RequestEnviarPago;
 import solidappservice.cm.com.presenteapp.entities.parametrosgenerales.ResponseMensajesRespuesta;
 import solidappservice.cm.com.presenteapp.front.base.ActivityBase;
@@ -59,10 +53,10 @@ public class FragmentPaymentCreditsView extends Fragment implements FragmentPaym
     private FragmentPaymentCreditsPresenter presenter;
     private ActivityBase context;
     private GlobalState state;
-//    private ProgressDialog pd;
-    private Dialog pd;
+    private ProgressDialog pd;
     private FirebaseAnalytics firebaseAnalytics;
-    private List<ResponseProducto> productsToPay;
+    private List<ResponseProductos> productsToPay;
+    private boolean isProcessPayment;
     int acutal=0;
     int anterior=0;
 
@@ -80,17 +74,8 @@ public class FragmentPaymentCreditsView extends Fragment implements FragmentPaym
     Spinner spinnerProductoDebitar;
     @BindView(R.id.btnAceptar)
     Button btnAceptar;
-
-    @BindView(R.id.contentPagoObligaciones)
-    ScrollView contentPagoObligaciones;
-    @BindView(R.id.layout_circular_progress_bar)
-    LinearLayout layoutCircularProgressBar;
-    @BindView(R.id.circular_progress_bar)
-    ProgressBar circularProgressBar;
-    @BindView(R.id.text_circular_progress_Bar)
-    TextView textCircularProgressBar;
-    @BindView(R.id.imageReferesh)
-    ImageView buttonReferesh;
+    //private RadioButton rbValCuota;
+    //private TextView lblCuotaValue;
 
     @Override
     public void onAttach(Context context) {
@@ -114,12 +99,7 @@ public class FragmentPaymentCreditsView extends Fragment implements FragmentPaym
         presenter = new FragmentPaymentCreditsPresenter(this, new FragmentPaymentCreditsModel());
         context = (ActivityBase) getActivity();
         state = context.getState();
-        fetchPendingPayments();
-    }
-
-    @OnClick(R.id.imageReferesh)
-    public void onClickRefresh(){
-        fetchPendingPayments();
+        pd = new ProgressDialog(context);
     }
 
     @Override
@@ -128,12 +108,19 @@ public class FragmentPaymentCreditsView extends Fragment implements FragmentPaym
         GlobalState state = context.getState();
         if(state == null || state.getUsuario() == null){
             context.salir();
+        }else{
+            if(!isProcessPayment){
+                fetchPendingPayments();
+            }
+//            Usuario usuario = state.getUsuario();
+//            new EstadoCuentaTask().execute(usuario.cedula, usuario.token);
         }
     }
 
 
     @OnClick(R.id.btnAceptar)
     public void onClickAceptar(View v) {
+//        enviarPago();
         validateDataPayment();
     }
 
@@ -167,6 +154,7 @@ public class FragmentPaymentCreditsView extends Fragment implements FragmentPaym
             textToEdit = !TextUtils.isEmpty(textToEdit) ? formato.format(Double.parseDouble(textToEdit)) : "";
             txtValorApagar.setText(textToEdit);
             txtValorApagar.setSelection(textToEdit.length());
+//            _formter(textToEdit.length(), textToEdit, txtValorApagar);
         }
     }
 
@@ -190,6 +178,7 @@ public class FragmentPaymentCreditsView extends Fragment implements FragmentPaym
 
     @OnItemSelected(R.id.spinnerProducto)
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//        validarPagoProducto(position);
         showPaymentDetails(position);
     }
 
@@ -203,7 +192,7 @@ public class FragmentPaymentCreditsView extends Fragment implements FragmentPaym
     @Override
     public void showPaymentDetails(int positionPayment) {
         if (positionPayment > 0) {
-            ResponseProducto producto = productsToPay.get(positionPayment);
+            ResponseProductos producto = productsToPay.get(positionPayment);
             enabledCheckboxSaldo(true);
             enabledCheckboxOtroValor(true);
             lblSaldoValue.setText(context.getMoneda(producto.getV_saldo()));
@@ -230,35 +219,28 @@ public class FragmentPaymentCreditsView extends Fragment implements FragmentPaym
                     state.getUsuario().getToken()
             ));
         }catch (Exception ex){
-            showDataFetchError("Lo sentimos", "");
+            showDataFetchError("");
         }
     }
 
     @Override
     public void showResultPendingPayments(){
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText("No es posible realizar el pago");
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText("Tienes un pago en proceso, inténtalo de nuevo más tarde.");
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle("No es posible realizar el pago");
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage("Tienes un pago en proceso, inténtalo de nuevo más tarde.");
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                dialog.dismiss();
+            public void onClick(DialogInterface dialog, int which) {
+                isProcessPayment = false;
                 txtValorApagar.setText("");
                 txtValorApagar.setEnabled(false);
-                enabledCheckboxSaldo(false);
-                enabledCheckboxOtroValor(false);
-                state.getmTabHost().setCurrentTab(ActivityTabsView.TAB_1_TRANSACTIONS_MENU_TAG);
+                context.getState().getmTabHost().setCurrentTab(ActivityTabsView.TAB_1_TRANSACTIONS_MENU_TAG);
+                dialog.dismiss();
             }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
@@ -270,21 +252,20 @@ public class FragmentPaymentCreditsView extends Fragment implements FragmentPaym
                     state.getUsuario().getToken()
             ));
         }catch (Exception ex){
-            showDialogError("Lo sentimos", "");
-            showErrorWithRefresh();
+            showDataFetchError("");
         }
     }
 
     @Override
-    public void showProductstoDebit(List<ResponseProducto> products){
+    public void showProductstoDebit(List<ResponseProductos> products){
         state.setProductos(products);
-        List<ResponseProducto> productsToDebit = new ArrayList<>();
-        ResponseProducto p = new ResponseProducto();
+        List<ResponseProductos> productsToDebit = new ArrayList<>();
+        ResponseProductos p = new ResponseProductos();
         p.setN_produc("Selecciona la cuenta");
         p.setN_tipodr("");
         p.setA_numdoc("");
         productsToDebit.add(0, p);
-        for (ResponseProducto pro : products) {
+        for (ResponseProductos pro : products) {
             if (pro.getI_debito() != null && pro.getI_debito().equals("Y") && pro.getV_saldo() > 0) {
                 productsToDebit.add(pro);
             }
@@ -295,24 +276,20 @@ public class FragmentPaymentCreditsView extends Fragment implements FragmentPaym
     }
 
     @Override
-    public void showProductstoPay(List<ResponseProducto> products){
+    public void showProductstoPay(List<ResponseProductos> products){
         productsToPay = new ArrayList<>();
-        ResponseProducto p = new ResponseProducto();
+        ResponseProductos p = new ResponseProductos();
         p.setN_produc("Selecciona el producto");
         p.setN_tipodr("");
         p.setA_numdoc("");
         productsToPay.add(0, p);
-        for (ResponseProducto pro : products) {
+        for (ResponseProductos pro : products) {
             if (pro.getI_debito() != null && pro.getI_debito().equals("N")) {
                 productsToPay.add(pro);
             }
         }
-        if(productsToPay != null && productsToPay.size()>1){
-            ProductoSpinnerAdapter adapter = new ProductoSpinnerAdapter(context, productsToPay, false);
-            spinnerProducto.setAdapter(adapter);
-        }else {
-            showDataFetchError("No tienes pagos pendientes", "En este momento no tienes pagos pendientes");
-        }
+        ProductoSpinnerAdapter adapter = new ProductoSpinnerAdapter(context, productsToPay, false);
+        spinnerProducto.setAdapter(adapter);
     }
 
     @Override
@@ -322,36 +299,36 @@ public class FragmentPaymentCreditsView extends Fragment implements FragmentPaym
             boolean i_pagsup;
 
             if (posicion <= 0) {
-                showDataFetchError("Datos incpmpletos", "Selecciona el producto a pagar");
+                context.makeErrorDialog("Selecciona el producto a pagar");
                 return;
             }
 
-            final ResponseProducto productoApagar = (ResponseProducto) spinnerProducto.getSelectedItem();
+            final ResponseProductos productoApagar = (ResponseProductos) spinnerProducto.getSelectedItem();
             if (productoApagar == null) {
-                showDataFetchError("Datos incpmpletos", "Selecciona el producto a pagar");
+                context.makeErrorDialog("Selecciona el producto a pagar");
                 return;
             }
 
             if (!rbSaldo.isChecked() && !rbOtroVal.isChecked()) {
-                showDataFetchError("Datos incpmpletos", "Selecciona una opción de pago");
+                context.makeErrorDialog("Selecciona una opción de pago");
                 return;
             }
 
             Editable valor = txtValorApagar.getText();
             if (valor == null || TextUtils.isEmpty(valor)) {
-                showDataFetchError("Datos incpmpletos", "Ingresa el valor a pagar");
+                context.makeErrorDialog("Ingresa el valor a pagar");
                 return;
             }
 
             posicion = spinnerProductoDebitar.getSelectedItemPosition();
             if (posicion <= 0) {
-                showDataFetchError("Datos incpmpletos", "Selecciona la cuenta a debitar");
+                context.makeErrorDialog("Selecciona la cuenta a debitar");
                 return;
             }
 
-            final ResponseProducto productoAdebitar = (ResponseProducto) spinnerProductoDebitar.getSelectedItem();
+            final ResponseProductos productoAdebitar = (ResponseProductos) spinnerProductoDebitar.getSelectedItem();
             if (productoAdebitar == null) {
-                showDataFetchError("Datos incpmpletos", "Selecciona la cuenta a debitar");
+                context.makeErrorDialog("Selecciona la cuenta a debitar");
                 return;
             }
 
@@ -367,7 +344,7 @@ public class FragmentPaymentCreditsView extends Fragment implements FragmentPaym
                 try {
                     d_valor = Long.parseLong(valor.toString());
                 } catch (Exception ex) {
-                    showDataFetchError("Datos incpmpletos", "Verifica el valor a pagar, ingrese un valor correcto");
+                    context.makeErrorDialog("Verifica el valor a pagar, ingrese un valor correcto");
                     return;
                 }
             }
@@ -378,14 +355,14 @@ public class FragmentPaymentCreditsView extends Fragment implements FragmentPaym
                 if (!i_pagsup) {
 
                     if (d_valor > productoApagar.getV_saldo()) {
-                        showDataFetchError("Datos incpmpletos", "Ingresa un valor a pagar inferior o igual al saldo");
+                        context.makeErrorDialog("Ingresa un valor a pagar inferior o igual al saldo");
                         return;
                     }
                 }
             }
 
             if (d_valor > productoAdebitar.getV_saldo()) {
-                showDataFetchError("Saldo insuficiente", "Tu saldo en esta cuenta es insuficiente para realizar este abono");
+                context.makeErrorDialog("Tu saldo en esta cuenta es insuficiente para realizar este abono");
                 return;
             }
 
@@ -393,43 +370,37 @@ public class FragmentPaymentCreditsView extends Fragment implements FragmentPaym
             showDialogConfirmPayment(_valorAbono, productoApagar, productoAdebitar);
 
         } catch (Exception e){
-            showDataFetchError("Lo sentimos", "");
+            context.makeErrorDialog(e.getMessage());
         }
     }
 
     @Override
-    public void showDialogConfirmPayment(Double paymentValue, ResponseProducto productToPay, ResponseProducto productoToDebit){
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_confirm);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText("¿Confirma tu solicitud?");
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText("Tu abono será de " + context.getMoneda(paymentValue));
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.buttonClose);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
+    public void showDialogConfirmPayment(Double paymentValue, ResponseProductos productToPay, ResponseProductos productoToDebit){
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage("Tu abono será de " + context.getMoneda(paymentValue));
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                try {
+                    makePayment(paymentValue, productToPay, productoToDebit);
+                } catch (Exception e) {
+                    context.makeErrorDialog(e.getMessage());
+                }
             }
         });
-        Button buttonAceptar = (Button) dialog.findViewById(R.id.btnAceptar);
-        buttonAceptar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-                makePayment(paymentValue, productToPay, productoToDebit);
+        d.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
             }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
-    public void makePayment(Double paymentValue, ResponseProducto productToPay, ResponseProducto productoToDebit){
+    public void makePayment(Double paymentValue, ResponseProductos productToPay, ResponseProductos productoToDebit){
         try{
+            isProcessPayment = true;
             Encripcion encripcion = Encripcion.getInstance();
             presenter.makePayment(new RequestEnviarPago(
                     encripcion.encriptar(state.getUsuario().getCedula()),
@@ -445,61 +416,28 @@ public class FragmentPaymentCreditsView extends Fragment implements FragmentPaym
             ));
         }catch (Exception ex){
             enabledAcceptButton();
-            showDataFetchError("Lo sentimos", "");
+            showDataFetchError("Upps, se ha producido un error, inténtalo nuevamente en unos minutos.");
         }
     }
 
     @Override
     public void showResultPayment(String resultPayment){
-        if(!TextUtils.isEmpty(resultPayment)){
-            final Dialog dialog = new Dialog(context);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.setContentView(R.layout.pop_up_success);
-            dialog.setCancelable(false);
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            TextView titleMessage = (TextView) dialog.findViewById(R.id.titleSuccess);
-            titleMessage.setText("Pago exitoso");
-            TextView contentMessage = (TextView) dialog.findViewById(R.id.contentSuccess);
-            contentMessage.setText(resultPayment);
-            ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.buttonClose);
-            buttonClose.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    txtValorApagar.setText("");
-                    txtValorApagar.setEnabled(false);
-                    enabledCheckboxSaldo(false);
-                    enabledCheckboxOtroValor(false);
-                    dialog.dismiss();
-                    context.getState().getmTabHost().setCurrentTab(ActivityTabsView.TAB_1_TRANSACTIONS_MENU_TAG);
-                }
-            });
-            dialog.show();
-        }else{
-            final Dialog dialog = new Dialog(context);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.setContentView(R.layout.pop_up_error);
-            dialog.setCancelable(false);
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-            titleMessage.setText("Lo sentimos");
-            TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-            contentMessage.setText("Tu pago no se ha realizado con exito, inténtalo nuevamente en unos minutos.");
-            ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-            buttonClose.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    txtValorApagar.setText("");
-                    txtValorApagar.setEnabled(false);
-                    enabledCheckboxSaldo(false);
-                    enabledCheckboxOtroValor(false);
-                    dialog.dismiss();
-                    state.getmTabHost().setCurrentTab(ActivityTabsView.TAB_1_TRANSACTIONS_MENU_TAG);
-                }
-            });
-            dialog.show();
-        }
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(resultPayment);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                isProcessPayment = false;
+                txtValorApagar.setText("");
+                txtValorApagar.setEnabled(false);
+                enabledCheckboxSaldo(false);
+                enabledCheckboxOtroValor(false);
+                context.getState().getmTabHost().setCurrentTab(ActivityTabsView.TAB_1_TRANSACTIONS_MENU_TAG);
+            }
+        });
+        d.show();
     }
 
     @Override
@@ -521,88 +459,18 @@ public class FragmentPaymentCreditsView extends Fragment implements FragmentPaym
         btnAceptar.setEnabled(true);
     }
 
-
-    @Override
-    public void showSectionPaymentsCredits(){
-        contentPagoObligaciones.setVisibility(View.VISIBLE);
-    }
-    @Override
-    public void hideSectionPaymentsCredits(){
-        contentPagoObligaciones.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showCircularProgressBar(String textProgressBar) {
-        layoutCircularProgressBar.setVisibility(View.VISIBLE);
-        textCircularProgressBar.setText(textProgressBar);
-    }
-
-    @Override
-    public void hideCircularProgressBar() {
-        layoutCircularProgressBar.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showErrorWithRefresh(){
-        contentPagoObligaciones.setVisibility(View.GONE);
-        layoutCircularProgressBar.setVisibility(View.VISIBLE);
-        circularProgressBar.setVisibility(View.GONE);
-        textCircularProgressBar.setText("Ha ocurrido un error, inténtalo de nuevo ");
-        buttonReferesh.setVisibility(View.VISIBLE);
-    }
-
     @Override
     public void showProgressDialog(String message) {
-        pd = new Dialog(context);
-        pd.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        pd.setCanceledOnTouchOutside(false);
-        pd.setContentView(R.layout.pop_up_loading);
+        pd.setTitle(context.getResources().getString(R.string.app_name));
+        pd.setMessage(message);
+        pd.setIcon(R.mipmap.icon_presente);
         pd.setCancelable(false);
-        pd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView contentMessage = (TextView) pd.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
         pd.show();
     }
 
     @Override
     public void hideProgressDialog() {
         pd.dismiss();
-    }
-
-    @Override
-    public void showDialogError(String title, String message){
-        if(TextUtils.isEmpty(message)){
-            message = "Ha ocurrido un error. Intenta de nuevo y si el error persiste, contacta a PRESENTE.";
-            if(state != null && state.getMensajesRespuesta() != null && state.getMensajesRespuesta().size()>0){
-                for(ResponseMensajesRespuesta rm : state.getMensajesRespuesta()){
-                    if(rm.getIdMensaje() == 7){
-                        message = rm.getMensaje();
-                    }
-                }
-            }
-        }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText(title);
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-                txtValorApagar.setText("");
-                txtValorApagar.setEnabled(false);
-                enabledCheckboxSaldo(false);
-                enabledCheckboxOtroValor(false);
-            }
-        });
-        dialog.show();
     }
 
     @Override
@@ -615,20 +483,15 @@ public class FragmentPaymentCreditsView extends Fragment implements FragmentPaym
                 }
             }
         }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText("Lo sentimos");
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(DialogInterface dialog, int which) {
+                isProcessPayment = false;
                 txtValorApagar.setText("");
                 txtValorApagar.setEnabled(false);
                 enabledCheckboxSaldo(false);
@@ -637,11 +500,11 @@ public class FragmentPaymentCreditsView extends Fragment implements FragmentPaym
                 dialog.dismiss();
             }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
-    public void showDataFetchError(String title, String message){
+    public void showDataFetchError(String message) {
         if(TextUtils.isEmpty(message)){
             message = "Ha ocurrido un error. Intenta de nuevo y si el error persiste, contacta a PRESENTE.";
             if(state != null && state.getMensajesRespuesta() != null && state.getMensajesRespuesta().size()>0){
@@ -652,20 +515,15 @@ public class FragmentPaymentCreditsView extends Fragment implements FragmentPaym
                 }
             }
         }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText(title);
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(DialogInterface dialog, int which) {
+                isProcessPayment = false;
                 txtValorApagar.setText("");
                 txtValorApagar.setEnabled(false);
                 enabledCheckboxSaldo(false);
@@ -674,25 +532,431 @@ public class FragmentPaymentCreditsView extends Fragment implements FragmentPaym
                 dialog.dismiss();
             }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
     public void showExpiredToken(String message) {
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_closedsession);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        Button buttonClosedSession = (Button) dialog.findViewById(R.id.btnVolverAIngresar);
-        buttonClosedSession.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle("Sesión finalizada");
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
                 context.salir();
             }
         });
-        dialog.show();
+        d.show();
     }
+
+
+
+//
+//    private void validarPagoProducto(int posicion) {
+//        if (posicion > 0) {
+//            ResponseProducto producto = productosApagar.get(posicion);
+//            lblSaldoValue.setText(context.getMoneda(producto.getV_saldo()));
+//            /*if (producto.v_vencid > 0) {
+//                lblCuotaValue.setText(context.getMoneda(producto.v_vencid));
+//            } else {
+//                lblCuotaValue.setText(context.getMoneda(producto.v_cuota));
+//            }*/
+//
+//            txtValorApagar.setText("");
+//            txtValorApagar.setEnabled(false);
+//            rbSaldo.setChecked(false);
+//            //rbValCuota.setChecked(false);
+//            rbOtroVal.setChecked(false);
+//            spinnerProductoDebitar.setEnabled(true);
+//        } else {
+//            txtValorApagar.setText("");
+//            txtValorApagar.setEnabled(false);
+//            //lblCuotaValue.setText("");
+//            lblSaldoValue.setText("");
+//        }
+//    }
+//
+//    class EstadoCuentaTask extends AsyncTask<String, String, String> {
+//
+//        String jsonEstadoCuenta = null;
+//        String jsonPagosPendientes = null;
+//
+//        @Override
+//        protected void onPreExecute() {
+//            pd.setTitle(context.getResources().getString(R.string.app_name));
+//            pd.setMessage("Actualizando estado de cuenta...");
+//            pd.setIcon(R.mipmap.icon_presente);
+//            pd.setCancelable(false);
+//            pd.show();
+//        }
+//
+//        @Override
+//        protected String doInBackground(String... params) {
+//            try {
+//                NetworkHelper networkHelper = new NetworkHelper();
+//                Encripcion encripcion = Encripcion.getInstance();
+//                JSONObject param = new JSONObject();
+//                param.put("cedula", encripcion.encriptar(params[0]));
+//                param.put("token", params[1]);
+//
+////                jsonEstadoCuenta = networkHelper.writeService(param, SincroHelper.ESTADO_CUENTA);
+//                jsonEstadoCuenta = networkHelper.writeService(param, SincroHelper.CONSULTAR_CUENTAS);
+//                jsonPagosPendientes = networkHelper.writeService(param, SincroHelper.CONSULTAR_ABONOS_CREDITO);
+//
+//                return "OK";
+//            } catch (Exception e) {
+//                return e.getMessage();
+//            }
+//        }
+//
+//        @Override
+//        protected void onProgressUpdate(String... values) {
+//            pd.setMessage(values[0]);
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            super.onPostExecute(result);
+//            pd.dismiss();
+//            procesarJsonRespuesta(jsonEstadoCuenta, jsonPagosPendientes);
+//        }
+//    }
+//
+//    private void procesarJsonRespuesta(String jsonEstadoCuenta, String jsonPagosPendientes) {
+//        try {
+//
+//            ArrayList<AbonoCreditos> abonos = SincroHelper.procesarJsonObtenerAbonosPendientes(jsonPagosPendientes);
+//
+//            if(abonos != null && abonos.size()>0){
+//                AlertDialog.Builder d = new AlertDialog.Builder(context);
+//                d.setTitle("No es posible realizar el pago");
+//                d.setIcon(R.mipmap.icon_presente);
+//                d.setMessage("Tienes un pago en proceso, inténtalo de nuevo más tarde.");
+//                d.setCancelable(false);
+//                d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        context.getState().getmTabHost().setCurrentTab(1);
+//                        dialog.dismiss();
+//                    }
+//                });
+//                d.show();
+//            }else {
+//                ArrayList<ResponseProducto> productos = SincroHelper.procesarJsonEstadoCuenta(jsonEstadoCuenta);
+//                cargarProductosApagar(productos);
+//                cargarProductosAdebitar(productos);
+//                context.getState().setProductos(productos);
+//            }
+//
+//        } catch (ErrorTokenException e) {
+//            AlertDialog.Builder d = new AlertDialog.Builder(context);
+//            d.setTitle("Sesión finalizada");
+//            d.setIcon(R.mipmap.icon_presente);
+//            d.setMessage(e.getMessage());
+//            d.setCancelable(false);
+//            d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface dialog, int id) {
+//                    context.salir();
+//                }
+//            });
+//            d.show();
+//        } catch (Exception e) {
+//            context.makeErrorDialog(e.getMessage());
+//        }
+//    }
+//
+//    private void cargarProductosApagar(ArrayList<ResponseProducto> productos) {
+//        productosApagar = new ArrayList<>();
+//        ResponseProducto p = new ResponseProducto();
+//        p.setN_produc("Selecciona el producto");
+//        p.setN_tipodr("");
+//        p.setA_numdoc("");
+//        productosApagar.add(0, p);
+//
+//        for (ResponseProducto pro : productos) {
+//            if (pro.getI_debito() != null && pro.getI_debito().equals("N")) {
+//                productosApagar.add(pro);
+//            }
+//        }
+//
+//        ProductoSpinnerAdapter adapter = new ProductoSpinnerAdapter(context, productosApagar, false);
+//        spinnerProducto.setAdapter(adapter);
+//    }
+//
+//    private void cargarProductosAdebitar(ArrayList<ResponseProducto> productos) {
+//        ArrayList<ResponseProducto> productosDebitar = new ArrayList<>();
+//        ResponseProducto p = new ResponseProducto();
+//        p.setN_produc("Selecciona la cuenta");
+//        p.setN_tipodr("");
+//        p.setA_numdoc("");
+//        productosDebitar.add(0, p);
+//
+//        for (ResponseProducto pro : productos) {
+//            if (pro.getI_debito() != null && pro.getI_debito().equals("Y") && pro.getV_saldo() > 0) {
+//                productosDebitar.add(pro);
+//            }
+//        }
+//
+//        ProductoSpinnerAdapter adapter = new ProductoSpinnerAdapter(context, productosDebitar, true);
+//        spinnerProductoDebitar.setAdapter(adapter);
+//        spinnerProductoDebitar.setEnabled(false);
+//    }
+//
+//    private void enviarPago() {
+//        try {
+//
+//            int posicion = spinnerProducto.getSelectedItemPosition();
+//            boolean i_pagsup;
+//
+//            if (posicion <= 0) {
+//                context.makeErrorDialog("Selecciona el producto a pagar");
+//                return;
+//            }
+//
+//            final ResponseProducto productoApagar = (ResponseProducto) spinnerProducto.getSelectedItem();
+//            if (productoApagar == null) {
+//                context.makeErrorDialog("Selecciona el producto a pagar");
+//                return;
+//            }
+//
+//            /*if (!rbSaldo.isChecked() && !rbValCuota.isChecked() && !rbOtroVal.isChecked()) {
+//                context.makeErrorDialog("Selecciona una opción de pago");
+//                return;
+//            }*/
+//
+//            if (!rbSaldo.isChecked() && !rbOtroVal.isChecked()) {
+//                context.makeErrorDialog("Selecciona una opción de pago");
+//                return;
+//            }
+//
+//            Editable valor = txtValorApagar.getText();
+//            if (valor == null || TextUtils.isEmpty(valor)) {
+//                context.makeErrorDialog("Ingresa el valor a pagar");
+//                return;
+//            }
+//
+//            posicion = spinnerProductoDebitar.getSelectedItemPosition();
+//            if (posicion <= 0) {
+//                context.makeErrorDialog("Selecciona la cuenta a debitar");
+//                return;
+//            }
+//
+//            final ResponseProducto productoAdebitar = (ResponseProducto) spinnerProductoDebitar.getSelectedItem();
+//            if (productoAdebitar == null) {
+//                context.makeErrorDialog("Selecciona la cuenta a debitar");
+//                return;
+//            }
+//
+//
+//            String v_cuota = txtValorApagar.getText().toString();
+//            v_cuota = v_cuota.replace(",", "");
+//            v_cuota = v_cuota.replace(".", "");
+//            v_cuota = v_cuota.replace("$", "");
+//
+//
+//            long d_valor;
+//            try {
+//                d_valor = Long.parseLong(v_cuota);
+//            } catch (Exception e) {
+//                try {
+//                    d_valor = Long.parseLong(valor.toString());
+//                } catch (Exception ex) {
+//                    context.makeErrorDialog("Verifica el valor a pagar, ingrese un valor correcto");
+//                    return;
+//                }
+//            }
+//
+//            i_pagsup = productoApagar.getI_pagsup().equals("Y");
+//
+//
+//            if (rbOtroVal.isChecked()) {
+//                if (!i_pagsup) {
+//
+//                    /*if (d_valor > productoApagar.v_cuota && productoApagar.v_vencid <= 0) {
+//                        context.makeErrorDialog("Ingresa un valor a pagar inferior o igual a la cuota");
+//                        return;
+//                    } else if (productoApagar.v_vencid > 0 && d_valor > productoApagar.v_vencid) {
+//                        context.makeErrorDialog("Ingresa un valor a pagar inferior o igual a la cuota");
+//                        return;
+//                    }*/
+//                    if (d_valor > productoApagar.getV_saldo()) {
+//                        context.makeErrorDialog("Ingresa un valor a pagar inferior o igual al saldo");
+//                        return;
+//                    }
+//                }
+//            }
+//
+//            if (d_valor > productoAdebitar.getV_saldo()) {
+//                context.makeErrorDialog("Tu saldo en esta cuenta es insuficiente para realizar este abono");
+//                return;
+//            }
+//
+//            final double _valorAbono = d_valor;
+//            AlertDialog.Builder d = new AlertDialog.Builder(context);
+//            d.setTitle(context.getResources().getString(R.string.app_name));
+//            d.setIcon(R.mipmap.icon_presente);
+//            d.setMessage("Tu abono será de " + context.getMoneda(_valorAbono));
+//            d.setCancelable(false);
+//            d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface dialog, int id) {
+//
+//                    try {
+//                        Encripcion encripcion = Encripcion.getInstance();
+//                        JSONObject pago = new JSONObject();
+//                        pago.put("id_dispositivo", context.obtenerIdDispositivo());
+//                        pago.put("v_valor", _valorAbono);
+//                        pago.put("k_tipodr", productoApagar.getK_tipodr());
+//                        pago.put("n_tipodr", productoApagar.getN_tipodr());
+//                        pago.put("a_tipodr", productoApagar.getA_tipodr());
+//                        pago.put("a_numdoc", encripcion.encriptar(productoApagar.getA_numdoc()));
+//                        pago.put("n_produc", productoApagar.getN_produc());
+//                        pago.put("a_numcta", encripcion.encriptar(productoAdebitar.getA_numdoc()));//a_numcta = a_numdoc en origen
+////                        pago.put("token", context.getState().getUsuario().token + productoAdebitar.k_tipodr);
+//                        pago.put("token", context.getState().getUsuario().token);
+//                        pago.put("cedula", encripcion.encriptar(context.getState().getUsuario().cedula));
+//                        new EnviarAbonoTask().execute(pago);
+//
+//                    } catch (Exception e) {
+//                        context.makeErrorDialog(e.getMessage());
+//                    }
+//                }
+//            });
+//            d.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface dialog, int id) {
+//                }
+//            });
+//            d.show();
+//        } catch (Exception e){
+//            context.makeErrorDialog(e.getMessage());
+//        }
+//    }
+//
+//
+//    class EnviarAbonoTask extends AsyncTask<JSONObject, String, String> {
+//
+//        @Override
+//        protected void onPreExecute() {
+//            pd.setTitle(context.getResources().getString(R.string.app_name));
+//            pd.setMessage("Realizando el pago...");
+//            pd.setIcon(R.mipmap.icon_presente);
+//            pd.setCancelable(false);
+//            pd.show();
+//        }
+//
+//        @Override
+//        protected String doInBackground(JSONObject... params) {
+//            try {
+//                NetworkHelper networkHelper = new NetworkHelper();
+//                return networkHelper.writeService(params[0], SincroHelper.ABONO_CREDITO);
+//            } catch (Exception e) {
+//                return e.getMessage();
+//            }
+//        }
+//
+//        @Override
+//        protected void onProgressUpdate(String... values) {
+//            pd.setMessage(values[0]);
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            super.onPostExecute(result);
+//            pd.dismiss();
+//            procesarResultAbono(result);
+//        }
+//    }
+//
+//    private void procesarResultAbono(String result) {
+//        try {
+//            result = SincroHelper.procesarJsonCrearSolicitudAhorro(result);
+//            AlertDialog.Builder d = new AlertDialog.Builder(context);
+//            d.setTitle(context.getResources().getString(R.string.app_name));
+//            d.setIcon(R.mipmap.icon_presente);
+//            d.setMessage(result);
+//            d.setCancelable(false);
+//            d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface dialog, int id) {
+//                    context.getState().getmTabHost().setCurrentTab(1);
+//                }
+//            });
+//            d.show();
+//        } catch (ErrorTokenException e) {
+//            AlertDialog.Builder d = new AlertDialog.Builder(context);
+//            d.setTitle("Sesión finalizada");
+//            d.setIcon(R.mipmap.icon_presente);
+//            d.setMessage(e.getMessage());
+//            d.setCancelable(false);
+//            d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface dialog, int id) {
+//                    context.salir();
+//                }
+//            });
+//            d.show();
+//        } catch (Exception e) {
+//            context.makeErrorDialog(e.getMessage());
+//        }
+//    }
+
+    //    public void _formter(int len, String textToEdit, EditText txtEdit){
+//        DecimalFormat fr;
+//        DecimalFormatSymbols separadoresPersonalizados = new DecimalFormatSymbols();
+//        separadoresPersonalizados.setDecimalSeparator(',');
+//
+//        switch (len){
+//
+//            case 1:
+//                fr = new DecimalFormat("#", separadoresPersonalizados);
+//                String fa = fr.format(Long.parseLong(textToEdit));
+//                txtEdit.setText(fa);
+//                break;
+//
+//            case 2:
+//                fr = new DecimalFormat("##", separadoresPersonalizados);
+//                txtEdit.setText( fr.format(Long.parseLong(textToEdit)));
+//                break;
+//
+//            case 3:
+//                fr = new DecimalFormat("###", separadoresPersonalizados);
+//                txtEdit.setText( fr.format(Long.parseLong(textToEdit)));
+//                break;
+//
+//            case 4:
+//                fr = new DecimalFormat("#,###", separadoresPersonalizados);
+//                txtEdit.setText( fr.format(Long.parseLong(textToEdit)));
+//                break;
+//
+//            case 5:
+//                fr = new DecimalFormat("##,###", separadoresPersonalizados);
+//                txtEdit.setText( fr.format(Long.parseLong(textToEdit)));
+//                break;
+//
+//            case 6:
+//                fr = new DecimalFormat("###,###", separadoresPersonalizados);
+//                txtEdit.setText( fr.format(Long.parseLong(textToEdit)));
+//                break;
+//
+//            case 7:
+//                fr = new DecimalFormat("#,###,###", separadoresPersonalizados);
+//                txtEdit.setText( fr.format(Long.parseLong(textToEdit)));
+//                break;
+//
+//            case 8:
+//                fr = new DecimalFormat("##,###,###", separadoresPersonalizados);
+//                txtEdit.setText( fr.format(Long.parseLong(textToEdit)));
+//                break;
+//
+//            case 9:
+//                fr = new DecimalFormat("###,###,###", separadoresPersonalizados);
+//                txtEdit.setText( fr.format(Long.parseLong(textToEdit)));
+//                break;
+//
+//            case 10:
+//                fr = new DecimalFormat("#,###,###,###", separadoresPersonalizados);
+//                txtEdit.setText( fr.format(Long.parseLong(textToEdit)));
+//                break;
+//        }
+//
+//        txtEdit.setSelection(txtEdit.length());
+//    }
 }

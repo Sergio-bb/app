@@ -31,7 +31,7 @@ public class ActivityPortfolioProductsExpandedPresenter implements ActivityPortf
     }
 
     @Override
-    public void onFailure(Throwable t, boolean isErrorTimeOut) {
+    public void onFailure(Throwable t) {
     }
 
 }

@@ -1,5 +1,7 @@
 package solidappservice.cm.com.presenteapp.front.bottomnavigationbar.ActivityGeoreferencing.ActivityLocationsGms;
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -22,7 +24,7 @@ public class ActivityLocationsGmsModel implements ActivityLocationsGmsContract.M
     public void getLocationsAgencies(final ActivityLocationsGmsContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 

@@ -1,9 +1,7 @@
 package solidappservice.cm.com.presenteapp.front.tarjetapresente.FragmentPresenteCardMenu.SecurityCard.FragmentActiveCard;
 
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
-import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -22,15 +20,10 @@ public class FragmentActiveCardModel implements FragmentActiveCardContract.Model
     @Override
     public void activateCard(RequestActivarTarjeta body, final FragmentActiveCardContract.APIListener listener) {
         try {
-            OkHttpClient client = new OkHttpClient().newBuilder()
-                    .readTimeout(60, TimeUnit.SECONDS)
-                    .connectTimeout(60, TimeUnit.SECONDS)
-                    .build();
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
-                    .client(client)
-                    .build()                    ;
+                    .build();
 
             ApiPresente service = retrofit.create(ApiPresente.class);
             Call<BaseResponse<String>> call = service.activateCard(body);
@@ -39,7 +32,6 @@ public class FragmentActiveCardModel implements FragmentActiveCardContract.Model
                 @Override
                 public void onResponse(Call<BaseResponse<String>> call, Response<BaseResponse<String>> response) {
                     if (response.isSuccessful()) {
-                        assert response.body() != null;
                         if(response.body().getErrorToken() != null && !response.body().getErrorToken().isEmpty()){
                             listener.onExpiredToken(response);
                         }else if(response.body().getMensajeErrorUsuario() != null && !response.body().getMensajeErrorUsuario().isEmpty()){
@@ -53,7 +45,12 @@ public class FragmentActiveCardModel implements FragmentActiveCardContract.Model
                 }
                 @Override
                 public void onFailure(Call<BaseResponse<String>> call, Throwable t) {
-                    listener.onFailure(t, t instanceof IOException);
+                    if(t instanceof IOException){
+                        listener.onFailure(t, true);
+                    }else{
+                        listener.onError(null);
+                    }
+
                 }
             });
         } catch (Exception e) {

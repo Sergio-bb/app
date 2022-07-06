@@ -34,6 +34,22 @@ public class FragmentLoginPresenter implements FragmentLoginContract.Presenter,
         view.showProgressDialog("Validando usuario...");
         model.validateLogin(request,this);
     }
+
+    @Override
+    public void fetchBannerMessages() {
+        model.getBannerMessages(this);
+    }
+
+    @Override
+    public void fetchLoginImage() {
+        model.getLoginImage(this);
+    }
+
+    @Override
+    public void validateRegisterDevice(Dispositivo request) {
+        model.validateRegisterDevice(request,this);
+    }
+
     @Override
     public <T> void onSuccessValidateLogin(RequestLogin login, Response<BaseResponse<T>> response) {
         try{
@@ -44,28 +60,23 @@ public class FragmentLoginPresenter implements FragmentLoginContract.Presenter,
                 view.resultValidateLogin(usuario);
             }else{
                 view.hideProgressDialog();
-                view.showDataFetchError("Lo sentimos", "");
+                view.showDataFetchError("");
             }
         }catch (Exception ex){
             view.hideProgressDialog();
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
     }
     @Override
     public <T> void onErrorValidateLogin(Response<BaseResponse<T>> response) {
         view.hideProgressDialog();
-        if(response != null && response.body() != null
-                && response.body().getDescripcionError() != null && response.body().getDescripcionError() != ""){
-            view.showDataFetchError("Lo sentimos", response.body().getDescripcionError());
+        if(response != null){
+            view.showDataFetchError(response.body().getDescripcionError());
         }else{
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
     }
 
-    @Override
-    public void fetchBannerMessages() {
-        model.getBannerMessages(this);
-    }
     @Override
     public <T> void onSuccessBannerMessages(Response<BaseResponse<T>> response) {
         try{
@@ -78,12 +89,6 @@ public class FragmentLoginPresenter implements FragmentLoginContract.Presenter,
         }
     }
 
-
-
-    @Override
-    public void fetchLoginImage() {
-        model.getLoginImage(this);
-    }
     @Override
     public <T> void onSuccessLoginImage(Response<BaseResponse<T>> response) {
         try{
@@ -97,10 +102,7 @@ public class FragmentLoginPresenter implements FragmentLoginContract.Presenter,
         }catch (Exception ex){
         }
     }
-    @Override
-    public void validateRegisterDevice(Dispositivo request) {
-        model.validateRegisterDevice(request,this);
-    }
+
     @Override
     public <T> void onSuccessValidateRegisterDevice(Response<BaseResponse<T>> response) {
         try{
@@ -110,11 +112,11 @@ public class FragmentLoginPresenter implements FragmentLoginContract.Presenter,
                 view.resultValidateRegisterDevice(validateDevice);
             } else{
                 view.hideProgressDialog();
-                view.showDataFetchError("Lo sentimos", "");
+                view.showDataFetchError("");
             }
         }catch (Exception ex){
             view.hideProgressDialog();
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
     }
 
@@ -123,9 +125,9 @@ public class FragmentLoginPresenter implements FragmentLoginContract.Presenter,
     public <T> void onError(Response<BaseResponse<T>> response) {
         view.hideProgressDialog();
         if(response != null){
-            view.showDataFetchError("Lo sentimos", response.body().getMensajeErrorUsuario());
+            view.showDataFetchError(response.body().getMensajeErrorUsuario());
         }else{
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
     }
 
@@ -135,7 +137,7 @@ public class FragmentLoginPresenter implements FragmentLoginContract.Presenter,
         if(isErrorTimeOut){
             view.showErrorTimeOut();
         }else{
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
     }
 

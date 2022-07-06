@@ -23,7 +23,7 @@ public class FragmentBlockCardModel implements FragmentBlockCardContract.Model{
     public void getReasonsBlockCard(BaseRequest body, final FragmentBlockCardContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -37,25 +37,25 @@ public class FragmentBlockCardModel implements FragmentBlockCardContract.Model{
                         if(response.body().getErrorToken() != null && !response.body().getErrorToken().isEmpty()){
                             listener.onExpiredToken(response);
                         }else if(response.body().getMensajeErrorUsuario() != null && !response.body().getMensajeErrorUsuario().isEmpty()){
-                            listener.onErrorReasonsBlockCard(response);
+                            listener.onError(response);
                         }else{
-                            listener.onSuccessReasonsBlockCard(response);
+                            listener.onSuccess(response);
                         }
                     } else {
-                        listener.onErrorReasonsBlockCard(null);
+                        listener.onError(null);
                     }
                 }
                 @Override
                 public void onFailure(Call<BaseResponse<List<String>>> call, Throwable t) {
                     if(t instanceof IOException){
-                        listener.onFailureReasonsBlockCard(t, true);
+                        listener.onFailure(t, true);
                     }else{
-                        listener.onFailureReasonsBlockCard(t, false);
+                        listener.onError(null);
                     }
                 }
             });
         } catch (Exception e) {
-            listener.onErrorReasonsBlockCard(null);
+            listener.onError(null);
         }
     }
 
@@ -63,7 +63,7 @@ public class FragmentBlockCardModel implements FragmentBlockCardContract.Model{
     public void blockCard(RequestBloquearTarjeta body, final FragmentBlockCardContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -77,21 +77,25 @@ public class FragmentBlockCardModel implements FragmentBlockCardContract.Model{
                         if(response.body().getErrorToken() != null && !response.body().getErrorToken().isEmpty()){
                             listener.onExpiredToken(response);
                         }else if(response.body().getMensajeErrorUsuario() != null && !response.body().getMensajeErrorUsuario().isEmpty()){
-                            listener.onErrorBlockCard(response);
+                            listener.onError(response);
                         }else{
-                            listener.onSuccessBlockCard(response);
+                            listener.onSuccess(response);
                         }
                     } else {
-                        listener.onErrorBlockCard(null);
+                        listener.onError(null);
                     }
                 }
                 @Override
                 public void onFailure(Call<BaseResponse<String>> call, Throwable t) {
-                    listener.onFailureBlockCard(t, t instanceof IOException);
+                    if(t instanceof IOException){
+                        listener.onFailure(t, true);
+                    }else{
+                        listener.onError(null);
+                    }
                 }
             });
         } catch (Exception e) {
-            listener.onErrorBlockCard(null);
+            listener.onError(null);
         }
     }
 

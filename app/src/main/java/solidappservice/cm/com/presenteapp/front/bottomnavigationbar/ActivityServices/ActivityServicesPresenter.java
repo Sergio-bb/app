@@ -29,14 +29,13 @@ public class ActivityServicesPresenter implements ActivityServicesContract.Prese
 
     @Override
     public void fetchServices() {
-        view.hideSectionServices();
-        view.showCircularProgressBar("Consultando servicios...");
+        view.showProgressDialog("Consultando servicios...");
         model.getServices(this);
     }
 
     @Override
     public <T> void onSuccess(Response<BaseResponse<T>> response) {
-        view.hideCircularProgressBar();
+        view.hideProgressDialog();
         try {
             List<ResponseServicios> servicios = (List<ResponseServicios>) response.body().getResultado();
             if (servicios != null && servicios.size() > 0) {
@@ -53,44 +52,39 @@ public class ActivityServicesPresenter implements ActivityServicesContract.Prese
                         return s.getQ_orden().compareTo(o.getQ_orden());
                     }
                 });
-                view.showSectionServices();
                 view.showServices(servicios);
             } else {
-                view.showDataFetchError("Lo sentimos","Error al consultar los productos");
-                view.showErrorWithRefresh();
+                view.showDataFetchError("Error al consultar los productos");
             }
         }catch (Exception ex){
-            view.showDataFetchError("Lo sentimos", "");
-            view.showErrorWithRefresh();
+            view.showDataFetchError("");
         }
     }
 
     @Override
     public <T> void onExpiredToken(Response<BaseResponse<T>> response) {
-        view.hideCircularProgressBar();
+        view.hideProgressDialog();
         view.showExpiredToken(response.body().getErrorToken());
     }
 
     @Override
     public <T> void onError(Response<BaseResponse<T>> response) {
-        view.hideCircularProgressBar();
+        view.hideProgressDialog();
         if(response != null){
-            view.showDataFetchError("Lo sentimos", response.body().getMensajeErrorUsuario());
+            view.showDataFetchError(response.body().getMensajeErrorUsuario());
         }else{
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
-        view.showErrorWithRefresh();
     }
 
     @Override
     public void onFailure(Throwable t, boolean isErrorTimeOut) {
-        view.hideCircularProgressBar();
+        view.hideProgressDialog();
         if(isErrorTimeOut){
             view.showErrorTimeOut();
         }else{
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
-        view.showErrorWithRefresh();
     }
 
 }

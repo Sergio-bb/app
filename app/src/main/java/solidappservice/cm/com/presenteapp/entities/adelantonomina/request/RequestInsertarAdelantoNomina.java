@@ -10,7 +10,7 @@ public class RequestInsertarAdelantoNomina extends BaseRequest {
     private Integer v_cupo;
     private String i_estado;
     private String n_error;
-    private Integer k_flujo;
+    private String k_flujo;
     private String i_aceptacion;
     private String f_aceptacion;
     private String ip;
@@ -18,11 +18,11 @@ public class RequestInsertarAdelantoNomina extends BaseRequest {
     public RequestInsertarAdelantoNomina() {
     }
 
-    public RequestInsertarAdelantoNomina(String cedula, String token, String f_solicitud, Integer v_solicitado,
-                 Integer v_valorcre, Integer v_cupo, String i_estado, String n_error, Integer k_flujo, String i_aceptacion,
+    public RequestInsertarAdelantoNomina(String cedula, String token, String f_solictud, Integer v_solicitado,
+                 Integer v_valorcre, Integer v_cupo, String i_estado, String n_error, String k_flujo, String i_aceptacion,
                  String f_aceptacion, String ip) {
         super(cedula, token);
-        this.f_solictud = f_solicitud;
+        this.f_solictud = f_solictud;
         this.v_solicitado = v_solicitado;
         this.v_valorcre = v_valorcre;
         this.v_cupo = v_cupo;
@@ -82,11 +82,11 @@ public class RequestInsertarAdelantoNomina extends BaseRequest {
         this.n_error = n_error;
     }
 
-    public Integer getK_flujo() {
+    public String getK_flujo() {
         return k_flujo;
     }
 
-    public void setK_flujo(Integer k_flujo) {
+    public void setK_flujo(String k_flujo) {
         this.k_flujo = k_flujo;
     }
 

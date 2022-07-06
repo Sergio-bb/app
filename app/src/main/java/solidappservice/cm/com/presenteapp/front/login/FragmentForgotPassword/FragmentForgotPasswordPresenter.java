@@ -36,10 +36,10 @@ public class FragmentForgotPasswordPresenter implements FragmentForgotPasswordCo
             if(result != null){
                 view.resultRecoverPassword(result);
             }else{
-                view.showDataFetchError("Lo sentimos", "");
+                view.showDataFetchError("");
             }
         }catch (Exception ex){
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
     }
 
@@ -47,9 +47,9 @@ public class FragmentForgotPasswordPresenter implements FragmentForgotPasswordCo
     public <T> void onError(Response<BaseResponse<T>> response) {
         view.hideProgressDialog();
         if(response != null){
-            view.showDataFetchError("Lo sentimos", response.body().getMensajeErrorUsuario());
+            view.showDataFetchError(response.body().getMensajeErrorUsuario());
         }else{
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
     }
 
@@ -59,10 +59,8 @@ public class FragmentForgotPasswordPresenter implements FragmentForgotPasswordCo
         if(isErrorTimeOut){
             view.showErrorTimeOut();
         }else{
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
     }
 
 }
-
-

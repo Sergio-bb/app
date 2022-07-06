@@ -11,21 +11,19 @@ public class Usuario {
     private String nombreAsociado;
     private String topeTransacciones;
     private String aceptoUltimosTyC;
-    private String fechaUltimoIngreso;
     private DatosActualizados datosActualizados;
 
     public Usuario() {
     }
 
     public Usuario(String cedula, String clave, String token, String nombreAsociado, String topeTransacciones,
-                   String aceptoUltimosTyC,String fechaUltimoIngreso, DatosActualizados datosActualizados) {
+                   String aceptoUltimosTyC, DatosActualizados datosActualizados) {
         this.cedula = cedula;
         this.clave = clave;
         this.token = token;
         this.nombreAsociado = nombreAsociado;
         this.topeTransacciones = topeTransacciones;
         this.aceptoUltimosTyC = aceptoUltimosTyC;
-        this.fechaUltimoIngreso = fechaUltimoIngreso;
         this.datosActualizados = datosActualizados;
     }
 
@@ -75,13 +73,6 @@ public class Usuario {
 
     public void setAceptoUltimosTyC(String aceptoUltimosTyC) {
         this.aceptoUltimosTyC = aceptoUltimosTyC;
-    }
-
-    public String getFechaUltimoIngreso() {
-        return fechaUltimoIngreso;
-    }
-    public void setFechaUltimoIngreso(String fechaUltimoIngreso) {
-        this.fechaUltimoIngreso = fechaUltimoIngreso;
     }
 
     public DatosActualizados getDatosActualizados() {

@@ -1,20 +1,17 @@
 package solidappservice.cm.com.presenteapp.front.adelantonomina.FragmentDetail;
 
-import android.app.Dialog;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.ImageButton;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -48,9 +45,8 @@ public class FragmentDetailView extends Fragment implements FragmentDetailContra
 
     private FragmentDetailPresenter presenter;
     private ActivityBase context;
-    private ActivityBase baseView;
     private GlobalState state;
-    private Dialog pd;
+    private ProgressDialog pd;
     private FirebaseAnalytics firebaseAnalytics;
 
     private String valorsolicitado;
@@ -59,16 +55,14 @@ public class FragmentDetailView extends Fragment implements FragmentDetailContra
     private String aceptacionterminos;
     private String fechaaceptacion;
 
-    @BindView(R.id.tvValorSolicitado)
-    TextView tvValorSolicitado;
-    @BindView(R.id.tvValorComision)
-    TextView tvValorComision;
-    @BindView(R.id.circularProgressBarValue)
-    ProgressBar circularProgressBarValue;
-    @BindView(R.id.cbTyCAdelanto)
-    CheckBox cbTyCAdelanto;
-    @BindView(R.id.btnAdelantarNomina)
-    Button btnAdelantarNomina;
+    @BindView(R.id.lblValor_Solicitado)
+    TextView lblValor_Solicitado;
+    @BindView(R.id.lblValor_Comision)
+    TextView lblValor_Comision;
+    @BindView(R.id.btnAdelantarN)
+    Button btnAdelantarN;
+    @BindView(R.id.chk_acepto_terminosadelanto)
+    CheckBox chk_acepto_terminosadelanto;
 
     @Override
     public void onAttach(Context context) {
@@ -95,12 +89,11 @@ public class FragmentDetailView extends Fragment implements FragmentDetailContra
     protected void setControls() {
         presenter = new FragmentDetailPresenter(this, new FragmentDetailModel());
         context = (ActivityBase) getActivity();
-        baseView = (ActivityTabsView) getActivity();
         state = context.getState();
+        pd = new ProgressDialog(context);
         DecimalFormat formato = new DecimalFormat("#,###");
         valorsolicitado = formato.format(Integer.parseInt(state.getValorSolicitado()));
-        tvValorSolicitado.setText("Valor solicitado a consignar: $"+valorsolicitado);
-        fetchCommissionValue();
+        lblValor_Solicitado.setText("Valor solicitado a consignar: $"+valorsolicitado);
     }
 
     @Override
@@ -109,18 +102,21 @@ public class FragmentDetailView extends Fragment implements FragmentDetailContra
         GlobalState state = context.getState();
         if(state == null || state.getUsuario() == null){
             context.salir();
+        } else {
+            fetchCommissionValue();
         }
     }
 
-    @OnClick(R.id.btnAdelantarNomina)
+    @OnClick(R.id.btnAdelantarN)
     public void onClickAdelantarNomina(){
         fetchRegisterSalaryAdvance();
     }
 
-    @OnCheckedChanged(R.id.cbTyCAdelanto)
+    @OnCheckedChanged(R.id.chk_acepto_terminosadelanto)
     public void onCheckedChangedAceptoTerminos(CompoundButton buttonView, boolean isChecked){
         if(isChecked){
-            btnAdelantarNomina.setEnabled(true);
+            btnAdelantarN.setEnabled(true);
+            btnAdelantarN.setBackground(getResources().getDrawable(R.drawable.btn_yellow_internal));
             aceptacionterminos = "S";
             SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
             Date date = new Date();
@@ -128,7 +124,8 @@ public class FragmentDetailView extends Fragment implements FragmentDetailContra
         }else{
             aceptacionterminos = "N";
             fechaaceptacion = "";
-            btnAdelantarNomina.setEnabled(false);
+            btnAdelantarN.setEnabled(false);
+            btnAdelantarN.setBackgroundColor(getResources().getColor(R.color.gris));
         }
     }
 
@@ -137,7 +134,7 @@ public class FragmentDetailView extends Fragment implements FragmentDetailContra
         try{
             presenter.fetchCommissionValue();
         }catch (Exception ex){
-            showDataFetchError("Lo sentimos", "");
+            showDataFetchError("PRESENTE","");
         }
     }
 
@@ -145,18 +142,7 @@ public class FragmentDetailView extends Fragment implements FragmentDetailContra
     public void showCommissionValue(String valorComision){
         DecimalFormat formato = new DecimalFormat("#,###");
         this.valorComision = formato.format(Integer.parseInt(valorComision));
-        tvValorComision.setText(String.format("Costo de la transacción: $%s", this.valorComision));
-    }
-
-    @Override
-    public void showCircularProgressBarValue() {
-        circularProgressBarValue.setVisibility(View.VISIBLE);
-        tvValorComision.setVisibility(View.GONE);
-    }
-    @Override
-    public void hideCircularProgressBarValue(){
-        circularProgressBarValue.setVisibility(View.GONE);
-        tvValorComision.setVisibility(View.VISIBLE);
+        lblValor_Comision.setText(String.format("Costo de la transacción: $%s", this.valorComision));
     }
 
     @Override
@@ -175,13 +161,13 @@ public class FragmentDetailView extends Fragment implements FragmentDetailContra
                     state.getTopes().getV_cupo(),
                     "E",
                     "",
-                    null,
+                    "",
                     aceptacionterminos,
                     fechaaceptacion,
                     context.getIP()
             ));
         }catch(Exception ex){
-            showDataFetchError("Lo sentimos", "");
+            showDataFetchError("PRESENTE","");
         }
     }
 
@@ -200,7 +186,7 @@ public class FragmentDetailView extends Fragment implements FragmentDetailContra
                     numeroTransaccion
             ));
         } catch (Exception ex){
-            showDataFetchError("Lo sentimos", "");
+            showDataFetchError("PRESENTE","");
         }
     }
 
@@ -217,47 +203,35 @@ public class FragmentDetailView extends Fragment implements FragmentDetailContra
                     format.format(new Date())
             ));
         }catch(Exception ex){
-            showDataFetchError("Lo sentimos", "");
+            showDataFetchError("PRESENTE","");
         }
     }
 
     @Override
     public void showSuccessfulSalaryAdvance(){
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_success);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.titleSuccess);
-        titleMessage.setText("Solicitud Enviada");
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.contentSuccess);
-        contentMessage.setText("Tu solicitud ha sido enviada con éxito. El valor que te será consignado en tu cuenta de nómina es de $" + valorsolicitado +
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle("Solicitud Enviada");
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage("Tu solicitud ha sido enviada con éxito. El valor que te será consignado en tu cuenta de nómina es de $" + valorsolicitado +
                 " valida la transacción en los movimientos de tu cuenta de nómina en unos minutos.");
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.buttonClose);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
                 state.setRequisitos(null);
                 state.setTopes(null);
                 state.setValorSolicitado(null);
-                state.getmTabHost().setCurrentTab(ActivityTabsView.TAB_1_TRANSACTIONS_MENU_TAG);
-                dialog.dismiss();
+                state.getmTabHost().setCurrentTab(ActivityTabsView.TAB_1_TRANSACTIONS_MENU_TAG); //Regresar al menu principal
             }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
     public void showProgressDialog(String message) {
-        pd = new Dialog(context);
-        pd.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        pd.setCanceledOnTouchOutside(false);
-        pd.setContentView(R.layout.pop_up_loading);
+        pd.setTitle(context.getResources().getString(R.string.app_name));
+        pd.setMessage(message);
+        pd.setIcon(R.mipmap.icon_presente);
         pd.setCancelable(false);
-        pd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView contentMessage = (TextView) pd.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
         pd.show();
     }
 
@@ -276,20 +250,14 @@ public class FragmentDetailView extends Fragment implements FragmentDetailContra
                 }
             }
         }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText("Lo sentimos");
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(DialogInterface dialog, int which) {
                 state.setRequisitos(null);
                 state.setTopes(null);
                 state.setValorSolicitado(null);
@@ -297,7 +265,7 @@ public class FragmentDetailView extends Fragment implements FragmentDetailContra
                 dialog.dismiss();
             }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
@@ -312,20 +280,14 @@ public class FragmentDetailView extends Fragment implements FragmentDetailContra
                 }
             }
         }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText(title);
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(title);
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(DialogInterface dialog, int which) {
                 state.setRequisitos(null);
                 state.setTopes(null);
                 state.setValorSolicitado(null);
@@ -333,26 +295,390 @@ public class FragmentDetailView extends Fragment implements FragmentDetailContra
                 dialog.dismiss();
             }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
     public void showExpiredToken(String message) {
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_closedsession);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        Button buttonClosedSession = (Button) dialog.findViewById(R.id.btnVolverAIngresar);
-        buttonClosedSession.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle("Sesión finalizada");
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
                 context.salir();
             }
         });
-        dialog.show();
-
+        d.show();
     }
+
+    //Obtiene el valor de la comisión
+//    private class obtenerValorComisionTask extends AsyncTask<String, String, String> {
+//
+//        @Override
+//        protected void onPreExecute() {
+//            pd.setTitle(context.getResources().getString(R.string.app_name));
+//            pd.setMessage("Validando datos...");
+//            pd.setIcon(R.mipmap.icon_presente);
+//            pd.setCancelable(false);
+//            pd.show();
+//        }
+//
+//        @Override
+//        protected String doInBackground(String... params) {
+//            try {
+//                NetworkHelper networkHelper = new NetworkHelper();
+//                return networkHelper.readService(SincroHelper.OBTENER_VALOR_COMISION);
+//            } catch (Exception e) {
+//                return e.getMessage();
+//            }
+//        }
+//
+//        @Override
+//        protected void onProgressUpdate(String... values) {
+//            pd.setMessage(values[0]);
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            super.onPostExecute(result);
+//            procesarResultValorComision(result);
+//            pd.dismiss();
+//        }
+//    }
+//
+//    private void procesarResultValorComision(String result) {
+//        try {
+//            valorComision = SincroHelper.procesarJsonValorComision(result);
+//            DecimalFormat formato = new DecimalFormat("#,###");
+//            valorComision = formato.format(Integer.parseInt(valorComision));
+//            lblValor_Comision.setText("Costo de la transacción: $"+valorComision);
+//
+//        } catch (ErrorTokenException e) {
+//            AlertDialog.Builder d = new AlertDialog.Builder(context);
+//            d.setTitle("Sesión finalizada");
+//            d.setIcon(R.mipmap.icon_presente);
+//            d.setMessage(e.getMessage());
+//            d.setCancelable(false);
+//            d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface dialog, int id) {
+//                    context.salir();
+//                }
+//            });
+//            d.show();
+//        } catch (Exception ex) {
+//            context.makeErrorDialog(ex.getMessage());
+//        }
+//    }
+//
+//
+//
+//
+//    //Realizar la solicitud de adelanto
+//    private void AdelantarNomina() {
+//        try{
+//            GlobalState state = context.getState();
+//            Usuario usuario = state.getUsuario();
+//            Encripcion encripcion = Encripcion.getInstance();
+//            JSONObject param = new JSONObject();
+//
+//            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+//            Date fechasolicitud = new Date();
+//            Integer valorfinal = Integer.parseInt(valorsolicitado.replaceAll("[,.]", ""))+Integer.parseInt(valorComision.replaceAll("[,.]", ""));
+//            String ip = getIP();
+//
+//            param.put("cedula", encripcion.encriptar(usuario.cedula));
+//            param.put("token", usuario.token);
+//            param.put("f_solicitud", format.format(fechasolicitud));
+//            param.put("v_solicitado", Integer.parseInt(valorsolicitado.replaceAll("[,.]", "")));
+//            param.put("v_valorcre", valorfinal);
+//            param.put("v_cupo", state.getTopes().getV_cupo());
+//            param.put("i_estado", "E");
+//            param.put("n_error", " ");
+//            param.put("k_flujo", " ");
+//            param.put("i_aceptacion", aceptacionterminos);
+//            param.put("f_aceptacion", fechaaceptacion);
+//            param.put("ip", ip);
+//
+//            new InsertarAdelantarNominaTask().execute(param);
+//
+//        } catch(Exception ex) {
+//            context.makeErrorDialog(ex.getMessage());
+//        }
+//    }
+//
+//
+//    //Inserta el adelanto de nomina
+//    private class InsertarAdelantarNominaTask extends AsyncTask<JSONObject, String, String> {
+//
+//        @Override
+//        protected void onPreExecute() {
+//            pd.setTitle(context.getResources().getString(R.string.app_name));
+//            pd.setMessage("Enviando solicitud...");
+//            pd.setIcon(R.mipmap.icon_presente);
+//            pd.setCancelable(false);
+//            pd.show();
+//        }
+//
+//        @Override
+//        protected String doInBackground(JSONObject... params) {
+//            try {
+//                NetworkHelper networkHelper = new NetworkHelper();
+//                return networkHelper.writeService(params[0], SincroHelper.INSERTAR_ADELANTAR_NOMINA);
+//            } catch (Exception e) {
+//                return e.getMessage();
+//            }
+//        }
+//
+//        @Override
+//        protected void onProgressUpdate(String... values) {
+//            pd.setMessage(values[0]);
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            super.onPostExecute(result);
+//            procesarResultInsertAdelantarNomina(result);
+//        }
+//    }
+//
+//    private void procesarResultInsertAdelantarNomina(String result) {
+//        try {
+//            String numeroTransa = SincroHelper.procesarJsonInsertarAdelantoNomina(result);
+//
+//            if(numeroTransa != null) {
+//
+//                GlobalState state = context.getState();
+//                Usuario usuario = state.getUsuario();
+//                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+//                Date fechasolicitd = new Date();
+//                Integer valorfinal = Integer.parseInt(valorsolicitado.replaceAll("[,.]", ""))+Integer.parseInt(valorComision.replaceAll("[,.]", ""));
+//
+//                Encripcion encripcion = Encripcion.getInstance();
+//                JSONObject param = new JSONObject();
+//                param.put("cedula", encripcion.encriptar(usuario.cedula));
+//                param.put("token", usuario.token);
+//                param.put("v_monto", valorfinal.toString());
+//                param.put("f_solici", format.format(fechasolicitd));
+//                param.put("k_nroSolici", numeroTransa);
+//                new AdelantarNominaTask().execute(param);
+//
+//            } else {
+//                Encripcion encripcion = Encripcion.getInstance();
+//                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+//                Date fecharegistro = new Date();
+//
+//                JSONObject param = new JSONObject();
+//                Usuario usuario = state.getUsuario();
+//                param.put("cedula", encripcion.encriptar(usuario.cedula));
+//                param.put("token", usuario.token);
+//                param.put("n_accion", "ADELANTO DE NOMINA FALLIDO");
+//                param.put("n_descr", "A ocurrido un error al insertar la solicitud del adelanto de nómina");
+//                param.put("f_registro", format.format(fecharegistro));
+//
+//                pd.dismiss();
+//                new EnviarLogAdelantoTask().execute(param);
+//
+//                AlertDialog.Builder d = new AlertDialog.Builder(context);
+//                d.setTitle("Solicitud Fallida");
+//                d.setIcon(R.mipmap.icon_presente);
+//                d.setMessage("Tu solicitud no se ha enviado, por favor inténtalo de nuevo más tarde");
+//                d.setCancelable(false);
+//                d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int id) {
+//                        state.setRequisitos(null);
+//                        state.setTopes(null);
+//                        state.setValorSolicitado(null);
+//                        state.getmTabHost().setCurrentTab(1); //Regresar al menu principal
+//                    }
+//                });
+//                d.show();
+//            }
+//
+//        } catch (ErrorTokenException e) {
+//            AlertDialog.Builder d = new AlertDialog.Builder(context);
+//            d.setTitle("Sesión finalizada");
+//            d.setIcon(R.mipmap.icon_presente);
+//            d.setMessage(e.getMessage());
+//            d.setCancelable(false);
+//            d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface dialog, int id) {
+//                    context.salir();
+//                }
+//            });
+//            d.show();
+//        } catch (Exception ex) {
+//
+//            context.makeErrorDialog(ex.getMessage());
+//        }
+//    }
+//
+//
+//    private class AdelantarNominaTask extends AsyncTask<JSONObject, String, String> {
+//
+//        @Override
+//        protected String doInBackground(JSONObject... params) {
+//            try {
+//                NetworkHelper networkHelper = new NetworkHelper();
+//                return networkHelper.writeService(params[0], SincroHelper.ADELANTAR_NOMINA_SOLICITUD);
+//
+//            } catch (Exception e) {
+//                return e.getMessage();
+//            }
+//        }
+//
+//        @Override
+//        protected void onProgressUpdate(String... values) {
+//            pd.setMessage(values[0]);
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            super.onPostExecute(result);
+//            pd.dismiss();
+//            procesarResultAdelantarNomina(result);
+//        }
+//    }
+//
+//
+//    private void procesarResultAdelantarNomina(String result){
+//        try {
+//            AdelantoNomina resultadoan = SincroHelper.procesarJsonAdelantarNomina(result);
+//
+//            Encripcion encripcion = Encripcion.getInstance();
+//            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+//            JSONObject param = new JSONObject();
+//            Usuario usuario = state.getUsuario();
+//
+//            if(resultadoan != null && resultadoan.n_resultado.equals("OK")){
+//                param.put("cedula", encripcion.encriptar(usuario.cedula));
+//                param.put("token", usuario.token);
+//                param.put("n_accion", "ADELANTO DE NOMINA EXITOSA");
+//                param.put("n_descr", "Numero de flujo " + numeroflujo==null || numeroflujo==0 ? "" : numeroflujo);
+//                param.put("f_registro", format.format(new Date()));
+//                new EnviarLogAdelantoTask().execute(param);
+//            }else {
+//                param = new JSONObject();
+//                param.put("cedula", encripcion.encriptar(usuario.cedula));
+//                param.put("token", usuario.token);
+//                param.put("n_accion", "ADELANTO DE NOMINA ENVIADO PERO SIN RESPUESTA");
+//                param.put("n_descr", "El adelanto de nomina se envio, pero no se obtuve respuesta de la base de datos");
+//                param.put("f_registro", format.format(new Date()));
+//                new EnviarLogAdelantoTask().execute(param);
+//            }
+//
+//            AlertDialog.Builder d = new AlertDialog.Builder(context);
+//            d.setTitle("Solicitud Enviada");
+//            d.setIcon(R.mipmap.icon_presente);
+//            d.setMessage("Tu solicitud ha sido enviada con éxito. El valor que te será consignado en tu cuenta de nómina es de $" + valorsolicitado +
+//                    " valida la transacción en los movimientos de tu cuenta de nómina en unos minutos.");
+//            d.setCancelable(false);
+//            d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface dialog, int id) {
+//                    state.setRequisitos(null);
+//                    state.setTopes(null);
+//                    state.setValorSolicitado(null);
+//                    state.getmTabHost().setCurrentTab(1); //Regresar al menu principal
+//                }
+//            });
+//            d.show();
+//
+//
+//        } catch (ErrorTokenException e) {
+//            AlertDialog.Builder d = new AlertDialog.Builder(context);
+//            d.setTitle("Sesión finalizada");
+//            d.setIcon(R.mipmap.icon_presente);
+//            d.setMessage(e.getMessage());
+//            d.setCancelable(false);
+//            d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface dialog, int id) {
+//                    context.salir();
+//                }
+//            });
+//            d.show();
+//        } catch (Exception ex) {
+//
+//            Encripcion encripcion = Encripcion.getInstance();
+//            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+//            Usuario usuario = state.getUsuario();
+//
+//            try {
+//                JSONObject param = new JSONObject();
+//                param.put("cedula", encripcion.encriptar(usuario.cedula));
+//                param.put("token", usuario.token);
+//                param.put("n_accion", "ADELANTO DE NOMINA ENVIADO PERO SIN RESPUESTA");
+//                param.put("n_descr", "El adelanto de nomina se envio, pero no se obtuve respuesta de la base de datos");
+//                param.put("f_registro", format.format(new Date()));
+//                new EnviarLogAdelantoTask().execute(param);
+//            } catch (JSONException e) {}
+//
+//            AlertDialog.Builder d = new AlertDialog.Builder(context);
+//            d.setTitle("Solicitud Enviada");
+//            d.setIcon(R.mipmap.icon_presente);
+//            d.setMessage("Tu solicitud ha sido enviada con éxito. El valor que te será consignado en tu cuenta de Nómina es de $" + valorsolicitado +
+//                    ". Valida la transacción en los movimientos de tu cuenta de Nómina en unos minutos.");
+//            d.setCancelable(false);
+//            d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface dialog, int id) {
+//                    state.setRequisitos(null);
+//                    state.setTopes(null);
+//                    state.setValorSolicitado(null);
+//                    state.getmTabHost().setCurrentTab(1); //Regresar al menu principal
+//                }
+//            });
+//            d.show();
+//        }
+//    }
+//
+//
+//    //Envia a la tabla LOG todas las peticiones fallidas y exitosas
+//    private class EnviarLogAdelantoTask extends AsyncTask<JSONObject, String, String> {
+//
+//        @Override
+//        protected String doInBackground(JSONObject... params) {
+//            try {
+//                NetworkHelper networkHelper = new NetworkHelper();
+//                return networkHelper.writeService(params[0], SincroHelper.ENVIAR_LOG_ADELANTO);
+//            } catch (Exception e) {
+//                return e.getMessage();
+//            }
+//        }
+//
+//        @Override
+//        protected void onProgressUpdate(String... values) {
+//            pd.setMessage(values[0]);
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            super.onPostExecute(result);
+//            procesarResultLog(result);
+//        }
+//    }
+//
+//    public void procesarResultLog(String result){
+//        String r = result;
+//    }
+//
+//
+//    public static String getIP(){
+//        List<InetAddress> addrs;
+//        String address = "";
+//        try{
+//            List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
+//            for(NetworkInterface intf : interfaces){
+//                addrs = Collections.list(intf.getInetAddresses());
+//                for(InetAddress addr : addrs){
+//                    if(!addr.isLoopbackAddress() && addr instanceof Inet4Address){
+//                        address = addr.getHostAddress().toUpperCase(new Locale("es", "CO"));
+//                    }
+//                }
+//            }
+//        }catch (Exception e){
+//            address = "";
+//        }
+//        return address;
+//    }
+
 }

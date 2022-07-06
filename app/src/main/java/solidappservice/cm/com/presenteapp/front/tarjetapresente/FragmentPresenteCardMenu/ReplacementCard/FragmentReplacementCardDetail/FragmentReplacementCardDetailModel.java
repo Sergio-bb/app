@@ -25,7 +25,7 @@ public class FragmentReplacementCardDetailModel implements FragmentReplacementCa
     public void getAssociatedDependence(BaseRequest body, final FragmentReplacementCardDetailContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -39,26 +39,25 @@ public class FragmentReplacementCardDetailModel implements FragmentReplacementCa
                         if(response.body().getErrorToken() != null && !response.body().getErrorToken().isEmpty()){
                             listener.onExpiredToken(response);
                         }else if(response.body().getMensajeErrorUsuario() != null && !response.body().getMensajeErrorUsuario().isEmpty()){
-                            listener.onErrorAssociatedDependence(response);
+                            listener.onError(response);
                         }else{
-                            listener.onSuccessAssociatedDependence(response);
+                            listener.onSuccess(response);
                         }
                     } else {
-                        listener.onErrorAssociatedDependence(null);
+                        listener.onError(null);
                     }
                 }
                 @Override
                 public void onFailure(Call<BaseResponse<ResponseDependenciasAsociado>> call, Throwable t) {
                     if(t instanceof IOException){
-                        listener.onFailureAssociatedDependence(t, true);
+                        listener.onFailure(t, true);
                     }else{
-                        listener.onFailureAssociatedDependence(t, false);
+                        listener.onError(null);
                     }
-
                 }
             });
         } catch (Exception e) {
-            listener.onErrorAssociatedDependence(null);
+            listener.onError(null);
         }
     }
 
@@ -66,7 +65,7 @@ public class FragmentReplacementCardDetailModel implements FragmentReplacementCa
     public void getReplacementCardValue(final FragmentReplacementCardDetailContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -80,25 +79,25 @@ public class FragmentReplacementCardDetailModel implements FragmentReplacementCa
                         if(response.body().getErrorToken() != null && !response.body().getErrorToken().isEmpty()){
                             listener.onExpiredToken(response);
                         }else if(response.body().getMensajeErrorUsuario() != null && !response.body().getMensajeErrorUsuario().isEmpty()){
-                            listener.onErrorReplacementCardValue(response);
+                            listener.onError(response);
                         }else{
-                            listener.onSuccessReplacementCardValue(response);
+                            listener.onSuccess(response);
                         }
                     } else {
-                        listener.onErrorReplacementCardValue(null);
+                        listener.onError(null);
                     }
                 }
                 @Override
                 public void onFailure(Call<BaseResponse<ResponseValorReposicionTarjeta>> call, Throwable t) {
                     if(t instanceof IOException){
-                        listener.onFailureReplacementCardValue(t, true);
+                        listener.onFailure(t, true);
                     }else{
-                        listener.onFailureReplacementCardValue(t, false);
+                        listener.onError(null);
                     }
                 }
             });
         } catch (Exception e) {
-            listener.onErrorReplacementCardValue(null);
+            listener.onError(null);
         }
     }
 
@@ -107,7 +106,7 @@ public class FragmentReplacementCardDetailModel implements FragmentReplacementCa
     public void solicityReplacementCard(RequestReposicionTarjeta body, final FragmentReplacementCardDetailContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -121,25 +120,25 @@ public class FragmentReplacementCardDetailModel implements FragmentReplacementCa
                         if(response.body().getErrorToken() != null && !response.body().getErrorToken().isEmpty()){
                             listener.onExpiredToken(response);
                         }else if(response.body().getMensajeErrorUsuario() != null && !response.body().getMensajeErrorUsuario().isEmpty()){
-                            listener.onErrorSolicityReplacementCard(response);
+                            listener.onError(response);
                         }else{
-                            listener.onSuccessSolicityReplacementCard(response);
+                            listener.onSuccess(response);
                         }
                     } else {
-                        listener.onErrorSolicityReplacementCard(null);
+                        listener.onError(null);
                     }
                 }
                 @Override
                 public void onFailure(Call<BaseResponse<String>> call, Throwable t) {
                     if(t instanceof IOException){
-                        listener.onFailureSolicityReplacementCard(t, true);
+                        listener.onFailure(t, true);
                     }else{
-                        listener.onFailureSolicityReplacementCard(t, false);
+                        listener.onError(null);
                     }
                 }
             });
         } catch (Exception e) {
-            listener.onErrorSolicityReplacementCard(null);
+            listener.onError(null);
         }
     }
 
@@ -147,7 +146,7 @@ public class FragmentReplacementCardDetailModel implements FragmentReplacementCa
     public void sendMessageCardReplacementSuccessful(RequestMensajeReposicionTarjeta body, final FragmentReplacementCardDetailContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -160,7 +159,7 @@ public class FragmentReplacementCardDetailModel implements FragmentReplacementCa
                     if (response.isSuccessful()) {
                         if(response.body().getErrorToken() != null && !response.body().getErrorToken().isEmpty()){
 //                            listener.onExpiredToken(response);
-                        }else if(response.body().getMensajeErrorUsuario() != null && !response.body().getMensajeErrorUsuario().isEmpty()){
+                        }else if(response.body().getDescripcionError() != null && !response.body().getDescripcionError().isEmpty()){
 //                            listener.onError(response);
                         }else{
 //                            listener.onSuccess(response);

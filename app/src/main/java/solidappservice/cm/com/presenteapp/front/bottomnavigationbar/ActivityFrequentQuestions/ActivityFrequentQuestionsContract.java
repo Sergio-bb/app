@@ -14,12 +14,9 @@ public interface ActivityFrequentQuestionsContract {
     interface View{
         void fetchFrequentQuestions();
         void showFrequentQuestions(List<ResponsePreguntasFrecuente> frequentQuestions);
-        void showSectionFrequentQuestions();
-        void hideSectionFrequentQuestions();
-        void showCircularProgressBar(String message);
-        void hideCircularProgressBar();
-        void showErrorWithRefresh();
-        void showDataFetchError(String title, String message);
+        void showProgressDialog(String message);
+        void hideProgressDialog();
+        void showDataFetchError(String message);
         void showErrorTimeOut();
         void showExpiredToken(String message);
     }

@@ -27,8 +27,8 @@ public interface FragmentResortsSolicityContract {
         void showResultSolicityResort(String result);
         void showProgressDialog(String message);
         void hideProgressDialog();
+        void showDataFetchError(String message);
         void showErrorTimeOut();
-        void showDataFetchError(String title, String message);
         void showExpiredToken(String message);
     }
 

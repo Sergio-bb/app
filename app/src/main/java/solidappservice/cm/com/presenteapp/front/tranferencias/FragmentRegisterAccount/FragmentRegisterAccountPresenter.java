@@ -29,67 +29,14 @@ public class FragmentRegisterAccountPresenter implements FragmentRegisterAccount
 
     @Override
     public void fetchBanks() {
-        try {
-            view.hideSectionRegisterAccount();
-            view.showCircularProgressBar("Consultando cuentas...");
-            model.getBanks(this);
-        } catch (Exception e) {
-            Log.e("Error", e.getMessage());
-            view.showErrorWithRefresh();
-        }
-    }
-    @Override
-    public <T> void onSuccessBanks(Response<BaseResponse<T>> response) {
-        view.hideCircularProgressBar();
-        try{
-            List<ResponseBanco> responseBancos = (List<ResponseBanco>) response.body().getResultado();
-            view.showSectionRegisterAccount();
-            view.showBanks(responseBancos);
-        }catch (Exception ex){
-            view.hideCircularProgressBar();
-            view.enabledRegisterAccountButton();
-            view.showDialogError("Lo sentimos", "");
-            view.showErrorWithRefresh();
-        }
-    }
-    @Override
-    public <T> void onErrorBanks(Response<BaseResponse<T>> response) {
-        view.hideCircularProgressBar();
-        view.enabledRegisterAccountButton();
-        if(response != null){
-            view.showDialogError("Lo sentimos", response.body().getMensajeErrorUsuario());
-        }else{
-            view.showDialogError("Lo sentimos", "");
-        }
-        view.showErrorWithRefresh();
-    }
-
-    @Override
-    public void onFailureBanks(Throwable t, boolean isErrorTimeOut) {
-        view.hideCircularProgressBar();
-        view.enabledRegisterAccountButton();
-        if(isErrorTimeOut){
-            view.showErrorTimeOut();
-        }else{
-            view.showDialogError("Lo sentimos", "");
-        }
-        view.showErrorWithRefresh();
+        view.showProgressDialog("Consultando cuentas...");
+        model.getBanks(this);
     }
 
     @Override
     public void fetchRegisteredAccounts(BaseRequest baseRequest) {
         view.showProgressDialog("Validando datos...");
         model.getRegisteredAccounts(baseRequest, this);
-    }
-    @Override
-    public <T> void onSuccessRegisteredAccounts(Response<BaseResponse<T>> response) {
-        view.hideProgressDialog();
-        try{
-            List<ResponseCuentasInscritas> responseCuentasInscritas = (List<ResponseCuentasInscritas>) response.body().getResultado();
-            view.validateRepeatAccounts(responseCuentasInscritas);
-        }catch (Exception ex){
-            view.showDataFetchError("Lo sentimos", "");
-        }
     }
 
     @Override
@@ -98,6 +45,29 @@ public class FragmentRegisterAccountPresenter implements FragmentRegisterAccount
         view.showProgressDialog("Inscribiendo cuenta...");
         model.registerAccount(request, this);
     }
+
+    @Override
+    public <T> void onSuccessBanks(Response<BaseResponse<T>> response) {
+        view.hideProgressDialog();
+        try{
+            List<ResponseBanco> responseBancos = (List<ResponseBanco>) response.body().getResultado();
+            view.showBanks(responseBancos);
+        }catch (Exception ex){
+            view.showDataFetchError("");
+        }
+    }
+
+    @Override
+    public <T> void onSuccessRegisteredAccounts(Response<BaseResponse<T>> response) {
+        view.hideProgressDialog();
+        try{
+            List<ResponseCuentasInscritas> responseCuentasInscritas = (List<ResponseCuentasInscritas>) response.body().getResultado();
+            view.validateRepeatAccounts(responseCuentasInscritas);
+        }catch (Exception ex){
+            view.showDataFetchError("");
+        }
+    }
+
     @Override
     public <T> void onSuccessRegisterAccount(Response<BaseResponse<T>> response) {
         view.hideProgressDialog();
@@ -107,10 +77,10 @@ public class FragmentRegisterAccountPresenter implements FragmentRegisterAccount
                 view.showResultRegisterAccount();
             }else{
                 view.enabledRegisterAccountButton();
-                view.showDataFetchError("Lo sentimos", "");
+                view.showDataFetchError("");
             }
         }catch (Exception ex){
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
     }
 
@@ -125,9 +95,9 @@ public class FragmentRegisterAccountPresenter implements FragmentRegisterAccount
         view.hideProgressDialog();
         view.enabledRegisterAccountButton();
         if(response != null){
-            view.showDataFetchError("Lo sentimos", response.body().getMensajeErrorUsuario());
+            view.showDataFetchError(response.body().getMensajeErrorUsuario());
         }else{
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
     }
 
@@ -138,7 +108,7 @@ public class FragmentRegisterAccountPresenter implements FragmentRegisterAccount
         if(isErrorTimeOut){
             view.showErrorTimeOut();
         }else{
-            view.showDataFetchError("Lo sentimos", "");
+            view.showDataFetchError("");
         }
     }
 

@@ -140,7 +140,7 @@
                     android:layout_weight="7"
                     android:weightSum="100"
                     android:orientation="horizontal"
-                    android:background="@color/transparent_dark"
+                    android:background="#73FFFFFF"
                     android:layout_below="@+id/lblNombreProducto">
                     <TextView
                         android:layout_width="0dp"
@@ -158,7 +158,7 @@
                         android:layout_height="fill_parent"
                         android:layout_weight="70"
                         android:gravity="start|center_vertical"
-                      />
+                        android:textColor="#000"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -167,7 +167,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="7"
                     android:orientation="horizontal"
-                    android:background="@color/transparent_dark"
+                    android:background="#73FFFFFF"
                     android:layout_below="@+id/layoutOpcionesCiudad">
                     <TextView
                         android:id="@+id/lblAlmacen"
@@ -195,7 +195,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="7"
                     android:orientation="horizontal"
-                    android:background="@color/transparent_dark"
+                    android:background="#73FFFFFF"
                     android:layout_below="@+id/layoutOpcionesTipo">
                     <TextView
                         android:layout_width="0dp"

@@ -19,7 +19,7 @@
             android:background="@color/gris"
             android:text="@string/responseConvenios"
             android:gravity="center"
-            android:textSize="16sp"
+            android:textSize="17sp"
             android:fontFamily="@font/roboto_light"/>
 
         <androidx.recyclerview.widget.RecyclerView

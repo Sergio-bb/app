@@ -14,12 +14,12 @@ public interface FragmentForgotPasswordContract {
         void resultRecoverPassword(String result);
         void showProgressDialog(String message);
         void hideProgressDialog();
+        void showDataFetchError(String message);
         void showErrorTimeOut();
-        void showDataFetchError(String title, String message);
     }
 
     interface Presenter{
-        void recoverPassword(RequestForgotPassword body);
+        void recoverPassword(RequestForgotPassword request);
     }
 
     interface Model{

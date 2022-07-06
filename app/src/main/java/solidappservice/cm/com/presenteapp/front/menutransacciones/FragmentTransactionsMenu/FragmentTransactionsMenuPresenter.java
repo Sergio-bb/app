@@ -34,7 +34,7 @@ public class FragmentTransactionsMenuPresenter implements FragmentTransactionsMe
     @Override
     public void fetchButtonStateAdvanceSalary() {
         view.hideTransactionMenu();
-        view.showCircularProgressBar("Un momento...");
+        view.showCircularProgressBar("Un momento");
         model.getButtonStateAdvanceSalary(this);
     }
     @Override
@@ -46,28 +46,21 @@ public class FragmentTransactionsMenuPresenter implements FragmentTransactionsMe
                 view.fetchButtonActionAdvanceSalary();
             } else {
                 view.hideButtonAdvanceSalary();
-                view.fetchButtonStateTransfers();
+                view.fetchButtonStateResorts();
             }
         }catch (Exception ex){
             view.hideButtonAdvanceSalary();
-            view.fetchButtonStateTransfers();
+            view.fetchButtonStateResorts();
         }
     }
     @Override
     public <T> void onErrorStateAdvanceSalary(Response<BaseResponse<T>> response) {
         view.hideButtonAdvanceSalary();
-        view.fetchButtonStateTransfers();
-    }
-    @Override
-    public void onFailureStateAdvanceSalary(Throwable t, boolean isErrorTimeOut) {
-        view.hideButtonAdvanceSalary();
-        view.fetchButtonStateTransfers();
+        view.fetchButtonStateResorts();
     }
 
     @Override
     public void fetchButtonActionAdvanceSalary() {
-        view.hideTransactionMenu();
-        view.showCircularProgressBar("Un momento...");
         model.getButtonActionAdvanceSalary(this);
     }
     @Override
@@ -83,30 +76,22 @@ public class FragmentTransactionsMenuPresenter implements FragmentTransactionsMe
                 view.changeButtonActionAdvanceSalary(listDependencies);
                 view.fetchAssociatedDependency();
             }else{
-                view.changeButtonActionAdvanceSalary(new ArrayList<>());
                 view.fetchAssociatedDependency();
             }
         }catch (Exception ex){
-            view.changeButtonActionAdvanceSalary(new ArrayList<>());
-            view.fetchAssociatedDependency();
+            view.hideButtonAdvanceSalary();
+            view.fetchButtonStateResorts();
         }
     }
     @Override
     public <T> void onErrorActionAdvanceSalary(Response<BaseResponse<T>> response) {
-        view.changeButtonActionAdvanceSalary(new ArrayList<>());
-        view.fetchAssociatedDependency();
-    }
-    @Override
-    public void onFailureActionAdvanceSalary(Throwable t, boolean isErrorTimeOut) {
-        view.changeButtonActionAdvanceSalary(new ArrayList<>());
-        view.fetchAssociatedDependency();
+        view.hideButtonAdvanceSalary();
+        view.fetchButtonStateResorts();
     }
 
 
     @Override
     public void fetchAssociatedDependency(BaseRequest baseRequest) {
-        view.hideTransactionMenu();
-        view.showCircularProgressBar("Un momento...");
         model.getAssociatedDependency(baseRequest,this);
     }
     @Override
@@ -116,24 +101,78 @@ public class FragmentTransactionsMenuPresenter implements FragmentTransactionsMe
             if(associatedDependency != null && associatedDependency.getCodigodependencia() != null){
                 view.showResultAssociatedDependency(associatedDependency.getCodigodependencia());
             }
-            view.fetchButtonStateTransfers();
+            view.fetchButtonStateResorts();
         }catch (Exception ex){
             view.hideButtonAdvanceSalary();
-            view.fetchButtonStateTransfers();
+            view.fetchButtonStateResorts();
         }
     }
     @Override
     public <T> void onErrorAssociatedDependency(Response<BaseResponse<T>> response) {
-        view.hideCircularProgressBar();
         view.hideButtonAdvanceSalary();
-        view.fetchButtonStateTransfers();
+        view.fetchButtonStateResorts();
+    }
+
+
+    @Override
+    public void fetchButtonStateResorts() {
+        model.getButtonStateResorts(this);
     }
     @Override
-    public void onFailureAssociatedDependency(Throwable t, boolean isErrorTimeOut) {
-        view.hideCircularProgressBar();
-        view.hideButtonAdvanceSalary();
-        view.fetchButtonStateTransfers();
+    public <T> void onSuccessButtonStateResorts(Response<BaseResponse<T>> response) {
+        try{
+            ResponseParametrosAPP stateResorts = (ResponseParametrosAPP) response.body().getResultado();
+            if(stateResorts != null && stateResorts.getEstado() != null && stateResorts.getEstado().equals("Y")){
+                view.showButtonResorts(stateResorts.getValue1());
+            }else{
+                view.hideButtonResorts();
+            }
+            view.fetchButtonStateTransfers();
+        }catch (Exception ex){
+            view.fetchButtonStateTransfers();
+        }
     }
+    @Override
+    public <T> void onErrorButtonStateResorts(Response<BaseResponse<T>> response) {
+        view.hideButtonAdvanceSalary();
+        view.fetchButtonStateResorts();
+    }
+
+
+    @Override
+    public void fetchPendingSalaryAdvance(BaseRequest baseRequest) {
+        view.showProgressDialog("Un momento...");
+        model.getPendingSalaryAdvance(baseRequest,this);
+    }
+    @Override
+    public <T> void onSuccessPendingSalaryAdvance(Response<BaseResponse<T>> response) {
+        view.hideProgressDialog();
+        try{
+            List<ResponseMovimientos> listMovements = (List<ResponseMovimientos>) response.body().getResultado();
+            List<ResponseMovimientos> listPendingMovements = new ArrayList<>();
+            for (ResponseMovimientos m : listMovements) {
+                SimpleDateFormat dt1 = new SimpleDateFormat("yyyy-MM-dd");
+                String fecha = dt1.format(new Date());
+                Date date = dt1.parse(fecha);
+                if (m.getI_estado() != null && (m.getI_estado().equals("E") || m.getI_estado().equals("A")) && (m.getF_solictud().after(date) || m.getF_solictud().equals(date) )) {
+                    listPendingMovements.add(m);
+                }
+            }
+            view.showResultPendingSalaryAdvance(listPendingMovements);
+        }catch (Exception ex){
+            view.showDataFetchError("");
+        }
+    }
+    @Override
+    public <T> void onErrorPendingSalaryAdvance(Response<BaseResponse<T>> response) {
+        if(response != null){
+            view.showDataFetchError(response.body().getMensajeErrorUsuario());
+        }else{
+            view.showDataFetchError("");
+        }
+    }
+
+
 
     @Override
     public void fetchButtonStateTransfers() {
@@ -216,12 +255,20 @@ public class FragmentTransactionsMenuPresenter implements FragmentTransactionsMe
         view.showTransactionMenu();
     }
 
-
     @Override
     public <T> void onExpiredToken(Response<BaseResponse<T>> response) {
         view.hideCircularProgressBar();
         view.showExpiredToken(response.body().getErrorToken());
     }
 
+    @Override
+    public void onFailure(Throwable t, boolean isErrorTimeOut) {
+        view.hideCircularProgressBar();
+        if(isErrorTimeOut){
+            view.showErrorTimeOut();
+        }else{
+            view.showDataFetchError("");
+        }
+    }
 
 }

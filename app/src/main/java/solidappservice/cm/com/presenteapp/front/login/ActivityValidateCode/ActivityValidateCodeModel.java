@@ -29,7 +29,7 @@ public class ActivityValidateCodeModel implements ActivityValidateCodeContract.M
     public void sendVerificationCode(RequestEnviarCodigo body, ActivityValidateCodeContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -56,8 +56,9 @@ public class ActivityValidateCodeModel implements ActivityValidateCodeContract.M
                     if(t instanceof IOException){
                         listener.onFailure(t, true);
                     }else{
-                        listener.onFailure(t, false);
+                        listener.onError(null);
                     }
+
                 }
             });
 
@@ -70,7 +71,7 @@ public class ActivityValidateCodeModel implements ActivityValidateCodeContract.M
     public void validateVerificationCode(RequestValidarCodigo body, ActivityValidateCodeContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -97,8 +98,9 @@ public class ActivityValidateCodeModel implements ActivityValidateCodeContract.M
                     if(t instanceof IOException){
                         listener.onFailure(t, true);
                     }else{
-                        listener.onFailure(t, false);
+                        listener.onError(null);
                     }
+
                 }
             });
 
@@ -111,7 +113,7 @@ public class ActivityValidateCodeModel implements ActivityValidateCodeContract.M
     public void registerDevice(Dispositivo body, final ActivityValidateCodeContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -138,8 +140,9 @@ public class ActivityValidateCodeModel implements ActivityValidateCodeContract.M
                     if(t instanceof IOException){
                         listener.onFailure(t, true);
                     }else{
-                        listener.onFailure(t, false);
+                        listener.onError(null);
                     }
+
                 }
             });
 

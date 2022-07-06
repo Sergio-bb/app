@@ -17,7 +17,6 @@ import solidappservice.cm.com.presenteapp.entities.adelantonomina.response.Respo
 import solidappservice.cm.com.presenteapp.entities.adelantonomina.response.ResponseValidarRequisitos;
 import solidappservice.cm.com.presenteapp.entities.base.BaseRequest;
 import solidappservice.cm.com.presenteapp.entities.base.BaseResponse;
-import solidappservice.cm.com.presenteapp.front.menutransacciones.FragmentTransactionsMenu.FragmentTransactionsMenuContract;
 import solidappservice.cm.com.presenteapp.rest.NetworkHelper;
 import solidappservice.cm.com.presenteapp.rest.retrofit.apipresente.ApiPresente;
 
@@ -26,51 +25,12 @@ import solidappservice.cm.com.presenteapp.rest.retrofit.apipresente.ApiPresente;
  */
 public class FragmentSolicityModel implements FragmentSolicityContract.Model {
 
-    @Override
-    public void getPendingSalaryAdvance(BaseRequest body, final FragmentSolicityContract.APIListener listener) {
-        try {
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
-
-            ApiPresente service = retrofit.create(ApiPresente.class);
-            Call<BaseResponse<List<ResponseMovimientos>>> call = service.getMoves(body);
-            call.enqueue(new Callback<BaseResponse<List<ResponseMovimientos>>>() {
-
-                @Override
-                public void onResponse(Call<BaseResponse<List<ResponseMovimientos>>> call, Response<BaseResponse<List<ResponseMovimientos>>> response) {
-                    if (response.isSuccessful()) {
-                        if(response.body().getErrorToken() != null && !response.body().getErrorToken().isEmpty()){
-                            listener.onExpiredToken(response);
-                        }else if(response.body().getDescripcionError() != null && !response.body().getDescripcionError().isEmpty()){
-                            listener.onErrorPendingSalaryAdvance(response);
-                        }else{
-                            listener.onSuccessPendingSalaryAdvance(response);
-                        }
-                    } else {
-                        listener.onErrorPendingSalaryAdvance(null);
-                    }
-                }
-                @Override
-                public void onFailure(Call<BaseResponse<List<ResponseMovimientos>>> call, Throwable t) {
-                    if(t instanceof IOException){
-                        listener.onFailurePendingSalaryAdvance(t, true);
-                    }else{
-                        listener.onFailurePendingSalaryAdvance(t, false);
-                    }
-                }
-            });
-        } catch (Exception e) {
-            listener.onError(null);
-        }
-    }
 
     @Override
     public void getValidateRequirements(BaseRequest body, FragmentSolicityContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -83,13 +43,13 @@ public class FragmentSolicityModel implements FragmentSolicityContract.Model {
                     if (response.isSuccessful()) {
                         if(response.body().getErrorToken() != null && !response.body().getErrorToken().isEmpty()){
                             listener.onExpiredToken(response);
-                        }else if(response.body().getDescripcionError() != null && !response.body().getDescripcionError().isEmpty()){
-                            listener.onErrorValidateRequirements(response);
+                        }else if(response.body().getMensajeErrorUsuario() != null && !response.body().getMensajeErrorUsuario().isEmpty()){
+                            listener.onError(response);
                         }else{
-                            listener.onSuccessValidateRequirements(response);
+                            listener.onSuccess(response);
                         }
                     } else {
-                        listener.onErrorValidateRequirements(null);
+                        listener.onError(null);
                     }
                 }
                 @Override
@@ -97,48 +57,9 @@ public class FragmentSolicityModel implements FragmentSolicityContract.Model {
                     if(t instanceof IOException){
                         listener.onFailure(t, true);
                     }else{
-                        listener.onFailure(t, false);
+                        listener.onError(null);
                     }
-                }
-            });
-        } catch (Exception e) {
-            listener.onError(null);
-        }
-    }
 
-    @Override
-    public void getReasonsNotMeetsRequirements(RequestNoCumple body, FragmentSolicityContract.APIListener listener) {
-        try {
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
-
-            ApiPresente service = retrofit.create(ApiPresente.class);
-            Call<BaseResponse<List<ResponseNoCumple>>> call = service.validateReasonsNotMeetsRequirements(body);
-            call.enqueue(new Callback<BaseResponse<List<ResponseNoCumple>>>() {
-
-                @Override
-                public void onResponse(Call<BaseResponse<List<ResponseNoCumple>>> call, Response<BaseResponse<List<ResponseNoCumple>>> response) {
-                    if (response.isSuccessful()) {
-                        if(response.body().getErrorToken() != null && !response.body().getErrorToken().isEmpty()){
-                            listener.onExpiredToken(response);
-                        }else if(response.body().getDescripcionError() != null && !response.body().getDescripcionError().isEmpty()){
-                            listener.onErrorReasonsNotMeetsRequirements(response);
-                        }else{
-                            listener.onSuccessReasonsNotMeetsRequirements(response);
-                        }
-                    } else {
-                        listener.onErrorReasonsNotMeetsRequirements(null);
-                    }
-                }
-                @Override
-                public void onFailure(Call<BaseResponse<List<ResponseNoCumple>>> call, Throwable t) {
-                    if(t instanceof IOException){
-                        listener.onFailureReasonsNotMeetsRequirements(t, true);
-                    }else{
-                        listener.onFailureReasonsNotMeetsRequirements(t, false);
-                    }
                 }
             });
         } catch (Exception e) {
@@ -150,7 +71,7 @@ public class FragmentSolicityModel implements FragmentSolicityContract.Model {
     public void getDebtCapacity(BaseRequest body, FragmentSolicityContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -163,10 +84,10 @@ public class FragmentSolicityModel implements FragmentSolicityContract.Model {
                     if (response.isSuccessful()) {
                         if(response.body().getErrorToken() != null && !response.body().getErrorToken().isEmpty()){
                             listener.onExpiredToken(response);
-                        }else if(response.body().getDescripcionError() != null && !response.body().getDescripcionError().isEmpty()){
+                        }else if(response.body().getMensajeErrorUsuario() != null && !response.body().getMensajeErrorUsuario().isEmpty()){
                             listener.onError(response);
                         }else{
-                            listener.onSuccessDebtCapacity(response);
+                            listener.onSuccess(response);
                         }
                     } else {
                         listener.onError(null);
@@ -177,8 +98,9 @@ public class FragmentSolicityModel implements FragmentSolicityContract.Model {
                     if(t instanceof IOException){
                         listener.onFailure(t, true);
                     }else{
-                        listener.onFailure(t, false);
+                        listener.onError(null);
                     }
+
                 }
             });
         } catch (Exception e) {
@@ -187,38 +109,39 @@ public class FragmentSolicityModel implements FragmentSolicityContract.Model {
     }
 
     @Override
-    public void getMoves(BaseRequest body, FragmentSolicityContract.APIListener listener) {
+    public void getReasonsNotMeetsRequirements(RequestNoCumple body, FragmentSolicityContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
             ApiPresente service = retrofit.create(ApiPresente.class);
-            Call<BaseResponse<List<ResponseMovimientos>>> call = service.getMoves(body);
-            call.enqueue(new Callback<BaseResponse<List<ResponseMovimientos>>>() {
+            Call<BaseResponse<List<ResponseNoCumple>>> call = service.validateReasonsNotMeetsRequirements(body);
+            call.enqueue(new Callback<BaseResponse<List<ResponseNoCumple>>>() {
 
                 @Override
-                public void onResponse(Call<BaseResponse<List<ResponseMovimientos>>> call, Response<BaseResponse<List<ResponseMovimientos>>> response) {
+                public void onResponse(Call<BaseResponse<List<ResponseNoCumple>>> call, Response<BaseResponse<List<ResponseNoCumple>>> response) {
                     if (response.isSuccessful()) {
                         if(response.body().getErrorToken() != null && !response.body().getErrorToken().isEmpty()){
                             listener.onExpiredToken(response);
-                        }else if(response.body().getDescripcionError() != null && !response.body().getDescripcionError().isEmpty()){
-                            listener.onErrorMoves(response);
+                        }else if(response.body().getMensajeErrorUsuario() != null && !response.body().getMensajeErrorUsuario().isEmpty()){
+                            listener.onError(response);
                         }else{
-                            listener.onSuccessMoves(response);
+                            listener.onSuccess(response);
                         }
                     } else {
-                        listener.onErrorMoves(null);
+                        listener.onError(null);
                     }
                 }
                 @Override
-                public void onFailure(Call<BaseResponse<List<ResponseMovimientos>>> call, Throwable t) {
+                public void onFailure(Call<BaseResponse<List<ResponseNoCumple>>> call, Throwable t) {
                     if(t instanceof IOException){
-                        listener.onFailureMoves(t, true);
+                        listener.onFailure(t, true);
                     }else{
-                        listener.onFailureMoves(t, false);
+                        listener.onError(null);
                     }
+
                 }
             });
         } catch (Exception e) {
@@ -230,7 +153,7 @@ public class FragmentSolicityModel implements FragmentSolicityContract.Model {
     public void getTips(FragmentSolicityContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -243,26 +166,27 @@ public class FragmentSolicityModel implements FragmentSolicityContract.Model {
                     if (response.isSuccessful()) {
                         if(response.body().getErrorToken() != null && !response.body().getErrorToken().isEmpty()){
                             listener.onExpiredToken(response);
-                        }else if(response.body().getDescripcionError() != null && !response.body().getDescripcionError().isEmpty()){
-                            listener.onErrorTips(response);
+                        }else if(response.body().getMensajeErrorUsuario() != null && !response.body().getMensajeErrorUsuario().isEmpty()){
+                            listener.onError(response);
                         }else{
-                            listener.onSuccessTips(response);
+                            listener.onSuccess(response);
                         }
                     } else {
-                        listener.onErrorTips(null);
+                        listener.onError(null);
                     }
                 }
                 @Override
                 public void onFailure(Call<BaseResponse<List<ResponseTips>>> call, Throwable t) {
                     if(t instanceof IOException){
-                        listener.onFailureTips(t, true);
+                        listener.onFailure(t, true);
                     }else{
-                        listener.onFailureTips(t, false);
+                        listener.onError(null);
                     }
+
                 }
             });
         } catch (Exception e) {
-            listener.onErrorTips(null);
+            listener.onError(null);
         }
     }
 
@@ -270,7 +194,7 @@ public class FragmentSolicityModel implements FragmentSolicityContract.Model {
     public void sendLogs(RequestLogs body, FragmentSolicityContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -303,6 +227,44 @@ public class FragmentSolicityModel implements FragmentSolicityContract.Model {
         }
     }
 
+    @Override
+    public void getMoves(BaseRequest body, FragmentSolicityContract.APIListener listener) {
+        try {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
 
+            ApiPresente service = retrofit.create(ApiPresente.class);
+            Call<BaseResponse<List<ResponseMovimientos>>> call = service.getMoves(body);
+            call.enqueue(new Callback<BaseResponse<List<ResponseMovimientos>>>() {
+
+                @Override
+                public void onResponse(Call<BaseResponse<List<ResponseMovimientos>>> call, Response<BaseResponse<List<ResponseMovimientos>>> response) {
+                    if (response.isSuccessful()) {
+                        if(response.body().getErrorToken() != null && !response.body().getErrorToken().isEmpty()){
+                            listener.onExpiredToken(response);
+                        }else if(response.body().getMensajeErrorUsuario() != null && !response.body().getMensajeErrorUsuario().isEmpty()){
+                            listener.onError(response);
+                        }else{
+                            listener.onSuccess(response);
+                        }
+                    } else {
+                        listener.onError(null);
+                    }
+                }
+                @Override
+                public void onFailure(Call<BaseResponse<List<ResponseMovimientos>>> call, Throwable t) {
+                    if(t instanceof IOException){
+                        listener.onFailure(t, true);
+                    }else{
+                        listener.onError(null);
+                    }
+
+                }
+            });
+        } catch (Exception e) {
+            listener.onError(null);
+        }
+    }
 }
-

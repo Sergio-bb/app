@@ -28,9 +28,9 @@ import solidappservice.cm.com.presenteapp.R;
 import solidappservice.cm.com.presenteapp.entities.mensajesbanner.ResponseMensajesBanner;
 import solidappservice.cm.com.presenteapp.entities.parametrosgenerales.ResponseMensajesRespuesta;
 import solidappservice.cm.com.presenteapp.entities.tyc.response.ReponseTyC;
-import solidappservice.cm.com.presenteapp.front.base.ActivityBase;
-import solidappservice.cm.com.presenteapp.front.base.main.ActivityMainView;
+import solidappservice.cm.com.presenteapp.front.base.ActivityMainView;
 import solidappservice.cm.com.presenteapp.rest.NetworkHelper;
+import solidappservice.cm.com.presenteapp.front.base.ActivityBase;
 import solidappservice.cm.com.presenteapp.entities.base.GlobalState;
 
 /**
@@ -42,6 +42,7 @@ public class ActivitySplashView extends ActivityBase implements ActivitySplashCo
     private ActivitySplashPresenter presenter;
     private GlobalState state;
     private ActivityBase context;
+    //private static final long SPLASH_DELAY = 2000;
     private static final int SPLASH_DELAY = 10000;
     public MyReceiver myreceiver;
 
@@ -56,6 +57,14 @@ public class ActivitySplashView extends ActivityBase implements ActivitySplashCo
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
         setControls();
+
+        if(isHmsAvailable(this)){
+            myreceiver = new MyReceiver();
+            IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+            filter.addAction("com.huawei.codelabpush.ON_NEW_TOKEN");
+            this.registerReceiver(myreceiver, filter);
+        }
+
     }
 
     @Override
@@ -63,17 +72,14 @@ public class ActivitySplashView extends ActivityBase implements ActivitySplashCo
         presenter = new ActivitySplashPresenter(this, new ActivitySplashModel());
         context = this;
         state = (GlobalState) getApplicationContext();
-        if(isHmsAvailable(this)){
-            myreceiver = new MyReceiver();
-            IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-            filter.addAction("com.huawei.codelabpush.ON_NEW_TOKEN");
-            this.registerReceiver(myreceiver, filter);
-        }
+//        new DelayTask(this).execute(SPLASH_DELAY);
     }
 
     @Override
     public void onResume(){
         super.onResume();
+        //tempThread(100000);
+        //startApp();
         initialStateVariables();
     }
 
@@ -100,7 +106,7 @@ public class ActivitySplashView extends ActivityBase implements ActivitySplashCo
         if (NetworkHelper.isConnectionAvailable(context)) {
             boolean isHmsSystem = isHmsAvailable(context);
             loadIsHmsAvailable(isHmsSystem);
-            fetchResponseMessages();
+            fetchBannerMessages();
         }else{
             startApp();
         }
@@ -111,22 +117,6 @@ public class ActivitySplashView extends ActivityBase implements ActivitySplashCo
         Intent mainIntent = new Intent().setClass(ActivitySplashView.this, ActivityMainView.class);
         startActivity(mainIntent);
         finish();
-    }
-
-    @Override
-    public void fetchResponseMessages(){
-        try{
-            presenter.fetchResponseMessages();
-        }catch (Exception ex){
-            fetchBannerMessages();
-        }
-    }
-
-    @Override
-    public void loadResponseMessages(List<ResponseMensajesRespuesta> responseMessages){
-        if (responseMessages != null && state != null) {
-            state.setMensajesRespuesta(responseMessages);
-        }
     }
 
     @Override
@@ -179,7 +169,6 @@ public class ActivitySplashView extends ActivityBase implements ActivitySplashCo
         try{
             presenter.fetchTermsAndConditions();
         }catch (Exception ex){
-
         }
     }
 
@@ -191,73 +180,18 @@ public class ActivitySplashView extends ActivityBase implements ActivitySplashCo
     }
 
     @Override
-    public void fetchButtonStatePaymentQR(){
+    public void fetchResponseMessages(){
         try{
-            presenter.fetchButtonStatePaymentQR();
+            presenter.fetchResponseMessages();
         }catch (Exception ex){
-            state.setActiveButtonPaymentQR(false);
         }
     }
 
     @Override
-    public void isActiveButtonPaymentQR(boolean isActiveSuscription){
-        state.setActiveButtonPaymentQR(isActiveSuscription);
-    }
-
-    @Override
-    public void fetchButtonStatePaymentDispersiones(){
-        try{
-            presenter.fetchButtonStatePaymentDispersiones();
-        }catch (Exception ex){
-            state.setActiveButtonPaymentDispersiones(false);
+    public void loadResponseMessages(List<ResponseMensajesRespuesta> responseMessages){
+        if (responseMessages != null && state != null) {
+            state.setMensajesRespuesta(responseMessages);
         }
-    }
-
-    @Override
-    public void isActiveButtonPaymentDispersiones(boolean isActiveButtonDispersion){
-        state.setActiveButtonPaymentDispersiones(isActiveButtonDispersion);
-    }
-
-    @Override
-    public void fetchStateButtonPaymentSuscriptions(){
-        try{
-            presenter.fetchStateButtonPaymentSuscriptions();
-        }catch (Exception ex){
-            state.setActiveButtonPaymentSuscriptions(false);
-        }
-    }
-
-    @Override
-    public void isActiveButtonPaymentSuscriptions(boolean isActiveButtonSuscriptions){
-        state.setActiveButtonPaymentSuscriptions(isActiveButtonSuscriptions);
-    }
-
-    @Override
-    public void fetchStateNequiBalance(){
-        try{
-            presenter.fetchStateNequiBalance();
-        }catch (Exception ex){
-            state.setActiveStateNequiBalance(false);
-        }
-    }
-
-    @Override
-    public void isActiveStateNequiBalance(boolean isActiveNequiBalance){
-        state.setActiveStateNequiBalance(isActiveNequiBalance);
-    }
-
-    @Override
-    public void fetchStateSuscriptions(){
-        try{
-            presenter.fetchStateSuscriptions();
-        }catch (Exception ex){
-            state.setActiveStateSuscriptions(false);
-        }
-    }
-
-    @Override
-    public void isActiveStateSuscriptions(boolean isActiveButtonQR){
-        state.setActiveStateSuscriptions(isActiveButtonQR);
     }
 
 
@@ -296,7 +230,7 @@ public class ActivitySplashView extends ActivityBase implements ActivitySplashCo
     }
 
     @Override
-    public Bitmap drawableFromUrl(String url) throws IOException {
+    public Bitmap drawableFromUrl(String url) throws java.io.IOException {
         HttpURLConnection connection = (HttpURLConnection)new java.net.URL(url) .openConnection();
         connection.setRequestProperty("User-agent","Mozilla/4.0");
         connection.connect();
@@ -335,4 +269,132 @@ public class ActivitySplashView extends ActivityBase implements ActivitySplashCo
         };
         splashThread.start();
     }
+
+
+
+//    private class DelayTask extends AsyncTask<Long, String, String> {
+//
+//        ActivityBase context;
+//
+//        DelayTask(ActivityBase context) {
+//            this.context = context;
+//        }
+//
+//        @Override
+//        protected void onPreExecute() {
+//        }
+//
+//        @Override
+//        protected String doInBackground(Long... params) {
+//            try {
+//                if (NetworkHelper.isConnectionAvailable(context)) {
+//                    ArrayList<ResponseLocationsAgencies> agencias;
+//                    ArrayList<MensajesBanner> mensajes;
+//                    //MensajesBannerVersion mensajes;
+//                    String urlImageBanner;
+//                    String versionApp;
+//
+//                    String jsonAgencias;
+//                    String jsonAppMensajes;
+//                    //String jsonAppMensajesVersion;
+//                    String jsonImgBanner;
+//                    String jsonVersionActualApp;
+//
+//                    //Terminos y condiciones
+//                    String jsonTerminos;
+//                    TerminosyCondiciones terminos;
+//
+//                    //Detecta Sistema Operativo HMS o GMS
+//                    boolean isHmsSystem = false;
+//
+//
+//                    NetworkHelper helper = new NetworkHelper();
+//                    jsonAgencias = helper.readService(SincroHelper.AGENCIAS);
+//                    jsonAppMensajes = helper.readService(SincroHelper.MENSAJES_BANNER);
+//                    //jsonAppMensajesVersion = helper.readService(SincroHelper.MENSAJES_BANNER_VERSION);
+//                    jsonImgBanner = helper.readService(SincroHelper.IMAGEN_BANNER);
+//                    jsonVersionActualApp = helper.readService(SincroHelper.VERSION_APP);
+//                    jsonTerminos = helper.readService(SincroHelper.OBTENER_TERMINOS);
+//
+//                    agencias = SincroHelper.procesarJsonAgencias(jsonAgencias);
+//                    mensajes = SincroHelper.procesarJsonMensajesBanner(jsonAppMensajes);
+//                    //mensajes = SincroHelper.procesarJsonMensajesBannerVersion(jsonAppMensajesVersion);
+//                    urlImageBanner = SincroHelper.procesarJsonImagenBanner(jsonImgBanner);
+//                    versionApp = SincroHelper.procesarJsonVersionApp(jsonVersionActualApp);
+//                    terminos = SincroHelper.procesarJsonTerminos(jsonTerminos);
+//                    isHmsSystem = isHmsAvailable(context);
+//
+//                    if (agencias != null && state != null) {
+//                        state.setAgencias(agencias);
+//                    }
+//
+//                    if (mensajes != null && state != null) {
+//                        state.setMensajes(mensajes);
+//                    }
+//
+//                    if (versionApp != null && state != null) {
+//                        state.setCurrentVersion(versionApp);
+//                    }
+//
+//                    if (terminos != null && state != null) {
+//                        state.setTerminos(terminos);
+//                    }
+//
+//                    if(!TextUtils.isEmpty(urlImageBanner)){
+//                        Bitmap bitmap = drawableFromUrl(urlImageBanner);
+//                        state.setBitmapImgBanner(bitmap);
+//                    }
+//
+//                    if (state != null) {
+//                        state.setHmsSystem(isHmsSystem);
+//                    }
+//
+//                    int h = 10000;
+//                    for(int i = 0; i < h; i++){
+//                        System.out.print(i);
+//                    }
+//
+//                }else{
+//                    int h = 10000;
+//                    for(int i = 0; i < h; i++){
+//                        System.out.print(i);
+//                    }
+//                }
+//
+//                return "OK";
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                return "NO";
+//            }
+//        }
+//
+//        @Override
+//        protected void onProgressUpdate(String... values) {
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            ingresar();
+//        }
+//    }
+
+//    private void ingresar() {
+//        Intent mainIntent = new Intent().setClass(ActivitySplashView.this, ActivityMain.class);
+//        startActivity(mainIntent);
+//        finish();
+//    }
+
+//    Bitmap drawableFromUrl(String url) throws java.io.IOException {
+//
+//        HttpURLConnection connection = (HttpURLConnection)new java.net.URL(url) .openConnection();
+//        connection.setRequestProperty("User-agent","Mozilla/4.0");
+//
+//        connection.connect();
+//        InputStream input = connection.getInputStream();
+//
+//        return BitmapFactory.decodeStream(input);
+//    }
+//
+
+
 }

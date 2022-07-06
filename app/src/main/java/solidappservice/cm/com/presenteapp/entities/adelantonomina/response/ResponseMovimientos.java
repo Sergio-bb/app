@@ -1,5 +1,7 @@
 package solidappservice.cm.com.presenteapp.entities.adelantonomina.response;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Date;
 
 /**
@@ -11,25 +13,20 @@ public class ResponseMovimientos {
     private String k_transa;
     private String aanumnit;
     private Date f_solictud;
-    private Integer v_solicitado;
-    private Integer v_cupo;
+    private String v_solicitado;
+    private String v_cupo;
     private String i_estado;
     private String n_error;
     private String k_tipodr;
     private String k_numdoc;
     private String v_valorcre;
     private String f_primcuota;
-    private Integer k_flujo;
+    private String k_flujo;
     private String i_aceptacion;
     private String f_aceptacion;
     private String ip;
 
-    public ResponseMovimientos() {
-    }
-
-    public ResponseMovimientos(String k_transa, String aanumnit, Date f_solictud, Integer v_solicitado, Integer v_cupo,
-               String i_estado, String n_error, String k_tipodr, String k_numdoc, String v_valorcre,
-               String f_primcuota, Integer k_flujo, String i_aceptacion, String f_aceptacion, String ip) {
+    public ResponseMovimientos(String k_transa, String aanumnit, Date f_solictud, String v_solicitado, String v_cupo, String i_estado, String n_error, String k_tipodr, String k_numdoc, String v_valorcre, String f_primcuota, String k_flujo, String i_aceptacion, String f_aceptacion, String ip) {
         this.k_transa = k_transa;
         this.aanumnit = aanumnit;
         this.f_solictud = f_solictud;
@@ -45,6 +42,9 @@ public class ResponseMovimientos {
         this.i_aceptacion = i_aceptacion;
         this.f_aceptacion = f_aceptacion;
         this.ip = ip;
+    }
+
+    public ResponseMovimientos() {
     }
 
     public String getK_transa() {
@@ -71,19 +71,19 @@ public class ResponseMovimientos {
         this.f_solictud = f_solictud;
     }
 
-    public Integer getV_solicitado() {
+    public String getV_solicitado() {
         return v_solicitado;
     }
 
-    public void setV_solicitado(Integer v_solicitado) {
+    public void setV_solicitado(String v_solicitado) {
         this.v_solicitado = v_solicitado;
     }
 
-    public Integer getV_cupo() {
+    public String getV_cupo() {
         return v_cupo;
     }
 
-    public void setV_cupo(Integer v_cupo) {
+    public void setV_cupo(String v_cupo) {
         this.v_cupo = v_cupo;
     }
 
@@ -135,11 +135,11 @@ public class ResponseMovimientos {
         this.f_primcuota = f_primcuota;
     }
 
-    public Integer getK_flujo() {
+    public String getK_flujo() {
         return k_flujo;
     }
 
-    public void setK_flujo(Integer k_flujo) {
+    public void setK_flujo(String k_flujo) {
         this.k_flujo = k_flujo;
     }
 
@@ -150,20 +150,5 @@ public class ResponseMovimientos {
     public void setI_aceptacion(String i_aceptacion) {
         this.i_aceptacion = i_aceptacion;
     }
-
-    public String getF_aceptacion() {
-        return f_aceptacion;
-    }
-
-    public void setF_aceptacion(String f_aceptacion) {
-        this.f_aceptacion = f_aceptacion;
-    }
-
-    public String getIp() {
-        return ip;
-    }
-
-    public void setIp(String ip) {
-        this.ip = ip;
-    }
 }
+

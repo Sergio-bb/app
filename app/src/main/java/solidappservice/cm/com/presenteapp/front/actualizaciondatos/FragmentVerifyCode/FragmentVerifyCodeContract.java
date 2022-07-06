@@ -31,13 +31,13 @@ public interface FragmentVerifyCodeContract {
         void resultSendVerificationCode(CodigoVerificacion codigo);
         void resultRegisterDevice(String idRegistroDispositivo);
         void resultUpdatePersonalData();
-        void showCircularProgressBar(String textProgressBar);
-        void hideCircularProgressBar();
+        void showDataFetchError(String message);
+        void showErrorTimeOut();
+        void showExpiredToken(String message);
         void showBoxTypesCodeSend();
         void hideBoxTypesCodeSend();
-        void showErrorTimeOut();
-        void showDataFetchError(String title, String message);
-        void showExpiredToken(String message);
+        void showCircularProgressBar(String textProgressBar);
+        void hideCircularProgressBar();
     }
 
     interface Presenter{

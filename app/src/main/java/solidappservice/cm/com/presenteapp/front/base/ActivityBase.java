@@ -2,7 +2,6 @@ package solidappservice.cm.com.presenteapp.front.base;
 
 import android.Manifest;
 import android.app.AlertDialog.Builder;
-import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -11,8 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.icu.number.NumberFormatter;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
@@ -23,15 +21,11 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTabHost;
 import androidx.core.app.NotificationCompat;
-
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,8 +33,11 @@ import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.sql.Timestamp;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
@@ -64,137 +61,8 @@ public abstract class ActivityBase extends FragmentActivity implements IFragment
     private static GlobalState state;
     private static FragmentActivity activity;
     private static final String PATTERN_EMAIL = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-    public static final long DISCONNECT_TIMEOUT = 3 * 60 * 1000; // 3 min
-    private static Handler disconnectHandler = new IncomingHandler();
-    public static final int IMEI_REQUEST = 0;
-    public static final String[] PERMISSIONS_IMEI = {Manifest.permission.READ_PHONE_STATE};
 
-    protected abstract void setControls() throws Exception;
-
-    @Override
-    protected void onResume() {
-        state = (GlobalState) getApplicationContext();
-        activity = this;
-        resetDisconnectTimer();
-        super.onResume();
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (state != null && state.getFragmentActual() == IFragmentCoordinator.Pantalla.Ingreso) {
-            final Dialog dialog = new Dialog(this);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setCanceledOnTouchOutside(true);
-            dialog.setContentView(R.layout.pop_up_exit_application);
-            dialog.setCancelable(true);
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.buttonClose);
-            buttonClose.setOnClickListener(view -> dialog.dismiss());
-            Button buttonCancelar = (Button) dialog.findViewById(R.id.btnCancelar);
-            buttonCancelar.setOnClickListener(view -> dialog.dismiss());
-            Button buttonAceptar = dialog.findViewById(R.id.btnAceptar);
-            buttonAceptar.setOnClickListener(view -> {
-                reiniciarEstado();
-                finish();
-                dialog.dismiss();
-            });
-            dialog.show();
-        } else if(state != null && state.getFragmentActual() == Pantalla.MenuFinanzas){
-
-            setFragment(Pantalla.MenuPrincipal);
-
-        }else if(state != null && state.getFragmentActual() == Pantalla.ConveniosCompraProducto){
-            if(state.haveFinishedBuy()){
-                setFragment(Pantalla.ConveniosMenuPrincipal);
-            }else{
-                setFragment(Pantalla.ConveniosProductos);
-            }
-        }else if(state != null && state.getFragmentActual() == Pantalla.ConveniosProductos){
-            if(state.haveJumpedToProducts()){
-                setFragment(Pantalla.ConveniosMenuPrincipal);
-            }else{
-                setFragment(Pantalla.ConveniosLista);
-            }
-        }else if(state != null && state.getFragmentActual() == Pantalla.ConveniosLista){
-            setFragment(Pantalla.ConveniosMenuPrincipal);
-        }else if(state != null && state.getFragmentActual() == Pantalla.ConveniosMenuPrincipal){
-            state.setFragmentActual(Pantalla.MenuPrincipal);
-            super.onBackPressed();
-        } else {
-            setFragment(Pantalla.Ingreso);
-        }
-    }
-
-    public void reiniciarEstado() {
-        if (state != null) {
-            state.reiniciarEstado();
-        }
-    }
-
-    //-----Control user inactivity-----
-    @Override
-    public void onUserInteraction() {
-        resetDisconnectTimer();
-    }
-
-    private static class IncomingHandler extends Handler {
-        IncomingHandler() {
-        }
-        @Override
-        public void handleMessage(Message msg) {
-            Log.d("IncomingHandler", msg.toString());
-        }
-    }
-
-    private static final Runnable disconnectCallback = new Runnable() {
-        @Override
-        public void run() {
-            salir_timer();
-        }
-    };
-
-    public static void resetDisconnectTimer() {
-        disconnectHandler.removeCallbacks(disconnectCallback);
-        disconnectHandler.postDelayed(disconnectCallback, DISCONNECT_TIMEOUT);
-    }
-
-    public static void stopDisconnectTimer() {
-        disconnectHandler.removeCallbacks(disconnectCallback);
-    }
-
-    public static void salir_timer(){
-        if (state != null && state.getFragmentActual() != null && state.getFragmentActual() != Pantalla.Ingreso) {
-            final Dialog dialog = new Dialog(activity);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.setContentView(R.layout.pop_up_closedsession);
-            dialog.setCancelable(false);
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            Button buttonClosedSession = (Button) dialog.findViewById(R.id.btnVolverAIngresar);
-            buttonClosedSession.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    state.reiniciarEstado();
-                    dialog.dismiss();
-                    activity.finish();
-                }
-            });
-            dialog.show();
-        }else{
-            if(state != null){
-                state.reiniciarEstado();
-            }
-        }
-        stopDisconnectTimer();
-    }
-
-    public void salir(){
-        state.reiniciarEstado();
-        finish();
-    }
-
-
-
+    protected abstract void setControls();
 
     public void makeLToast(String mensaje) {
         Toast.makeText(this, mensaje, Toast.LENGTH_LONG).show();
@@ -204,10 +72,45 @@ public abstract class ActivityBase extends FragmentActivity implements IFragment
         Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show();
     }
 
+    public void makeDialog(String titulo, String mensaje) {
+        Builder d = new Builder(this);
+        d.setTitle(titulo);
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(mensaje);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        });
+        d.show();
+    }
+
     public String getMaxTope() {
         String tope = state.getTopeTransacciones();
         double parsed = Double.parseDouble(tope);
         return this.getMoneda(parsed);
+    }
+
+    public void makeDialog(String mensaje) {
+        makeDialog(getResources().getString(R.string.app_name), mensaje);
+    }
+
+    public void makeErrorDialog(String mensaje) {
+        makeDialog(getResources().getString(R.string.app_name), mensaje);
+    }
+
+    void makeNotification(String titulo, String mensaje, boolean error) {
+        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        Intent li = new Intent(getApplicationContext(), ActivityBase.class);
+        PendingIntent pi = PendingIntent.getActivity(getApplicationContext(), 0, li, PendingIntent.FLAG_UPDATE_CURRENT);
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+                .setSmallIcon((error ? android.R.drawable.stat_notify_error : android.R.drawable.stat_notify_sync))
+                .setContentTitle(titulo)
+                .setContentIntent(pi)
+                .setDefaults(Notification.DEFAULT_SOUND)
+                .setContentText(mensaje);
+
+        if(manager != null) manager.notify(100, mBuilder.build());
     }
 
     public static boolean validateEmail(String email) {
@@ -236,12 +139,52 @@ public abstract class ActivityBase extends FragmentActivity implements IFragment
         if(cellPhone.length() < 7){
             return false;
         }
-        return cellPhone.length() <= 10;
+        if(cellPhone.length() > 10){
+            return false;
+        }
+        return true;
+    }
+
+
+    //-----Control user inactivity-----
+
+    public static final long DISCONNECT_TIMEOUT = 2 * 60 * 1000; // 2 min
+    private static Handler disconnectHandler = new IncomingHandler();
+
+    private static class IncomingHandler extends Handler {
+        IncomingHandler() {
+        }
+        @Override
+        public void handleMessage(Message msg) {
+            Log.d("IncomingHandler", msg.toString());
+        }
+    }
+
+    private static final Runnable disconnectCallback = new Runnable() {
+        @Override
+        public void run() {
+            salir_timer();
+        }
+    };
+
+    public static void resetDisconnectTimer() {
+        disconnectHandler.removeCallbacks(disconnectCallback);
+        disconnectHandler.postDelayed(disconnectCallback, DISCONNECT_TIMEOUT);
+    }
+
+    public static void stopDisconnectTimer() {
+        disconnectHandler.removeCallbacks(disconnectCallback);
+    }
+
+    @Override
+    public void onUserInteraction() {
+        resetDisconnectTimer();
     }
 
     @Override
     public void onStop() {
         super.onStop();
+        //stopDisconnectTimer();
     }
 
     public String obtenerIdDispositivo() throws Exception {
@@ -384,7 +327,15 @@ public abstract class ActivityBase extends FragmentActivity implements IFragment
         return address;
     }
 
+
+    public void reiniciarEstado() {
+        if (state != null) {
+            state.reiniciarEstado();
+        }
+    }
+
     private void requestImeiPermission() {
+
         Log.i("Imei", "Requesting permission for reading IMEI");
 
         if (ActivityCompat.shouldShowRequestPermissionRationale(ActivityBase.this,
@@ -416,6 +367,89 @@ public abstract class ActivityBase extends FragmentActivity implements IFragment
         }
     }
 
+    public static final int IMEI_REQUEST = 0;
+    public static final String[] PERMISSIONS_IMEI = {Manifest.permission.READ_PHONE_STATE};
+
+    @Override
+    public void onBackPressed() {
+        if (state != null && state.getFragmentActual() == Pantalla.Ingreso) {
+            Builder d = new Builder(this);
+            d.setTitle(getResources().getString(R.string.app_name));
+            d.setIcon(R.mipmap.icon_presente);
+            d.setMessage("¿Desea salir de la aplicación?");
+            d.setCancelable(false);
+            d.setPositiveButton("Aceptar",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialogo1, int id) {
+                            reiniciarEstado();
+                            finish();
+                        }
+                    });
+            d.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                }
+            });
+            d.show();
+        } else if (state != null && state.getFragmentActual() == Pantalla.MenuPrincipal) {
+            Builder d = new Builder(this);
+            d.setTitle(getResources().getString(R.string.app_name));
+            d.setIcon(R.mipmap.icon_presente);
+            d.setMessage("¿Desea cerrar sesión?");
+            d.setCancelable(false);
+            d.setPositiveButton("Aceptar",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialogo1, int id) {
+                            reiniciarEstado();
+                            setFragment(Pantalla.Ingreso);
+                        }
+                    });
+            d.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                }
+            });
+            d.show();
+        }else if(state != null && (state.getFragmentActual() == Pantalla.Candidatos ||
+                state.getFragmentActual() == Pantalla.Votacion )  ) {
+
+            if (state.getFragmentActual() == Pantalla.Candidatos) {
+                state.setFragmentActual(Pantalla.MenuPrincipal);
+
+            } else {
+                state.setFragmentActual(Pantalla.Candidatos);
+            }
+            super.onBackPressed();
+        }else if(state != null && state.getFragmentActual() == Pantalla.MenuFinanzas){
+
+            setFragment(Pantalla.MenuPrincipal);
+
+        }else if(state != null && state.getFragmentActual() == Pantalla.ConveniosCompraProducto){
+            if(state.haveFinishedBuy()){
+                setFragment(Pantalla.ConveniosMenuPrincipal);
+            }else{
+                setFragment(Pantalla.ConveniosProductos);
+            }
+        }else if(state != null && state.getFragmentActual() == Pantalla.ConveniosProductos){
+            if(state.haveJumpedToProducts()){
+                setFragment(Pantalla.ConveniosMenuPrincipal);
+            }else{
+                setFragment(Pantalla.ConveniosLista);
+            }
+        }else if(state != null && state.getFragmentActual() == Pantalla.ConveniosLista){
+            setFragment(Pantalla.ConveniosMenuPrincipal);
+        }else if(state != null && state.getFragmentActual() == Pantalla.ConveniosMenuPrincipal){
+            state.setFragmentActual(Pantalla.MenuPrincipal);
+            super.onBackPressed();
+        }else if(state != null && state.getFragmentActual() == Pantalla.ConveniosMELandingME){
+            setFragment(Pantalla.ConveniosMenuPrincipal);
+        }else if(state != null && state.getFragmentActual() == Pantalla.ConveniosMEMostrarResumen){
+            setFragment(Pantalla.ConveniosMELandingME);
+        } else {
+            setFragment(Pantalla.Ingreso);
+        }
+    }
+
     public GlobalState getState() {
         if(state == null) {
             state = (GlobalState) getApplicationContext();
@@ -424,9 +458,82 @@ public abstract class ActivityBase extends FragmentActivity implements IFragment
     }
 
     @Override
-    public void setFragment(IFragmentCoordinator.Pantalla pantalla) {
+    protected void onResume() {
+        state = (GlobalState) getApplicationContext();
+        activity = this;
+        resetDisconnectTimer();
+        super.onResume();
+    }
+
+
+//    @Override
+//    public void ingresar(Usuario usuario) {
+//
+//    }
+
+    @Override
+    public void verMenuFinanzas() {
 
     }
+
+    @Override
+    public void verEstadoCuenta() {
+
+    }
+
+    @Override
+    public void verTransacciones() {
+
+    }
+
+    @Override
+    public void verTarjetaPresente() {
+
+    }
+
+    @Override
+    public void verMisMensajes() {
+
+    }
+
+    @Override
+    public void verGeoReferenciacion() {
+
+    }
+
+    @Override
+    public void verVotacion() {
+
+    }
+
+    @Override
+    public void verCandidatos() {
+
+    }
+
+    @Override
+    public void verMenuPrincipal(){
+
+    }
+
+    @Override
+    public void verRecuperarClave(){}
+
+//    @Override
+//    public void verBorrarCuentas() {
+//
+//    }
+//
+//    @Override
+//    public void verInscribirCuentas() {
+//
+//    }
+
+    @Override
+    public void setFragment(Pantalla pantalla) {
+
+    }
+
     public void hideKeyBoard() {
         if (getCurrentFocus() != null) {
             InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
@@ -434,13 +541,29 @@ public abstract class ActivityBase extends FragmentActivity implements IFragment
         }
     }
 
+    public String getMonedaWithOutDecimals(double valor) {
+        DecimalFormat formatter = new DecimalFormat("$#,###");
+        return formatter.format(valor);
+    }
+
     public String getMoneda(double valor) {
         DecimalFormat formatter = new DecimalFormat("$#,##0.00;$-#,##0.00");
         return formatter.format(valor);
     }
 
-    public String getMonedaWithOutDecimals(double valor) {
-        DecimalFormat formatter = new DecimalFormat("$#,###");
+    public String getMonedaWithDotSeparatorWithOutDecimals(double valor) {
+        DecimalFormatSymbols simbols = new DecimalFormatSymbols();
+        simbols.setDecimalSeparator(',');
+        simbols.setGroupingSeparator('.');
+        DecimalFormat formatter = new DecimalFormat("$#,###", simbols);
+        return formatter.format(valor);
+    }
+
+    public String getMonedaWithDotSeparator(double valor) {
+        DecimalFormatSymbols simbols = new DecimalFormatSymbols();
+        simbols.setDecimalSeparator(',');
+        simbols.setGroupingSeparator('.');
+        DecimalFormat formatter = new DecimalFormat("$#,##0.00", simbols);
         return formatter.format(valor);
     }
 
@@ -458,13 +581,73 @@ public abstract class ActivityBase extends FragmentActivity implements IFragment
         }
     }
 
-    public boolean tryParseDouble(String value) {
-        try {
-            Double.valueOf(value).intValue();
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
+    //-----VARIABLES ESTÁTICAS DE LA APLICACIÓN
+    public static final int MAX_DIAS_ESTADIA = 30;
+
+    public void salir(){
+        state.reiniciarEstado();
+        finish();
+    }
+
+    public static void salir_timer(){
+        if (state != null) {
+            state.reiniciarEstado();
         }
+        stopDisconnectTimer();
+        activity.finish();
+    }
+
+
+    public void showUnreadMessages(ResponseObtenerMensajes mensajeBuzon){
+        try{
+            GlobalState state = getState();
+            if(state != null){
+
+                if(mensajeBuzon != null){
+                    state.leerMensaje(mensajeBuzon);
+                }
+
+                FragmentTabHost mTabHost = state.getmTabHost();
+                if(mTabHost != null){
+                    int cant = state.getUnreadMessagesCount();
+                    int currentTab = mTabHost.getCurrentTab();
+                    if(currentTab == 3) {
+                        View view_tab = mTabHost.getCurrentTabView();
+                        if(view_tab == null) return;
+                        TextView c = view_tab.findViewById(R.id.cantMessages);
+                        if(c == null) return;
+                        if (cant > 0) {
+                            c.setText((cant > 9 ? String.valueOf(cant):" "+String.valueOf(cant)+" "));
+                            c.setVisibility(View.VISIBLE);
+                        } else {
+                            c.setText("");
+                            c.setVisibility(View.GONE);
+                        }
+                    }else{
+                        View messages_view = state.getMessages_view();
+                        if(messages_view != null){
+                            TextView c = messages_view.findViewById(R.id.cantMessages);
+                            if(c == null) return;
+                            if (cant > 0) {
+                                c.setText((cant > 9 ? String.valueOf(cant):" "+String.valueOf(cant)+" "));
+                                c.setVisibility(View.VISIBLE);
+                            } else {
+                                c.setText("");
+                                c.setVisibility(View.GONE);
+                            }
+                        }
+                    }
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public String generateUniqueId() {
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        String id = String.valueOf(timestamp.getTime());
+        return id;
     }
 
     public void guardarConfiguracionTerminos(boolean sw){
@@ -477,9 +660,15 @@ public abstract class ActivityBase extends FragmentActivity implements IFragment
         return preferences.getBoolean("pref_terminos", false);
     }
 
+    /*public void guardarConfiguracionSecureUrl(String url){
+        //// TODO: 14/12/2015 RECIBIR URL SEGURA DESDE EL SERVICIO Y GUARDARLA
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        preferences.edit().putString("pref_secure_url", url).apply();
+    }*/
+
     public String obtenerConfiguracionSecureUrl(){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        return preferences.getString("pref_secure_url", NetworkHelper.DIRECCION_WS);
+        return preferences.getString("pref_secure_url", NetworkHelper.URL_APIPRESENTEAPP);
     }
 
     public void guardarConfiguracionTutorial(boolean seen){

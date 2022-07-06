@@ -30,13 +30,13 @@ public class FragmentMovementsProductsPresenter implements FragmentMovementsProd
 
     @Override
     public void fetchMovementsProducts(RequestMovimientosProducto request) {
-        view.hideSectionMovementsProducts();
-        view.showCircularProgressBar("Consultando movimientos...");
+        view.showProgressDialog("Estamos realizando la consulta de tus saldos y productos...");
         model.getMovementsProducts(request, this);
     }
 
     @Override
     public <T> void onSuccess(Response<BaseResponse<T>> response) {
+        view.hideProgressDialog();
         try{
             List<ResponseMovimientoProducto> productos = (List<ResponseMovimientoProducto>) response.body().getResultado();
             Encripcion encripcion = Encripcion.getInstance();
@@ -46,40 +46,36 @@ public class FragmentMovementsProductsPresenter implements FragmentMovementsProd
                 Date date = new Date(Long.parseLong(producto.getF_movimi()));
                 producto.setF_movimi(formatFecha.format(date));
             }
-            view.hideCircularProgressBar();
             view.showMovementsProducts(productos);
-            view.showSectionMovementsProducts();
         }catch (Exception ex){
-            view.hideCircularProgressBar();
-            view.showDataFetchError("Lo sentimos", "");
-            view.showErrorWithRefresh();
+            view.showDataFetchError("");
         }
-    }
-
-    @Override
-    public <T> void onError(Response<BaseResponse<T>> response) {
-        if(response != null){
-            view.showDataFetchError("Lo sentimos", response.body().getMensajeErrorUsuario());
-        }else{
-            view.showDataFetchError("Lo sentimos", "");
-        }
-        view.showErrorWithRefresh();
-    }
-
-    @Override
-    public void onFailure(Throwable t, boolean isErrorTimeOut) {
-        if(isErrorTimeOut){
-            view.showErrorTimeOut();
-        }else{
-            view.showDataFetchError("Lo sentimos", "");
-        }
-        view.showErrorWithRefresh();
     }
 
     @Override
     public <T> void onExpiredToken(Response<BaseResponse<T>> response) {
-        view.hideCircularProgressBar();
+        view.hideProgressDialog();
         view.showExpiredToken(response.body().getErrorToken());
+    }
+
+    @Override
+    public <T> void onError(Response<BaseResponse<T>> response) {
+        view.hideProgressDialog();
+        if(response != null){
+            view.showDataFetchError(response.body().getMensajeErrorUsuario());
+        }else{
+            view.showDataFetchError("");
+        }
+    }
+
+    @Override
+    public void onFailure(Throwable t, boolean isErrorTimeOut) {
+        view.hideProgressDialog();
+        if(isErrorTimeOut){
+            view.showErrorTimeOut();
+        }else{
+            view.showDataFetchError("");
+        }
     }
 
 }

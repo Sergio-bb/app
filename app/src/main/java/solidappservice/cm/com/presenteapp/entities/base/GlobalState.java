@@ -1,33 +1,22 @@
 package solidappservice.cm.com.presenteapp.entities.base;
 
-import android.Manifest;
 import android.app.Application;
-import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.Bundle;
-import androidx.core.app.ActivityCompat;
+
 import androidx.fragment.app.FragmentTabHost;
+
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
+import solidappservice.cm.com.presenteapp.entities.actualizaciondatos.apiresponse.ResponseConsultarDatosAsociado;
 import solidappservice.cm.com.presenteapp.entities.bottomnavigationbar.response.ResponseLocationsAgencies;
 import solidappservice.cm.com.presenteapp.entities.estadocuenta.response.ResponseMovimientoProducto;
-import solidappservice.cm.com.presenteapp.entities.nequi.dto.SuscriptionData;
-import solidappservice.cm.com.presenteapp.entities.nequi.response.ResponseDataCommerceQR;
 import solidappservice.cm.com.presenteapp.entities.parametrosgenerales.ResponseMensajesRespuesta;
+import solidappservice.cm.com.presenteapp.entities.parametrosgenerales.ResponseParametrosAPP;
 import solidappservice.cm.com.presenteapp.entities.transferencias.response.ResponseBanco;
 import solidappservice.cm.com.presenteapp.entities.centrosvacacionales.response.ResponseCentroVacacional;
 import solidappservice.cm.com.presenteapp.entities.bottomnavigationbar.response.ResponseDirectorio;
@@ -36,7 +25,7 @@ import solidappservice.cm.com.presenteapp.entities.mensajes.response.ResponseObt
 import solidappservice.cm.com.presenteapp.entities.bottomnavigationbar.response.ResponsePortafolio;
 import solidappservice.cm.com.presenteapp.entities.bottomnavigationbar.dto.PortafolioPadre;
 import solidappservice.cm.com.presenteapp.entities.bottomnavigationbar.response.ResponsePreguntasFrecuente;
-import solidappservice.cm.com.presenteapp.entities.estadocuenta.response.ResponseProducto;
+import solidappservice.cm.com.presenteapp.entities.estadocuenta.response.ResponseProductos;
 import solidappservice.cm.com.presenteapp.entities.bottomnavigationbar.response.ResponseServicios;
 import solidappservice.cm.com.presenteapp.entities.tarjetapresente.dto.ReposicionTarjeta;
 import solidappservice.cm.com.presenteapp.entities.tarjetapresente.response.ResponseTarjeta;
@@ -48,10 +37,7 @@ import solidappservice.cm.com.presenteapp.entities.login.Response.Usuario;
 import solidappservice.cm.com.presenteapp.entities.adelantonomina.response.ResponseValidarRequisitos;
 import solidappservice.cm.com.presenteapp.entities.convenios.dto.Resumen;
 import solidappservice.cm.com.presenteapp.entities.adelantonomina.response.ResponseTopes;
-import solidappservice.cm.com.presenteapp.rest.NetworkHelper;
 import solidappservice.cm.com.presenteapp.tools.IFragmentCoordinator;
-import solidappservice.cm.com.presenteapp.tools.ILocation;
-import solidappservice.cm.com.presenteapp.tools.LocationHelper;
 
 /**
  * CREADO POR JORGE ANDRÉS DAVID CARDONA
@@ -116,20 +102,16 @@ public class GlobalState extends Application{
 
     public void reiniciarEstado() {
         usuario = null;
-        statusSuscription = null;
-        productos = null;
-        datosSuscripcion = null;
-        estadoAdelantoNomina = null;
-        saldoNequi = null;
-        tarjetas = null;
-        tarjetaSeleccionada = null;
-
     }
     public boolean validarEstado() {
-        return usuario != null && !TextUtils.isEmpty(usuario.getToken())
+        boolean sw = false;
+        if (usuario != null && !TextUtils.isEmpty(usuario.getToken())
                 && !TextUtils.isEmpty(usuario.getCedula())
                 && !TextUtils.isEmpty(usuario.getClave())
-                && !TextUtils.isEmpty(usuario.getNombreAsociado());
+                && !TextUtils.isEmpty(usuario.getNombreAsociado())) {
+            sw = true;
+        }
+        return sw;
     }
 
 
@@ -160,29 +142,29 @@ public class GlobalState extends Application{
     }
 
     //VARIABLES ESTADO CUENTA
-    private List<ResponseProducto> productos;
-    private List<ResponseProducto> productosDetalle;
-    private ResponseProducto productoSeleccionado;
+    private List<ResponseProductos> productos;
+    private List<ResponseProductos> productosDetalle;
+    private ResponseProductos productoSeleccionado;
     private List<ResponseMovimientoProducto> movimientos;
 
-    public List<ResponseProducto> getProductos() {
+    public List<ResponseProductos> getProductos() {
         return productos;
     }
-    public void setProductos(List<ResponseProducto> productos) {
+    public void setProductos(List<ResponseProductos> productos) {
         this.productos = productos;
     }
 
-    public List<ResponseProducto> getProductosDetalle() {
+    public List<ResponseProductos> getProductosDetalle() {
         return productosDetalle;
     }
-    public void setProductosDetalle(ArrayList<ResponseProducto> productos_ver_detalle) {
+    public void setProductosDetalle(ArrayList<ResponseProductos> productos_ver_detalle) {
         this.productosDetalle = productos_ver_detalle;
     }
 
-    public ResponseProducto getProductoSeleccionado() {
+    public ResponseProductos getProductoSeleccionado() {
         return productoSeleccionado;
     }
-    public void setProductoSeleccionado(ResponseProducto productoSeleccionado) {
+    public void setProductoSeleccionado(ResponseProductos productoSeleccionado) {
         this.productoSeleccionado = productoSeleccionado;
     }
 
@@ -348,6 +330,9 @@ public class GlobalState extends Application{
     private Resumen resumen;
     private boolean haveJumpedToProducts;
     private boolean haveFinishedBuy;
+    private String idTransaccionPresente;
+    private ResponseConsultarDatosAsociado datosAsociado;
+    private ResponseParametrosAPP paramsMovilExito;
 
     public Resumen getResumen() {
         return resumen;
@@ -370,6 +355,27 @@ public class GlobalState extends Application{
         this.haveFinishedBuy = haveFinishedBuy;
     }
 
+    public String getIdTransaccionPresente() {
+        return idTransaccionPresente;
+    }
+    public void setIdTransaccionPresente(String idTransaccionPresente) {
+        this.idTransaccionPresente = idTransaccionPresente;
+    }
+
+    public ResponseConsultarDatosAsociado getDatosAsociado() {
+        return datosAsociado;
+    }
+    public void setDatosAsociado(ResponseConsultarDatosAsociado datosAsociado) {
+        this.datosAsociado = datosAsociado;
+    }
+
+    public ResponseParametrosAPP getParamsMovilExito() {
+        return paramsMovilExito;
+    }
+
+    public void setParamsMovilExito(ResponseParametrosAPP paramsMovilExito) {
+        this.paramsMovilExito = paramsMovilExito;
+    }
 
     //VARIABLES ADELANTO NOMINA
     private ResponseTopes topes;
@@ -534,109 +540,51 @@ public class GlobalState extends Application{
         this.responseBancos = responseBancos;
     }
 
-    //VARIABLES NEQUI
-    private SuscriptionData datosSuscripcion;
-    private String statusSuscription;
-    private String textQR;
-    private String saldoNequi;
-    private ResponseDataCommerceQR.DataReceivedQR dataCommerceQR;
-    private boolean alreadyOpenDialogNequiBalance;
-    private boolean refusedAuthorizationNequiBalance;
-    private boolean isActiveButtonPaymentQR;
-    private boolean isActiveButtonPaymentDispersiones;
-    private boolean isActiveButtonPaymentSuscriptions;
-    private boolean isActiveStateNequiBalance;
-    private boolean isActiveStateSuscriptions;
-    private Integer tiempoExpiracionAutorizacion;
 
-    public SuscriptionData getDatosSuscripcion() {
-        return datosSuscripcion;
-    }
-    public void setDatosSuscripcion(SuscriptionData datosSuscripcion) {
-        this.datosSuscripcion = datosSuscripcion;
+
+
+    //DEPRECATED
+
+    public int getUnreadMessagesCount(){
+        if(getMensajesBuzon() != null && getMensajesBuzon().size() > 0){
+            int counter = 0;
+            for(ResponseObtenerMensajes m : getMensajesBuzon()){
+                if(m.getLeido().equals("N")){
+                    counter++;
+                }
+            }
+            return counter;
+        }else{
+            return 0;
+        }
     }
 
-    public String getStatusSuscription() {
-        return statusSuscription;
-    }
-    public void setStatusSuscription(String statusSuscription) {
-        this.statusSuscription = statusSuscription;
-    }
-
-    public String getTextQR() {
-        return textQR;
-    }
-    public void setTextQR(String textQR) {
-        this.textQR = textQR;
+    public void leerMensaje(ResponseObtenerMensajes mensajeBuzon){
+        if(getMensajesBuzon() != null && getMensajesBuzon().size() > 0) {
+            for (ResponseObtenerMensajes m : getMensajesBuzon()) {
+                if(m.getIdMensaje().equals(mensajeBuzon.getIdMensaje())){
+                    m.setLeido("Y");
+                    break;
+                }
+            }
+        }
     }
 
-    public String getSaldoNequi() {
-        return saldoNequi;
+    private View messages_view;
+    public void setMessages_view(View messages_view) {
+        this.messages_view = messages_view;
     }
-    public void setSaldoNequi(String saldoNequi) {
-        this.saldoNequi = saldoNequi;
-    }
-
-    public ResponseDataCommerceQR.DataReceivedQR getDataCommerceQR() {
-        return dataCommerceQR;
-    }
-    public void setDataCommerceQR(ResponseDataCommerceQR.DataReceivedQR dataCommerceQR) {
-        this.dataCommerceQR = dataCommerceQR;
+    public View getMessages_view() {
+        return messages_view;
     }
 
-    public boolean isAlreadyOpenDialogNequiBalance() {
-        return alreadyOpenDialogNequiBalance;
-    }
-    public void setAlreadyOpenDialogNequiBalance(boolean alreadyOpenDialogNequiBalance) {
-        this.alreadyOpenDialogNequiBalance = alreadyOpenDialogNequiBalance;
-    }
-
-    public boolean isRefusedAuthorizationNequiBalance() {
-        return refusedAuthorizationNequiBalance;
-    }
-    public void setRefusedAuthorizationNequiBalance(boolean refusedAuthorizationNequiBalance) {
-        this.refusedAuthorizationNequiBalance = refusedAuthorizationNequiBalance;
-    }
-
-    public boolean isActiveButtonPaymentQR() {
-        return isActiveButtonPaymentQR;
-    }
-    public void setActiveButtonPaymentQR(boolean activeButtonPaymentQR) {
-        isActiveButtonPaymentQR = activeButtonPaymentQR;
-    }
-
-    public boolean isActiveButtonPaymentDispersiones() {
-        return isActiveButtonPaymentDispersiones;
-    }
-    public void setActiveButtonPaymentDispersiones(boolean activeButtonPaymentDispersiones) {
-        isActiveButtonPaymentDispersiones = activeButtonPaymentDispersiones;
-    }
-
-    public boolean isActiveButtonPaymentSuscriptions() {
-        return isActiveButtonPaymentSuscriptions;
-    }
-    public void setActiveButtonPaymentSuscriptions(boolean activeButtonPaymentSuscriptions) {
-        isActiveButtonPaymentSuscriptions = activeButtonPaymentSuscriptions;
-    }
-
-    public boolean isActiveStateNequiBalance() {
-        return isActiveStateNequiBalance;
-    }
-    public void setActiveStateNequiBalance(boolean activeStateNequiBalance) {
-        isActiveStateNequiBalance = activeStateNequiBalance;
-    }
-
-    public boolean isActiveStateSuscriptions() {
-        return isActiveStateSuscriptions;
-    }
-    public void setActiveStateSuscriptions(boolean activeStateSuscriptions) {
-        isActiveStateSuscriptions = activeStateSuscriptions;
-    }
-
-    public Integer getTiempoExpiracionAutorizacion() {
-        return tiempoExpiracionAutorizacion;
-    }
-    public void setTiempoExpiracionAutorizacion(Integer tiempoExpiracionAutorizacion) {
-        this.tiempoExpiracionAutorizacion = tiempoExpiracionAutorizacion;
+    public void bloquearActivarTarjetas(ResponseTarjeta tarjeta, boolean bloquear){
+        if(getTarjetas() != null && getTarjetas().size() > 0){
+            for(ResponseTarjeta t : getTarjetas()){
+                if(t.getK_mnumpl().equals(tarjeta.getK_mnumpl())){
+                    t.setI_estado((bloquear?"B":"A"));;
+                }
+            }
+        }
     }
 }

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".front.convenios.ActivityAgreements.movilexito.FragmentLandingME.FragmentLandingMEView">
+
+    <LinearLayout
+        android:id="@+id/layout_circular_progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+        <ProgressBar
+            android:id="@+id/circular_progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminateTint="#707070"/>
+        <TextView
+            android:id="@+id/text_circular_progress_Bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:text="Un momento..."
+            android:textSize="17sp"
+            android:fontFamily="@font/roboto_light"/>
+    </LinearLayout>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/pullToRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+        <WebView
+            android:id="@+id/webViewMovilExito"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+<!--        <Button-->
+<!--            android:id="@+id/btnRealizarCompra"-->
+<!--            android:layout_width="100dp"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:layout_alignParentEnd="true"-->
+<!--            android:layout_marginHorizontal="5dp"-->
+<!--            android:layout_marginTop="250dp"-->
+<!--            android:background="@drawable/btn_yellow_internal"-->
+<!--            android:text="N/A (Resumen)"-->
+<!--            android:textAllCaps="false"-->
+<!--            android:textSize="12sp"-->
+<!--            android:visibility="gone" />-->
+
+</LinearLayout>

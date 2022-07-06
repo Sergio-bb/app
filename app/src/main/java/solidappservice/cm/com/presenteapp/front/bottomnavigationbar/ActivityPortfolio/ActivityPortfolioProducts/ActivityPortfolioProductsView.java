@@ -1,25 +1,17 @@
 package solidappservice.cm.com.presenteapp.front.bottomnavigationbar.ActivityPortfolio.ActivityPortfolioProducts;
 
-import android.app.Dialog;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.List;
 
@@ -46,24 +38,14 @@ public class ActivityPortfolioProductsView extends ActivityBase implements Activ
     private ActivityPortfolioProductsPresenter presenter;
     private ActivityBase context;
     private GlobalState state;
+    private ProgressDialog pd;
     private List<ResponsePortafolio> productos = null;
     private List<PortafolioPadre> categorias = null;
 
-    @BindView(R.id.btn_back)
-    ImageButton btnBack;
     @BindView(R.id.list_portafolio)
     ListView list_productos;
-
-    @BindView(R.id.layout_circular_progress_bar)
-    LinearLayout layoutCircularProgressBar;
-    @BindView(R.id.circular_progress_bar)
-    ProgressBar circularProgressBar;
-    @BindView(R.id.text_circular_progress_Bar)
-    TextView textCircularProgressBar;
-    @BindView(R.id.imageReferesh)
-    ImageView buttonReferesh;
-    @BindView(R.id.pullToRefresh)
-    SwipeRefreshLayout pullToRefresh;
+    @BindView(R.id.btn_back)
+    ImageButton btnBack;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -78,14 +60,7 @@ public class ActivityPortfolioProductsView extends ActivityBase implements Activ
         presenter = new ActivityPortfolioProductsPresenter(this, new ActivityPortfolioProductsModel());
         context = this;
         state = context.getState();
-        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                state.setPortafolio(null);
-                fetchPortfolioProducts();
-                pullToRefresh.setRefreshing(false);
-            }
-        });
+        pd = new ProgressDialog(context);
     }
 
     @Override
@@ -95,13 +70,15 @@ public class ActivityPortfolioProductsView extends ActivityBase implements Activ
         if(state == null){
             context.salir();
         }else {
-            fetchPortfolioProducts();
+            if (context.getState().getPortafolio() == null ||
+                    context.getState().getPortafolio().size() == 0) {
+                presenter.fetchPortfolioProducts();
+//                new PortafolioTask().execute();
+            }else{
+                showPortfolioProducts(context.getState().getPortafolio(), context.getState().getCategoriasPortafolio());
+//                cargarProductos(context.getState().getPortafolio());
+            }
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        finish();
     }
 
     @OnClick(R.id.btn_back)
@@ -109,12 +86,10 @@ public class ActivityPortfolioProductsView extends ActivityBase implements Activ
         onBackPressed();
     }
 
-    @OnClick(R.id.imageReferesh)
-    public void onClickRefresh(){
-        state.setPortafolio(null);
-        fetchPortfolioProducts();
+    @Override
+    public void onBackPressed() {
+        finish();
     }
-
 
     @OnItemClick(R.id.list_portafolio)
     void onItemClickDirectorio(AdapterView<?> parent, View view, int position, long id) {
@@ -133,17 +108,6 @@ public class ActivityPortfolioProductsView extends ActivityBase implements Activ
     }
 
     @Override
-    public void fetchPortfolioProducts() {
-        if (state.getPortafolio() == null || state.getPortafolio().size() == 0) {
-            presenter.fetchPortfolioProducts();
-        }else{
-            hideCircularProgressBar();
-            showSectionPortfolioProducts();
-            showPortfolioProducts(state.getPortafolio(), state.getCategoriasPortafolio());
-        }
-    }
-
-    @Override
     public void showPortfolioProducts(List<ResponsePortafolio> productos, List<PortafolioPadre> portafolioPadres) {
         try {
             state.setCategoriasPortafolio(portafolioPadres);
@@ -152,38 +116,22 @@ public class ActivityPortfolioProductsView extends ActivityBase implements Activ
             PortafolioPadreAdapter pa = new PortafolioPadreAdapter(context, portafolioPadres);
             list_productos.setAdapter(pa);
         } catch (Exception ex) {
-            showDataFetchError("Lo sentimos", "");
-            showErrorWithRefresh();
+            context.makeErrorDialog("Error cargando los productos");
         }
     }
 
     @Override
-    public void showSectionPortfolioProducts() {
-        pullToRefresh.setVisibility(View.VISIBLE);
-    }
-    @Override
-    public void hideSectionPortfolioProducts() {
-        pullToRefresh.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showCircularProgressBar(String textProgressBar) {
-        layoutCircularProgressBar.setVisibility(View.VISIBLE);
-        textCircularProgressBar.setText(textProgressBar);
+    public void showProgressDialog(String message) {
+        pd.setTitle(context.getResources().getString(R.string.app_name));
+        pd.setMessage(message);
+        pd.setIcon(R.mipmap.icon_presente);
+        pd.setCancelable(false);
+        pd.show();
     }
 
     @Override
-    public void hideCircularProgressBar() {
-        layoutCircularProgressBar.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showErrorWithRefresh(){
-        pullToRefresh.setVisibility(View.GONE);
-        layoutCircularProgressBar.setVisibility(View.VISIBLE);
-        circularProgressBar.setVisibility(View.GONE);
-        textCircularProgressBar.setText("Ha ocurrido un error, inténtalo de nuevo ");
-        buttonReferesh.setVisibility(View.VISIBLE);
+    public void hideProgressDialog() {
+        pd.dismiss();
     }
 
     @Override
@@ -196,28 +144,23 @@ public class ActivityPortfolioProductsView extends ActivityBase implements Activ
                 }
             }
         }
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText("Lo sentimos");
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
+                finish();
             }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
-    public void showDataFetchError(String title, String message){
+    public void showDataFetchError(String message) {
         if(TextUtils.isEmpty(message)){
             message = "Ha ocurrido un error. Intenta de nuevo y si el error persiste, contacta a PRESENTE.";
             if(state != null && state.getMensajesRespuesta() != null && state.getMensajesRespuesta().size()>0){
@@ -228,44 +171,34 @@ public class ActivityPortfolioProductsView extends ActivityBase implements Activ
                 }
             }
         }
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText(title);
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
+                finish();
             }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
     public void showExpiredToken(String message) {
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_closedsession);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        Button buttonClosedSession = (Button) dialog.findViewById(R.id.btnVolverAIngresar);
-        buttonClosedSession.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle("Sesión finalizada");
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
                 context.salir();
             }
         });
-        dialog.show();
-
+        d.show();
     }
 
 //    @Override

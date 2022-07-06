@@ -1,25 +1,20 @@
 package solidappservice.cm.com.presenteapp.front.tranferencias.FragmentMakeTransfer;
 
-import android.app.Dialog;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -40,16 +35,15 @@ import butterknife.OnTextChanged;
 import solidappservice.cm.com.presenteapp.R;
 import solidappservice.cm.com.presenteapp.adapters.pagoobligaciones.ProductoSpinnerAdapter;
 import solidappservice.cm.com.presenteapp.entities.base.BaseRequest;
-import solidappservice.cm.com.presenteapp.entities.base.GlobalState;
-import solidappservice.cm.com.presenteapp.entities.estadocuenta.response.ResponseProducto;
 import solidappservice.cm.com.presenteapp.entities.parametrosgenerales.ResponseMensajesRespuesta;
 import solidappservice.cm.com.presenteapp.entities.transferencias.request.RequestMakeTransfer;
 import solidappservice.cm.com.presenteapp.entities.transferencias.response.ResponseCuentasInscritas;
-import solidappservice.cm.com.presenteapp.front.base.ActivityBase;
+import solidappservice.cm.com.presenteapp.entities.estadocuenta.response.ResponseProductos;
 import solidappservice.cm.com.presenteapp.front.tabs.ActivityTabs.ActivityTabsView;
-import solidappservice.cm.com.presenteapp.tools.helpers.DialogHelpers;
-import solidappservice.cm.com.presenteapp.tools.helpers.NumberTextWatcher;
+import solidappservice.cm.com.presenteapp.front.base.ActivityBase;
 import solidappservice.cm.com.presenteapp.tools.security.Encripcion;
+import solidappservice.cm.com.presenteapp.entities.base.GlobalState;
+import solidappservice.cm.com.presenteapp.tools.helpers.NumberTextWatcher;
 
 /**
  * CREADO POR JORGE ANDRÉS DAVID CARDONA EL 03/11/2016.
@@ -60,10 +54,9 @@ public class FragmentMakeTransferView extends Fragment implements FragmentMakeTr
     private FragmentMakeTransferPresenter presenter;
     private ActivityBase context;
     private GlobalState state;
-//    private ProgressDialog pd;
-    private Dialog pd;
+    private ProgressDialog pd;
     private FirebaseAnalytics firebaseAnalytics;
-    private List<ResponseProducto> cuentasPropias;
+    private List<ResponseProductos> cuentasPropias;
 
     @BindView(R.id.spCuentaOrigen)
     Spinner spCuentaOrigen;
@@ -87,18 +80,6 @@ public class FragmentMakeTransferView extends Fragment implements FragmentMakeTr
     TextView lblborrarCuenta;
     @BindView(R.id.txt3)
     TextView txt3;
-
-    @BindView(R.id.contentMakeTransfer)
-    ScrollView contentMakeTransfer;
-
-    @BindView(R.id.layout_circular_progress_bar)
-    LinearLayout layoutCircularProgressBar;
-    @BindView(R.id.circular_progress_bar)
-    ProgressBar circularProgressBar;
-    @BindView(R.id.text_circular_progress_Bar)
-    TextView textCircularProgressBar;
-    @BindView(R.id.imageReferesh)
-    ImageView buttonReferesh;
 
     @Override
     public void onAttach(Context context) {
@@ -127,8 +108,8 @@ public class FragmentMakeTransferView extends Fragment implements FragmentMakeTr
     protected void setControls() {
         presenter = new FragmentMakeTransferPresenter(this, new FragmentMakeTransferModel());
         context = (ActivityTabsView) getActivity();
-        assert context != null;
         state = context.getState();
+        pd = new ProgressDialog(context);
 
         spCuentaDestino.setEnabled(false);
         String vlrMinimo = "Valor mínimo a transferir: $5.000 ";
@@ -142,7 +123,6 @@ public class FragmentMakeTransferView extends Fragment implements FragmentMakeTr
         txtAvaliable.setText(vlrDisponible);
         txtAvaliableSaldo.setText(vlrCero);
         txtValorTransferencia.addTextChangedListener(new NumberTextWatcher(txtValorTransferencia));
-        fetchIncompleteTransfers();
     }
 
     @Override
@@ -151,6 +131,9 @@ public class FragmentMakeTransferView extends Fragment implements FragmentMakeTr
         GlobalState state = context.getState();
         if(state == null || state.getUsuario() == null){
             context.salir();
+        }else{
+//            cargarCuentas();
+            fetchIncompleteTransfers();
         }
     }
 
@@ -192,22 +175,18 @@ public class FragmentMakeTransferView extends Fragment implements FragmentMakeTr
 
     @OnClick(R.id.button_transferir)
     public void onClickMakeTransfer(){
+//        transferir();
         validateDataTransfer();
     }
 
     @OnClick(R.id.lbl_inscribir_cuenta)
     public void onClicRegisterAccount(){
-        state.getmTabHost().setCurrentTab(18);
+        state.getmTabHost().setCurrentTab(ActivityTabsView.TAB_15_TRANSFERS_REGISTER_ACCOUNT_TAG);
     }
 
     @OnClick(R.id.lbl_borrar_cuenta_inscrita)
     public void onClickDeleteAccount(){
-        state.getmTabHost().setCurrentTab(19);
-    }
-
-    @OnClick(R.id.imageReferesh)
-    public void onClickRefresh(){
-        fetchIncompleteTransfers();
+        state.getmTabHost().setCurrentTab(ActivityTabsView.TAB_16_TRANSFERS_DELETE_ACCOUNT_TAG);
     }
 
     @Override
@@ -219,30 +198,25 @@ public class FragmentMakeTransferView extends Fragment implements FragmentMakeTr
                     state.getUsuario().getToken()
             ));
         }catch (Exception ex){
-            showDataFetchError("Lo sentimos", "");
+            showDataFetchError("");
         }
     }
 
     @Override
     public void showResultIncompleteTransfers(){
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText("No es posible realizar la transferencia");
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText("Tienes una transferencia en proceso, inténtalo de nuevo más tarde.");
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle("No es posible realizar la transferencia");
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage("Tienes una transferencia en proceso, inténtalo de nuevo más tarde.");
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(DialogInterface dialog, int which) {
+                context.getState().getmTabHost().setCurrentTab(ActivityTabsView.TAB_1_TRANSACTIONS_MENU_TAG);
                 dialog.dismiss();
-                state.getmTabHost().setCurrentTab(ActivityTabsView.TAB_23_NEQUI_MENU_SEND_MONEY_TAG);
             }
         });
+        d.show();
     }
 
     @Override
@@ -254,28 +228,23 @@ public class FragmentMakeTransferView extends Fragment implements FragmentMakeTr
                     state.getUsuario().getToken()
             ));
         }catch (Exception ex){
-            showDialogError("Lo sentimos", "");
-            showErrorWithRefresh();
+            showDataFetchError("");
         }
     }
 
     @Override
     public void showRegisteredAccounts(List<ResponseCuentasInscritas> cuentasInscritas){
         try {
-            if(cuentasInscritas != null && cuentasInscritas.size()>0){
-                ResponseCuentasInscritas first = new ResponseCuentasInscritas();
-                first.setNnasocia("");
-                first.setN_numcta("Seleccionar un producto");
-                cuentasInscritas.add(0, first);
-                if (spCuentaDestino != null) {
-                    ArrayAdapter<ResponseCuentasInscritas> adapter = new ArrayAdapter<ResponseCuentasInscritas>(context, R.layout.list_item_spinner, cuentasInscritas);
-                    spCuentaDestino.setAdapter(adapter);
-                }
-            }else{
-                showDataFetchError("Lo sentimos", "No tienes cuentas inscritas.");
+            ResponseCuentasInscritas first = new ResponseCuentasInscritas();
+            first.setNnasocia("");
+            first.setN_numcta("Seleccionar un producto");
+            cuentasInscritas.add(0, first);
+            if (spCuentaDestino != null) {
+                ArrayAdapter<ResponseCuentasInscritas> adapter = new ArrayAdapter<ResponseCuentasInscritas>(context, R.layout.list_item_spinner, cuentasInscritas);
+                spCuentaDestino.setAdapter(adapter);
             }
         } catch (Exception ex) {
-            showDataFetchError("Lo sentimos", "");
+            context.makeErrorDialog("Error cargando las cuentas destino");
         }
     }
 
@@ -288,21 +257,21 @@ public class FragmentMakeTransferView extends Fragment implements FragmentMakeTr
                     state.getUsuario().getToken()
             ));
         }catch (Exception ex){
-            showDataFetchError("Lo sentimos", "");
+            showDataFetchError("");
         }
     }
 
     @Override
-    public void showAccounts(List<ResponseProducto> cuentasPropias){
+    public void showAccounts(List<ResponseProductos> cuentasPropias){
         try {
             if (spCuentaOrigen != null) {
-                List<ResponseProducto> cuentasPropiasFinal = new ArrayList<>();
-                ResponseProducto first = new ResponseProducto();
+                List<ResponseProductos> cuentasPropiasFinal = new ArrayList<>();
+                ResponseProductos first = new ResponseProductos();
                 first.setN_tipodr("Seleccionar un producto");
                 first.setN_produc("Seleccionar un producto");
                 first.setA_numdoc("");
                 cuentasPropiasFinal.add(first);
-                for (ResponseProducto ec : cuentasPropias) {
+                for (ResponseProductos ec : cuentasPropias) {
                     if (ec.getI_debito() != null
                             && ec.getI_debito().equals("Y")) {
                         cuentasPropiasFinal.add(ec);
@@ -313,7 +282,7 @@ public class FragmentMakeTransferView extends Fragment implements FragmentMakeTr
                 this.cuentasPropias = cuentasPropiasFinal;
             }
         } catch (Exception ex) {
-            showDataFetchError("Lo sentimos", "");
+            context.makeErrorDialog("Error cargando las cuentas de origen");
         }
     }
 
@@ -323,94 +292,90 @@ public class FragmentMakeTransferView extends Fragment implements FragmentMakeTr
             Object _cuentaOrigen = spCuentaOrigen.getSelectedItem();
             Object _cuentaDestino = spCuentaDestino.getSelectedItem();
 
-            ResponseProducto cuentaOrigen = null;
+            ResponseProductos cuentaOrigen = null;
             ResponseCuentasInscritas cuentaDestino = null;
 
             if (_cuentaDestino != null && _cuentaOrigen != null) {
-                cuentaOrigen = (ResponseProducto) _cuentaOrigen;
+                cuentaOrigen = (ResponseProductos) _cuentaOrigen;
                 cuentaDestino = (ResponseCuentasInscritas) _cuentaDestino;
             }
 
             if (cuentaOrigen == null || cuentaDestino == null
                     || cuentaOrigen.getN_tipodr().equals("")
                     || cuentaDestino.getNnasocia().equals("")) {
-                showDialogError("Datos incompletos", context.getResources().getString(R.string.error_cuenta_origen));
+                context.makeErrorDialog(context.getResources().getString(R.string.error_cuenta_origen));
                 return;
             }
 
             double valorTransferencia;
             if (txtValorTransferencia.getText() == null
                     || TextUtils.isEmpty(txtValorTransferencia.getText().toString())) {
-                showDialogError("Datos incompletos", context.getResources().getString(R.string.error_valor_transfer));
+                context.makeErrorDialog(context.getResources().getString(R.string.error_valor_transfer));
                 return;
             } else {
                 try {
                     String cleanString = txtValorTransferencia.getText().toString().replaceAll("[$,.]", "");
                     valorTransferencia = Double.parseDouble(cleanString);
                 } catch (Exception e) {
-                    showDialogError("Datos incompletos", context.getResources().getString(R.string.error_valor_transfer));
+                    context.makeErrorDialog(context.getResources().getString(R.string.error_valor_transfer));
                     return;
                 }
             }
 
             if (valorTransferencia <= 0) {
-                showDialogError("Datos incompletos", context.getResources().getString(R.string.error_valor_transfer));
+                context.makeErrorDialog(context.getResources().getString(R.string.error_valor_transfer));
                 return;
             }
 
             if (valorTransferencia < 5000) {
-                showDialogError("Error de transferencia", context.getResources().getString(R.string.error_valor_min_transfer));
+                context.makeErrorDialog(context.getResources().getString(R.string.error_valor_min_transfer));
                 return;
             }
 
             double v_transf = cuentaOrigen.getV_transf();
             if (valorTransferencia > v_transf){
-                showDialogError("Error de transferencia", context.getResources().getString(R.string.alerta_valor_disponible) + ": " + context.getMoneda(cuentaOrigen.getV_transf()));
+                context.makeDialog("Atención",context.getResources().getString(R.string.alerta_valor_disponible) + ": " + context.getMoneda(cuentaOrigen.getV_transf()));
                 return;
             }
 
             final double _valorTransferencia = valorTransferencia;
-            final ResponseProducto auxcuentaOrigen = cuentaOrigen;
+            final ResponseProductos auxcuentaOrigen = cuentaOrigen;
             final ResponseCuentasInscritas auxcuentaDestino = cuentaDestino;
             showDialogConfirmTransfer(_valorTransferencia, auxcuentaOrigen, auxcuentaDestino);
 
+
         } catch (Exception ex) {
-            showDataFetchError("Lo sentimos", "");
+            context.makeErrorDialog(ex.getMessage());
         }
     }
 
     @Override
-    public void showDialogConfirmTransfer(Double valorTransferencia, ResponseProducto cuentaOrigen, ResponseCuentasInscritas cuentaDestino){
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_confirm);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText("¿Confirma tu solicitud?");
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText("Tu transferencia será por un valor de " + context.getMoneda(valorTransferencia));
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.buttonClose);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
-        Button buttonAceptar = (Button) dialog.findViewById(R.id.btnAceptar);
-        buttonAceptar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-                makeTransfer(valorTransferencia, cuentaOrigen, cuentaDestino);
-            }
-        });
-        dialog.show();
+    public void showDialogConfirmTransfer(Double valorTransferencia, ResponseProductos cuentaOrigen, ResponseCuentasInscritas cuentaDestino){
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage("Tu transferencia será por un valor de " + context.getMoneda(valorTransferencia));
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        try {
+                            makeTransfer(valorTransferencia, cuentaOrigen, cuentaDestino);
+                        } catch (Exception e) {
+                            context.makeErrorDialog(e.getMessage());
+                        }
+                    }
+                });
+        d.setNegativeButton("Cancelar",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                });
+        d.show();
     }
 
     @Override
-    public void makeTransfer(Double valorTransferencia, ResponseProducto cuentaOrigen, ResponseCuentasInscritas cuentaDestino){
+    public void makeTransfer(Double valorTransferencia, ResponseProductos cuentaOrigen, ResponseCuentasInscritas cuentaDestino){
         try{
             Encripcion encripcion = Encripcion.getInstance();
             presenter.makeTransfer(new RequestMakeTransfer(
@@ -427,34 +392,27 @@ public class FragmentMakeTransferView extends Fragment implements FragmentMakeTr
             ));
         }catch (Exception ex){
             enabledMakeTransferButton();
-            showDataFetchError("Lo sentimos", "");
+            showDataFetchError("");
         }
     }
 
     @Override
     public void showResultTransfer(String resultMessage){
         try {
-            final Dialog dialog = new Dialog(context);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.setContentView(R.layout.pop_up_success);
-            dialog.setCancelable(false);
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            TextView titleMessage = (TextView) dialog.findViewById(R.id.titleSuccess);
-            titleMessage.setText("Solicitud Enviada");
-            TextView contentMessage = (TextView) dialog.findViewById(R.id.contentSuccess);
-            contentMessage.setText(resultMessage);
-            ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.buttonClose);
-            buttonClose.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    state.getmTabHost().setCurrentTab(ActivityTabsView.TAB_23_NEQUI_MENU_SEND_MONEY_TAG);
+            AlertDialog.Builder d = new AlertDialog.Builder(context);
+            d.setTitle(context.getResources().getString(R.string.app_name));
+            d.setIcon(R.mipmap.icon_presente);
+            d.setMessage(resultMessage);
+            d.setCancelable(false);
+            d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
                     dialog.dismiss();
+                    state.getmTabHost().setCurrentTab(ActivityTabsView.TAB_1_TRANSACTIONS_MENU_TAG);
                 }
             });
-            dialog.show();
+            d.show();
         } catch (Exception e) {
-            showDataFetchError("Lo sentimos", "");
+            context.makeErrorDialog(e.getMessage());
         }
     }
 
@@ -469,84 +427,17 @@ public class FragmentMakeTransferView extends Fragment implements FragmentMakeTr
     }
 
     @Override
-    public void showSectionMakeTransfer() {
-        contentMakeTransfer.setVisibility(View.VISIBLE);
-    }
-    @Override
-    public void hideSectionMakeTransfer(){
-        contentMakeTransfer.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showCircularProgressBar(String textProgressBar) {
-        layoutCircularProgressBar.setVisibility(View.VISIBLE);
-        textCircularProgressBar.setText(textProgressBar);
-    }
-
-    @Override
-    public void hideCircularProgressBar() {
-        layoutCircularProgressBar.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showErrorWithRefresh(){
-        contentMakeTransfer.setVisibility(View.GONE);
-        layoutCircularProgressBar.setVisibility(View.VISIBLE);
-        circularProgressBar.setVisibility(View.GONE);
-        textCircularProgressBar.setText("Ha ocurrido un error, inténtalo de nuevo ");
-        buttonReferesh.setVisibility(View.VISIBLE);
-    }
-
-
-    @Override
     public void showProgressDialog(String message) {
-        pd = new Dialog(context);
-        pd.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        pd.setCanceledOnTouchOutside(false);
-        pd.setContentView(R.layout.pop_up_loading);
+        pd.setTitle(context.getResources().getString(R.string.app_name));
+        pd.setMessage(message);
+        pd.setIcon(R.mipmap.icon_presente);
         pd.setCancelable(false);
-        pd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView contentMessage = (TextView) pd.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
         pd.show();
     }
 
     @Override
     public void hideProgressDialog() {
         pd.dismiss();
-    }
-
-    @Override
-    public void showDialogError(String title, String message){
-        if(TextUtils.isEmpty(message)){
-            message = "Ha ocurrido un error. Intenta de nuevo y si el error persiste, contacta a PRESENTE.";
-            if(state != null && state.getMensajesRespuesta() != null && state.getMensajesRespuesta().size()>0){
-                for(ResponseMensajesRespuesta rm : state.getMensajesRespuesta()){
-                    if(rm.getIdMensaje() == 7){
-                        message = rm.getMensaje();
-                    }
-                }
-            }
-        }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText(title);
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-                state.getmTabHost().setCurrentTab(ActivityTabsView.TAB_23_NEQUI_MENU_SEND_MONEY_TAG);
-            }
-        });
-        dialog.show();
     }
 
     @Override
@@ -559,29 +450,23 @@ public class FragmentMakeTransferView extends Fragment implements FragmentMakeTr
                 }
             }
         }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText("Lo sentimos");
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                state.getmTabHost().setCurrentTab(ActivityTabsView.TAB_23_NEQUI_MENU_SEND_MONEY_TAG);
+            public void onClick(DialogInterface dialog, int which) {
+                state.getmTabHost().setCurrentTab(ActivityTabsView.TAB_1_TRANSACTIONS_MENU_TAG);
                 dialog.dismiss();
             }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
-    public void showDataFetchError(String title, String message){
+    public void showDataFetchError(String message) {
         if(TextUtils.isEmpty(message)){
             message = "Ha ocurrido un error. Intenta de nuevo y si el error persiste, contacta a PRESENTE.";
             if(state != null && state.getMensajesRespuesta() != null && state.getMensajesRespuesta().size()>0){
@@ -592,44 +477,366 @@ public class FragmentMakeTransferView extends Fragment implements FragmentMakeTr
                 }
             }
         }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_error);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView titleMessage = (TextView) dialog.findViewById(R.id.lbl_title_message);
-        titleMessage.setText(title);
-        TextView contentMessage = (TextView) dialog.findViewById(R.id.lbl_content_message);
-        contentMessage.setText(message);
-        ImageButton buttonClose = (ImageButton) dialog.findViewById(R.id.button_close);
-        buttonClose.setOnClickListener(new View.OnClickListener() {
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle(context.getResources().getString(R.string.app_name));
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                state.getmTabHost().setCurrentTab(ActivityTabsView.TAB_23_NEQUI_MENU_SEND_MONEY_TAG);
+            public void onClick(DialogInterface dialog, int which) {
+                state.getmTabHost().setCurrentTab(ActivityTabsView.TAB_1_TRANSACTIONS_MENU_TAG);
                 dialog.dismiss();
             }
         });
-        dialog.show();
+        d.show();
     }
 
     @Override
     public void showExpiredToken(String message) {
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setContentView(R.layout.pop_up_closedsession);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        Button buttonClosedSession = (Button) dialog.findViewById(R.id.btnVolverAIngresar);
-        buttonClosedSession.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
+        AlertDialog.Builder d = new AlertDialog.Builder(context);
+        d.setTitle("Sesión finalizada");
+        d.setIcon(R.mipmap.icon_presente);
+        d.setMessage(message);
+        d.setCancelable(false);
+        d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
                 context.salir();
             }
         });
-        dialog.show();
-
+        d.show();
     }
+//    private void cargarCuentas() {
+//        GlobalState state = context.getState();
+//        Usuario usuario = state.getUsuario();
+//        new ConsultarCuentasTask().execute(usuario.cedula, usuario.token);
+//    }
+//
+//    class ConsultarCuentasTask extends AsyncTask<String, String, String> {
+//
+//        String jsonEstadoCuenta;
+//        String jsonCuentasInscritas;
+//        String jsonTransferenciasPendientes = null;
+//
+//        @Override
+//        protected void onPreExecute() {
+//            pd.setTitle(context.getResources().getString(R.string.app_name));
+//            pd.setIcon(R.mipmap.icon_presente);
+//            pd.setMessage("Consultando cuentas...");
+//            pd.setCancelable(false);
+//            pd.show();
+//        }
+//
+//        @Override
+//        protected String doInBackground(String... params) {
+//            try {
+//                NetworkHelper networkHelper = new NetworkHelper(context.obtenerConfiguracionSecureUrl());
+//
+//                JSONObject param = new JSONObject();
+//                param.put("cedula", Encripcion.getInstance().encriptar(params[0]));
+//                param.put("token", params[1]);
+//
+//                jsonEstadoCuenta = networkHelper.writeService(param,
+//                        SincroHelper.CONSULTAR_CUENTAS);
+////                jsonEstadoCuenta = networkHelper.writeService(param,
+////                        SincroHelper.ESTADO_CUENTA);
+//
+//                jsonCuentasInscritas = networkHelper.writeService(param,
+//                        SincroHelper.CONSULTA_CUENTAS_INSCRITAS);
+//
+//                jsonTransferenciasPendientes = networkHelper.writeService(param,
+//                        SincroHelper.CONSULTAR_TRANSFERENCIAS);
+//
+//                return "OK";
+//            } catch (Exception e) {
+//                return e.getMessage();
+//            }
+//        }
+//
+//        @Override
+//        protected void onProgressUpdate(String... values) {
+//            pd.setMessage(values[0]);
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            super.onPostExecute(result);
+//            pd.dismiss();
+//            procesarJsonProductos(jsonEstadoCuenta, jsonCuentasInscritas, jsonTransferenciasPendientes);
+//        }
+//    }
+//
+//    private void procesarJsonProductos(String jsonEstadoCuenta, String jsonCuentasInscritas, String jsonTransferenciasPendientes) {
+//        try {
+//
+//            ArrayList<Transferencias> transferencias = SincroHelper.procesarJsonObtenerTransferenciasPendientes(jsonTransferenciasPendientes);
+//
+//            if(transferencias != null && transferencias.size()>0){
+//                AlertDialog.Builder d = new AlertDialog.Builder(context);
+//                d.setTitle("No es posible realizar la transferencia");
+//                d.setIcon(R.mipmap.icon_presente);
+//                d.setMessage("Tienes una transferencia en proceso, inténtalo de nuevo más tarde.");
+//                d.setCancelable(false);
+//                d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        context.getState().getmTabHost().setCurrentTab(1);
+//                        dialog.dismiss();
+//                    }
+//                });
+//                d.show();
+//            }else {
+//                ArrayList<ResponseCuentasInscritas> listado_cuentas_inscritas
+//                        = SincroHelper.procesarJsonCuentasInscritas(jsonCuentasInscritas);
+//                ArrayList<ResponseProducto> listado_estado_cuenta
+//                        = SincroHelper.procesarJsonEstadoCuenta(jsonEstadoCuenta);
+//                cargarCuentasPropias(listado_estado_cuenta);
+//                cargarCuentasInscritas(listado_cuentas_inscritas);
+//            }
+//        }  catch (Exception e) {
+//            context.makeErrorDialog(e.getMessage());
+//        }
+//    }
+//
+//    private void cargarCuentasPropias( ArrayList<ResponseProducto> listado_estado_cuenta) {
+//        try {
+//            if (spCuentaOrigen != null) {
+//                final ArrayList<ResponseProducto> listado_selected = new ArrayList<ResponseProducto>();
+//
+//                ResponseProducto first = new ResponseProducto();
+//                first.setN_tipodr("Seleccionar un producto");
+//                first.setN_produc("Seleccionar un producto");
+//                first.setA_numdoc("");
+//                listado_selected.add(first);
+//
+//                for (ResponseProducto ec : listado_estado_cuenta) {
+//                    if (ec.getI_debito() != null
+//                            && ec.getI_debito().equals("Y")) {
+//                        listado_selected.add(ec);
+//                    }
+//                }
+//
+//                ProductoSpinnerAdapter adapter = new ProductoSpinnerAdapter(context, listado_selected, true);
+//                spCuentaOrigen.setAdapter(adapter);
+//                spCuentaOrigen.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//                    @Override
+//                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                        String vlrDisponible = "Valor disponible: ";
+//                        String vlrCero = "$0.00";
+//                        if (position != 0){
+//                            double tope = listado_selected.get(position).getV_transf();
+//                            tv_cuenta_destino.setTextColor(Color.parseColor("#444444"));
+//                            txtAvaliable.setText(vlrDisponible);
+//                            txtAvaliableSaldo.setText(context.getMoneda(tope));
+//                            spCuentaDestino.setEnabled(true);
+//                        }else{
+//                            tv_cuenta_destino.setTextColor(Color.parseColor("#cccccc"));
+//                            spCuentaDestino.setSelection(0);
+//                            spCuentaDestino.setEnabled(false);
+//                            txtAvaliable.setText(vlrDisponible);
+//                            txtAvaliableSaldo.setText(vlrCero);
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onNothingSelected(AdapterView<?> parent) {
+//
+//                    }
+//                });
+//            }
+//        } catch (Exception ex) {
+//            context.makeErrorDialog("Error cargando las cuentas de origen");
+//        }
+//    }
+//
+//    private void cargarCuentasInscritas(
+//            ArrayList<ResponseCuentasInscritas> listado_cuentas_inscritas) {
+//        try {
+//
+//            ResponseCuentasInscritas first = new ResponseCuentasInscritas();
+//            first.setNnasocia("");
+//            first.setN_numcta("Seleccionar un producto");
+//            listado_cuentas_inscritas.add(0, first);
+//
+//            if (spCuentaDestino != null) {
+//                ArrayAdapter<ResponseCuentasInscritas> adapter = new ArrayAdapter<ResponseCuentasInscritas>(context, R.layout.list_item_spinner,listado_cuentas_inscritas);
+//                spCuentaDestino.setAdapter(adapter);
+//
+//
+//            }
+//        } catch (Exception ex) {
+//            context.makeErrorDialog("Error cargando las cuentas destino");
+//        }
+//    }
+//
+//    private class TransferirTask extends AsyncTask<JSONObject, String, String> {
+//
+//        @Override
+//        protected void onPreExecute() {
+//            pd.setTitle(context.getResources().getString(R.string.app_name));
+//            pd.setIcon(R.mipmap.icon_presente);
+//            pd.setMessage("Transfiriendo...");
+//            pd.setCancelable(false);
+//            pd.show();
+//        }
+//
+//        @Override
+//        protected String doInBackground(JSONObject... params) {
+//            try {
+//                NetworkHelper networkHelper = new NetworkHelper(context.obtenerConfiguracionSecureUrl());
+//                return networkHelper.writeService(params[0],
+//                        SincroHelper.REALIZAR_TRANSFERENCIA);
+//            } catch (Exception e) {
+//                return e.getMessage();
+//            }
+//        }
+//
+//        @Override
+//        protected void onProgressUpdate(String... values) {
+//            pd.setMessage(values[0]);
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            super.onPostExecute(result);
+//            pd.dismiss();
+//            procesarResultTransferencia(result);
+//        }
+//    }
+//
+//    private void procesarResultTransferencia(String result) {
+//        try {
+//            result = SincroHelper.procesarJsonCrearSolicitudAhorro(result);
+//            AlertDialog.Builder d = new AlertDialog.Builder(context);
+//            d.setTitle(context.getResources().getString(R.string.app_name));
+//            d.setIcon(R.mipmap.icon_presente);
+//            d.setMessage(result);
+//            d.setCancelable(false);
+//            d.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface dialog, int id) {
+//                    context.onBackPressed();
+//                }
+//            });
+//            d.show();
+//        }  catch (Exception e) {
+//            context.makeErrorDialog(e.getMessage());
+//        }
+//    }
+//
+//    @Override
+//    public void onClick(View v) {
+//        GlobalState state = context.getState();
+//        switch (v.getId()) {
+//            case R.id.button_transferir:
+//                transferir();
+//                break;
+//            case R.id.lbl_inscribir_cuenta:
+//                state.getmTabHost().setCurrentTab(18);
+//                break;
+//            case R.id.lbl_borrar_cuenta_inscrita:
+//                state.getmTabHost().setCurrentTab(19);
+//                break;
+//            default:
+//                break;
+//        }
+//    }
+//
+//    private void transferir() {
+//        try {
+//            Object _cuentaOrigen = spCuentaOrigen.getSelectedItem();
+//            Object _cuentaDestino = spCuentaDestino.getSelectedItem();
+//
+//            ResponseProducto cuentaOrigen = null;
+//            ResponseCuentasInscritas cuentaDestino = null;
+//
+//            if (_cuentaDestino != null && _cuentaOrigen != null) {
+//                cuentaOrigen = (ResponseProducto) _cuentaOrigen;
+//                cuentaDestino = (ResponseCuentasInscritas) _cuentaDestino;
+//            }
+//
+//            if (cuentaOrigen == null || cuentaDestino == null
+//                    || cuentaOrigen.getN_tipodr().equals("")
+//                    || cuentaDestino.getNnasocia().equals("")) {
+//                context.makeErrorDialog(context.getResources().getString(R.string.error_cuenta_origen));
+//                return;
+//            }
+//
+//            double valorTransferencia;
+//            if (txtValorTransferencia.getText() == null
+//                    || TextUtils.isEmpty(txtValorTransferencia.getText().toString())) {
+//                context.makeErrorDialog(context.getResources().getString(R.string.error_valor_transfer));
+//                return;
+//            } else {
+//                try {
+//                    String cleanString = txtValorTransferencia.getText().toString().replaceAll("[$,.]", "");
+//                    valorTransferencia = Double.parseDouble(cleanString);
+//                } catch (Exception e) {
+//                    context.makeErrorDialog(context.getResources().getString(R.string.error_valor_transfer));
+//                    return;
+//                }
+//            }
+//
+//            if (valorTransferencia <= 0) {
+//                context.makeErrorDialog(context.getResources().getString(R.string.error_valor_transfer));
+//                return;
+//            }
+//
+//            if (valorTransferencia < 5000) {
+//                context.makeErrorDialog(context.getResources().getString(R.string.error_valor_min_transfer));
+//                return;
+//            }
+//
+//            double v_transf = cuentaOrigen.getV_transf();
+//            if (valorTransferencia > v_transf){
+//                context.makeDialog("Atención",context.getResources().getString(R.string.alerta_valor_disponible) + ": " + context.getMoneda(cuentaOrigen.getV_transf()));
+//                return;
+//            }
+//
+
+//            final double _valorTransferencia = valorTransferencia;
+//            final ResponseProducto auxcuentaOrigen = cuentaOrigen;
+//            final ResponseCuentasInscritas auxcuentaDestino = cuentaDestino;
+//
+//            AlertDialog.Builder d = new AlertDialog.Builder(context);
+//            d.setTitle(context.getResources().getString(R.string.app_name));
+//            d.setIcon(R.mipmap.icon_presente);
+//            d.setMessage("Tu transferencia será por un valor de " + context.getMoneda(valorTransferencia));
+//            d.setCancelable(false);
+//            d.setPositiveButton("Aceptar",
+//                    new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int id) {
+//                            try {
+//
+//                                JSONObject param = new JSONObject();
+//                                GlobalState state = context.getState();
+//                                Usuario usuario = state.getUsuario();
+//                                param.put("cedula", Encripcion.getInstance().encriptar(usuario.cedula));
+//                                param.put("token", usuario.token);
+//                                param.put("id_dispositivo", context.obtenerIdDispositivo());
+//                                param.put("aanumnit_o", auxcuentaDestino.getAanumnit_o());
+//                                param.put("a_numdoc", auxcuentaOrigen.getA_numdoc());
+//                                param.put("v_valor", _valorTransferencia);
+//                                param.put("k_idterc", auxcuentaDestino.getK_idterc());
+//                                param.put("k_idterc_tit", auxcuentaDestino.getK_idterc_tit());
+//                                param.put("n_numcta", auxcuentaDestino.getN_numcta());
+//                                param.put("f_solici", new Date().getTime());
+//
+//                                new TransferirTask().execute(param);
+//
+//                            } catch (Exception e) {
+//                                context.makeErrorDialog(e.getMessage());
+//                            }
+//                        }
+//                    });
+//            d.setNegativeButton("Cancelar",
+//                    new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int id) {
+//                        }
+//                    });
+//            d.show();
+//
+//        } catch (Exception ex) {
+//            context.makeErrorDialog(ex.getMessage());
+//        }
+//    }
 }

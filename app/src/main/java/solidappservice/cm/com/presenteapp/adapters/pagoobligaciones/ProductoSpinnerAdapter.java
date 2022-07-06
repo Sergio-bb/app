@@ -9,19 +9,19 @@ import android.widget.TextView;
 import java.util.List;
 
 import solidappservice.cm.com.presenteapp.R;
-import solidappservice.cm.com.presenteapp.entities.estadocuenta.response.ResponseProducto;
+import solidappservice.cm.com.presenteapp.entities.estadocuenta.response.ResponseProductos;
 import solidappservice.cm.com.presenteapp.front.base.ActivityBase;
 
 /**
  * CREADO POR JORGE ANDRÉS DAVID CARDONA EL 01/12/2015.
  */
-public class ProductoSpinnerAdapter extends ArrayAdapter<ResponseProducto> {
+public class ProductoSpinnerAdapter extends ArrayAdapter<ResponseProductos> {
 
-    private List<ResponseProducto> productos;
+    private List<ResponseProductos> productos;
     private ActivityBase context;
     private boolean showSaldo = false;
 
-    public ProductoSpinnerAdapter(ActivityBase context, List<ResponseProducto> productos, boolean showSaldo) {
+    public ProductoSpinnerAdapter(ActivityBase context, List<ResponseProductos> productos, boolean showSaldo) {
         super(context, R.layout.list_item_producto_spinner, productos);
         this.productos = productos;
         this.context = context;
@@ -40,7 +40,7 @@ public class ProductoSpinnerAdapter extends ArrayAdapter<ResponseProducto> {
             view = inflater.inflate(R.layout.list_item_producto_spinner, parent, false);
         }
 
-        ResponseProducto producto = productos.get(position);
+        ResponseProductos producto = productos.get(position);
 
         TextView lblNtipoDR = (TextView) view.findViewById(R.id.lblNtipoDR);
         TextView lblNombreProducto = (TextView) view.findViewById(R.id.lblNombreProducto);
@@ -74,7 +74,7 @@ public class ProductoSpinnerAdapter extends ArrayAdapter<ResponseProducto> {
             view = inflater.inflate(R.layout.list_item_producto_spinner, parent, false);
         }
 
-        ResponseProducto producto = productos.get(position);
+        ResponseProductos producto = productos.get(position);
 
         TextView lblNtipoDR = (TextView) view.findViewById(R.id.lblNtipoDR);
         TextView lblNombreProducto = (TextView) view.findViewById(R.id.lblNombreProducto);

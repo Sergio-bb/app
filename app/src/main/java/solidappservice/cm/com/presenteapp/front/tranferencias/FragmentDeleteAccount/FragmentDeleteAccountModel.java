@@ -24,7 +24,7 @@ public class FragmentDeleteAccountModel implements FragmentDeleteAccountContract
     public void getRegisteredAccounts(BaseRequest body, final FragmentDeleteAccountContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -38,25 +38,25 @@ public class FragmentDeleteAccountModel implements FragmentDeleteAccountContract
                         if(response.body().getErrorToken() != null && !response.body().getErrorToken().isEmpty()){
                             listener.onExpiredToken(response);
                         }else if(response.body().getMensajeErrorUsuario() != null && !response.body().getMensajeErrorUsuario().isEmpty()){
-                            listener.onErrorRegisteredAccounts(response);
+                            listener.onError(response);
                         }else{
                             listener.onSuccessRegisteredAccounts(response);
                         }
                     } else {
-                        listener.onErrorRegisteredAccounts(null);
+                        listener.onError(null);
                     }
                 }
                 @Override
                 public void onFailure(Call<BaseResponse<List<ResponseCuentasInscritas>>> call, Throwable t) {
                     if(t instanceof IOException){
-                        listener.onFailureRegisteredAccounts(t, true);
+                        listener.onFailure(t, true);
                     }else{
-                        listener.onFailureRegisteredAccounts(t, false);
+                        listener.onError(null);
                     }
                 }
             });
         } catch (Exception e) {
-            listener.onErrorRegisteredAccounts(null);
+            listener.onError(null);
         }
     }
 
@@ -64,7 +64,7 @@ public class FragmentDeleteAccountModel implements FragmentDeleteAccountContract
     public void deleteSelectedAccounts(RequestDeleteAccount body, boolean isLastSelected, final FragmentDeleteAccountContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -92,7 +92,7 @@ public class FragmentDeleteAccountModel implements FragmentDeleteAccountContract
                     if(t instanceof IOException){
                         listener.onFailure(t, true);
                     }else{
-                        listener.onFailure(t, false);
+                        listener.onError(null);
                     }
                 }
             });

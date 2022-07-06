@@ -10,18 +10,18 @@ import android.widget.TextView;
 import java.util.List;
 
 import solidappservice.cm.com.presenteapp.R;
-import solidappservice.cm.com.presenteapp.entities.estadocuenta.response.ResponseProducto;
+import solidappservice.cm.com.presenteapp.entities.estadocuenta.response.ResponseProductos;
 import solidappservice.cm.com.presenteapp.front.base.ActivityBase;
 
 /**
  * CREADO POR JORGE ANDRÉS DAVID CARDONA EL 26/11/2015.
  */
-public class DetalleProductoAdapter extends ArrayAdapter<ResponseProducto>{
+public class DetalleProductoAdapter extends ArrayAdapter<ResponseProductos>{
 
-    private List<ResponseProducto> productos;
+    private List<ResponseProductos> productos;
     private ActivityBase context;
 
-    public DetalleProductoAdapter(ActivityBase context, List<ResponseProducto> productos){
+    public DetalleProductoAdapter(ActivityBase context, List<ResponseProductos> productos){
         super(context, R.layout.list_item_detalle_producto, productos);
         this.productos = productos;
         this.context = context;
@@ -39,7 +39,7 @@ public class DetalleProductoAdapter extends ArrayAdapter<ResponseProducto>{
             view = inflater.inflate(R.layout.list_item_detalle_producto, parent, false);
         }
 
-        ResponseProducto producto = productos.get(position);
+        ResponseProductos producto = productos.get(position);
 
         TextView lblNombreTipoDR = (TextView)view.findViewById(R.id.lblNombreProducto);
         TextView lblNumeroProducto = (TextView)view.findViewById(R.id.lblNumeroProducto);
@@ -70,7 +70,7 @@ public class DetalleProductoAdapter extends ArrayAdapter<ResponseProducto>{
         }
 
         lblNombreTipoDR.setText(producto.getN_produc());
-        lblNumeroProducto.setText(producto.getA_numdoc() == null ? "" : producto.getA_numdoc());
+        lblNumeroProducto.setText(producto.getA_numdoc());
         lblSaldoValue.setText(context.getMoneda(producto.getV_saldo()));
 
 

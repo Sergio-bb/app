@@ -16,13 +16,10 @@ public interface FragmentSecurityCardMenuContract {
         void fetchPresenteCards();
         void showPresenteCards(List<ResponseTarjeta> tarjetas);
         boolean validatePresenteCardsStatus(boolean isStatusBlock);
-        void showSectionSecurityCardMenu();
-        void hideSectionSecurityCardMenu();
-        void showCircularProgressBar(String message);
-        void hideCircularProgressBar();
-        void showErrorWithRefresh();
+        void showProgressDialog(String message);
+        void hideProgressDialog();
+        void showDataFetchError(String message);
         void showErrorTimeOut();
-        void showDataFetchError(String title, String message);
         void showExpiredToken(String message);
     }
 

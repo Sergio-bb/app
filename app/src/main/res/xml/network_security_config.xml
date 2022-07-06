@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config xmlns:android="http://schemas.android.com/apk/res/android">
+    <domain-config>
+        <domain includeSubdomains="true">kripton.grupo-exito.com</domain>
+        <trust-anchors>
+            <certificates src="@raw/movilexitopruebaspem2021" />
+        </trust-anchors>
+    </domain-config>
+<!--    <domain-config>-->
+<!--        <domain includeSubdomains="true">einstenio.grupo-exito.com</domain>-->
+<!--        <trust-anchors>-->
+<!--            <certificates src="@raw/certificado_pem_prd" />-->
+<!--        </trust-anchors>-->
+<!--    </domain-config>-->
+</network-security-config>

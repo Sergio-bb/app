@@ -48,7 +48,7 @@
             android:gravity="center"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
-            android:textSize="16sp"
+            android:textSize="17sp"
             android:fontFamily="@font/roboto_light"/>
 
     </LinearLayout>
@@ -62,9 +62,9 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:background="@drawable/backgroun_border_radius_yellow"
-        android:fontFamily="@font/roboto_light"
         android:text="Aceptar"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:fontFamily="@font/roboto_light"/>
 
 </RelativeLayout>

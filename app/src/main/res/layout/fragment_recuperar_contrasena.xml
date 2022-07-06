@@ -62,11 +62,8 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="Enviar solicitud"
                 android:textStyle="bold"
-                android:textSize="16sp"
-                android:paddingHorizontal="25dp"
-                android:background="@drawable/backgroun_button_rounded"
-                android:backgroundTint="@color/yellow"
-                android:fontFamily="@font/roboto_light"/>
+                android:background="@drawable/btn_yellow_internal"
+                android:fontFamily="@font/roboto"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

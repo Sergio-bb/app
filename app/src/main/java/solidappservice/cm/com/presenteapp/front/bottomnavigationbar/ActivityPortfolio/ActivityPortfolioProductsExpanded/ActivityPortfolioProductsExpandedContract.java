@@ -11,12 +11,6 @@ public interface ActivityPortfolioProductsExpandedContract {
 
     interface View{
         void showPortfolioProductsExpanded(PortafolioPadre portafolioPadre);
-        void showSectionPortfolioProducts();
-        void hideSectionPortfolioProducts();
-        void showCircularProgressBar(String message);
-        void hideCircularProgressBar();
-        void showErrorWithRefresh();
-        void showDataFetchError(String title, String message);
     }
 
     interface Presenter{
@@ -29,7 +23,7 @@ public interface ActivityPortfolioProductsExpandedContract {
         <T> void onSuccess(Response<BaseResponse<T>> response);
         <T> void onExpiredToken(Response<BaseResponse<T>> response);
         <T> void onError(Response<BaseResponse<T>> response);
-        void onFailure(Throwable t, boolean isErrorTimeOut);
+        void onFailure(Throwable t);
     }
 
 }

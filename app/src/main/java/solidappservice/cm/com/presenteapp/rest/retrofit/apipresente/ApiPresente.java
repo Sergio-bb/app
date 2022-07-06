@@ -9,7 +9,9 @@ import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import solidappservice.cm.com.presenteapp.entities.bottomnavigationbar.response.ResponsePreguntasFrecuente;
+import solidappservice.cm.com.presenteapp.entities.datosasociado.response.ResponseDatosBasicosAsociado;
 import solidappservice.cm.com.presenteapp.entities.dispositivo.apiresponse.ResponseValidarDispositivo;
+import solidappservice.cm.com.presenteapp.entities.estadocuenta.response.ResponseProductosV2;
 import solidappservice.cm.com.presenteapp.entities.login.Request.RequestForgotPassword;
 import solidappservice.cm.com.presenteapp.entities.login.Request.RequestLogin;
 import solidappservice.cm.com.presenteapp.entities.login.Response.Usuario;
@@ -19,7 +21,7 @@ import solidappservice.cm.com.presenteapp.entities.parametrosgenerales.ResponseM
 import solidappservice.cm.com.presenteapp.entities.tyc.request.RequestAceptaTyC;
 import solidappservice.cm.com.presenteapp.entities.tyc.response.ReponseTyC;
 import solidappservice.cm.com.presenteapp.entities.pagoobligaciones.response.ResponsePagosPendientes;
-import solidappservice.cm.com.presenteapp.entities.banercomercial.response.ResponseBannerComercial;
+import solidappservice.cm.com.presenteapp.entities.banercomercial.response.ResponseBanerComercial;
 import solidappservice.cm.com.presenteapp.entities.parametrosgenerales.ResponseParametrosAPP;
 import solidappservice.cm.com.presenteapp.entities.solicitudahorros.response.ResponseTiposAhorro;
 import solidappservice.cm.com.presenteapp.entities.centrosvacacionales.request.RequestSolicitarCentroVacacional;
@@ -38,7 +40,7 @@ import solidappservice.cm.com.presenteapp.entities.transferencias.request.Reques
 import solidappservice.cm.com.presenteapp.entities.transferencias.response.ResponseBanco;
 import solidappservice.cm.com.presenteapp.entities.transferencias.response.ResponseCuentasInscritas;
 import solidappservice.cm.com.presenteapp.entities.estadocuenta.response.ResponseMovimientoProducto;
-import solidappservice.cm.com.presenteapp.entities.estadocuenta.response.ResponseProducto;
+import solidappservice.cm.com.presenteapp.entities.estadocuenta.response.ResponseProductos;
 import solidappservice.cm.com.presenteapp.entities.estadocuenta.request.RequestMovimientosProducto;
 import solidappservice.cm.com.presenteapp.entities.tarjetapresente.request.RequestActivarTarjeta;
 import solidappservice.cm.com.presenteapp.entities.tarjetapresente.request.RequestBloquearTarjeta;
@@ -147,7 +149,9 @@ public interface ApiPresente {
 
     //Estado de cuenta
     @POST("estadoCuenta/consultarCuentas")
-    Call<BaseResponse<List<ResponseProducto>>> getAccounts(@Body BaseRequest body);
+    Call<BaseResponse<List<ResponseProductos>>> getAccounts(@Body BaseRequest body);
+    @POST("estadoCuentas/consultarCuentas")
+    Call<BaseResponse<List<ResponseProductosV2>>> getAccountsV2(@Body BaseRequest body);
     @POST("estadoCuenta/consultarMovimientosCuenta")
     Call<BaseResponse<List<ResponseMovimientoProducto>>> getMovementsAccounts(@Body RequestMovimientosProducto body);
     @GET("estadoCuenta/estadoMensajeMisAportes")
@@ -193,7 +197,7 @@ public interface ApiPresente {
 
     //BannerComercial Menu Principal
     @POST("mensajes/BannerMP")
-    Call<BaseResponse<List<ResponseBannerComercial>>> getCommercialBanner(@Body BaseRequest body);
+    Call<BaseResponse<List<ResponseBanerComercial>>> getCommercialBanner(@Body BaseRequest body);
 
     //Centros vacacionales
     @POST("centrosVacacionales")
@@ -218,10 +222,16 @@ public interface ApiPresente {
     Call<BaseResponse<ResponseParametrosAPP>> getButtonStateReposicionTarjeta();
     @GET("parametrosApp/obtenerParametro/"+18)
     Call<BaseResponse<ResponseParametrosAPP>> getButtonStateTransfers();
+    @GET("parametrosApp/obtenerParametro/"+20)
+    Call<BaseResponse<ResponseParametrosAPP>> getUrlLandingMovilExito();
+    @GET("parametrosApp/obtenerParametro/"+21)
+    Call<BaseResponse<ResponseParametrosAPP>> getParamsAccessTokenPresenteME();
 
     //Actualizacion de datos
     @POST("datosAsociado/consultarDatos")
     Call<BaseResponse<ResponseConsultarDatosAsociado>> getPersonalData(@Body BaseRequest body);
+    @POST("datosAsociado/consultarDatosBasicos")
+    Call<BaseResponse<ResponseDatosBasicosAsociado>> getBasicPersonalData(@Body BaseRequest body);
     @GET("creditos/obtenerUbicaciones")
     Call<BaseResponse<ResponseUbicaciones>> getLocations();
     @GET("datosAsociado/formatoDirecciones")
@@ -240,5 +250,6 @@ public interface ApiPresente {
     @Headers("Content-Type: application/json")
     @POST("MTMessage")
     Call<BaseResponse<ResponseEnviarCodigoPhone>> sendSms(@Body RequestEnviarCodigoPhone enviarCodigoPhone, @Header("Authorization") String authHeader);
+
 
 }

@@ -22,7 +22,7 @@ public class ActivityLocationsHmsModel implements ActivityLocationsHmsContract.M
     public void getLocationsAgencies(final ActivityLocationsHmsContract.APIListener listener) {
         try {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(NetworkHelper.DIRECCION_WS)
+                    .baseUrl(NetworkHelper.URL_APIPRESENTEAPP)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 

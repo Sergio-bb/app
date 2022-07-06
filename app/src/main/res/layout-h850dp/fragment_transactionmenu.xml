@@ -1,306 +1,215 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#fff">
+
+    <TextView
+        android:id="@+id/lblNombreProducto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="6dp"
+        android:background="@color/gris"
+        android:text="Transacciones"
+        android:gravity="center"
+        android:textSize="17sp"
+        android:fontFamily="@font/roboto_light"/>
 
     <LinearLayout
         android:id="@+id/layout_circular_progress_bar"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone">
         <ProgressBar
             android:id="@+id/circular_progress_bar"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:indeterminateTint="#707070"
-            android:visibility="visible"/>
-        <ImageView
-            android:id="@+id/imageReferesh"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:src="@drawable/icon_refresh"
-            android:visibility="gone"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminateTint="#707070"/>
         <TextView
             android:id="@+id/text_circular_progress_Bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:gravity="center"
-            android:text="Intentar de nuevo"
-            android:textSize="12sp"
-            android:fontFamily="@font/roboto_light"
-            android:visibility="visible"/>
+            android:text="Un momento..."
+            android:textSize="17sp"
+            android:fontFamily="@font/roboto_light"/>
     </LinearLayout>
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/pullToRefresh"
+    <LinearLayout
+        android:id="@+id/layoutMenuTransacciones"
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
         android:visibility="visible">
-        <ScrollView
-            android:id="@+id/contentTransactionMenu"
+
+        <LinearLayout
+            android:id="@+id/layoutSolicitudAhorro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:layout_weight="1"
+                android:text="Apertura de ahorros"
+                android:textSize="17sp"
+                android:fontFamily="@font/roboto_light"/>
+
+            <ImageView
+                android:layout_weight="5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/btn_arrow_right"
+                android:layout_marginTop="15dp"
+                android:contentDescription="@string/app_name"/>
+
+        </LinearLayout>
+
+        <View
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:clickable="true"
-            android:fillViewport="true"
-            android:scrollbars="none"
-            android:windowSoftInputMode="adjustPan"
-            android:visibility="visible">
+            android:layout_height="0.2dp"
+            android:id="@+id/separator_item1"
+            android:visibility="visible"
+            android:background="#cccccc"/>
 
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:visibility="visible">
+        <LinearLayout
+            android:id="@+id/layoutTransferencias"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
 
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginBottom="25dp"
-                    android:paddingHorizontal="30dp"
-                    android:orientation="horizontal">
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="fill_parent"
-                        android:layout_weight="20"
-                        android:weightSum="100"
-                        android:gravity="center_vertical|right"
-                        android:orientation="horizontal">
-                        <ImageView
-                            android:id="@+id/imageView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/icon_transacciones_chart" />
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="80"
-                        android:gravity="center_vertical|left"
-                        android:paddingLeft="5dp"
-                        android:orientation="vertical">
-                        <TextView
-                            android:id="@+id/textView3"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Transacciones"
-                            android:textSize="19sp"
-                            android:textStyle="bold"
-                            android:fontFamily="@font/roboto_light"/>
-                        <TextView
-                            android:id="@+id/textView4"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Múltiples opciones y todo desde tu celular"
-                            android:textSize="15sp"
-                            android:fontFamily="@font/roboto_light"/>
-                    </LinearLayout>
-                </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:layout_weight="1"
+                android:text="Transferencias"
+                android:textSize="17sp"
+                android:fontFamily="@font/roboto_light"/>
 
-                <solidappservice.cm.com.presenteapp.tools.RearrangingGridLayout
-                    android:id="@+id/gridLayoutSections"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:orientation="horizontal"
-                    android:columnCount="2"
-                    android:paddingHorizontal="20dp">
+            <ImageView
+                android:layout_weight="5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/btn_arrow_right"
+                android:layout_marginTop="15dp"
+                android:contentDescription="@string/app_name"/>
 
-                    <LinearLayout
-                        android:id="@+id/layoutSolicitudAhorro"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_columnWeight="1"
-                        android:weightSum="100"
-                        android:layout_margin="5dp"
-                        android:padding="15dp"
-                        android:background="@drawable/btns_transacciones"
-                        android:orientation="vertical"
-                        android:visibility="visible">
+        </LinearLayout>
 
-                        <LinearLayout
-                            android:layout_width="fill_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="60">
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="45dp"
-                                android:scaleType="centerInside"
-                                android:gravity="left|start"
-                                android:src="@drawable/icon_abrirahorro" />
-                        </LinearLayout>
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="0.2dp"
+            android:id="@+id/separator_item2"
+            android:visibility="visible"
+            android:background="#cccccc"/>
 
-                        <LinearLayout
-                            android:layout_width="fill_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="40"
-                            android:weightSum="100"
-                            android:orientation="horizontal">
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="70"
-                                android:fontFamily="@font/roboto_light"
-                                android:gravity="center_vertical"
-                                android:text="@string/apertura_ahorro"
-                                android:textSize="16sp"/>
-                            <ImageView
-                                android:layout_width="0dp"
-                                android:layout_height="fill_parent"
-                                android:scaleType="centerInside"
-                                android:layout_weight="30"
-                                android:src="@drawable/flecha_azul"/>
-                        </LinearLayout>
-                    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/layoutAdelantoNomina"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
 
-                    <LinearLayout
-                        android:id="@+id/layoutEnviaDinero"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_columnWeight="1"
-                        android:weightSum="100"
-                        android:layout_margin="5dp"
-                        android:padding="15dp"
-                        android:background="@drawable/btns_transacciones"
-                        android:orientation="vertical"
-                        android:visibility="visible">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:layout_weight="1"
+                android:text="Adelanto de nómina"
+                android:textSize="17sp"
+                android:fontFamily="@font/roboto_light"/>
 
-                        <LinearLayout
-                            android:layout_width="fill_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="60">
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="45dp"
-                                android:scaleType="centerInside"
-                                android:gravity="left|start"
-                                android:src="@drawable/icon_enviadinero" />
-                        </LinearLayout>
+            <ImageView
+                android:layout_weight="5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/btn_arrow_right"
+                android:layout_marginTop="15dp"
+                android:contentDescription="@string/app_name"/>
 
-                        <LinearLayout
-                            android:layout_width="fill_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="40"
-                            android:weightSum="100"
-                            android:orientation="horizontal">
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="70"
-                                android:fontFamily="@font/roboto_light"
-                                android:gravity="center_vertical"
-                                android:text="@string/enviar_dinero"
-                                android:textSize="16sp"/>
-                            <ImageView
-                                android:layout_width="0dp"
-                                android:layout_height="fill_parent"
-                                android:scaleType="centerInside"
-                                android:layout_weight="30"
-                                android:src="@drawable/flecha_azul"/>
-                        </LinearLayout>
-                    </LinearLayout>
+        </LinearLayout>
 
-                    <LinearLayout
-                        android:id="@+id/layoutAdelantoNomina"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_columnWeight="1"
-                        android:weightSum="100"
-                        android:layout_margin="5dp"
-                        android:padding="15dp"
-                        android:background="@drawable/btns_transacciones"
-                        android:orientation="vertical">
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="0.2dp"
+            android:id="@+id/separator_item3"
+            android:visibility="gone"
+            android:background="#cccccc"/>
 
-                        <LinearLayout
-                            android:layout_width="fill_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="60">
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="45dp"
-                                android:scaleType="centerInside"
-                                android:gravity="left|start"
-                                android:src="@drawable/icon_adelantonomina" />
-                        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/layoutAbonosCreditos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
 
-                        <LinearLayout
-                            android:layout_width="fill_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="40"
-                            android:weightSum="100"
-                            android:orientation="horizontal">
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="70"
-                                android:fontFamily="@font/roboto_light"
-                                android:gravity="center_vertical"
-                                android:text="@string/adelanto_nomina"
-                                android:textSize="16sp"/>
-                            <ImageView
-                                android:layout_width="0dp"
-                                android:layout_height="fill_parent"
-                                android:scaleType="centerInside"
-                                android:layout_weight="30"
-                                android:src="@drawable/flecha_azul"/>
-                        </LinearLayout>
-                    </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:layout_weight="1"
+                android:text="Abono a tus obligaciones"
+                android:textSize="17sp"
+                android:fontFamily="@font/roboto_light"/>
 
-                    <LinearLayout
-                        android:id="@+id/layoutAbonosCreditos"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_columnWeight="1"
-                        android:weightSum="100"
-                        android:layout_margin="5dp"
-                        android:padding="15dp"
-                        android:background="@drawable/btns_transacciones"
-                        android:orientation="vertical">
+            <ImageView
+                android:layout_weight="5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/btn_arrow_right"
+                android:layout_marginTop="15dp"
+                android:contentDescription="@string/app_name"/>
 
-                        <LinearLayout
-                            android:layout_width="fill_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="60">
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="45dp"
-                                android:scaleType="centerInside"
-                                android:gravity="left|start"
-                                android:src="@drawable/icon_abonodeuda" />
-                        </LinearLayout>
+        </LinearLayout>
 
-                        <LinearLayout
-                            android:layout_width="fill_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="40"
-                            android:weightSum="100"
-                            android:orientation="horizontal">
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="0.2dp"
+            android:id="@+id/separator_item4"
+            android:visibility="visible"
+            android:background="#cccccc"/>
 
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="70"
-                                android:fontFamily="@font/roboto_light"
-                                android:gravity="center_vertical"
-                                android:text="@string/abono_deudas"
-                                android:textSize="16sp"/>
+        <LinearLayout
+            android:id="@+id/layoutSolicitudCv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
 
-                            <ImageView
-                                android:layout_width="0dp"
-                                android:layout_height="fill_parent"
-                                android:scaleType="centerInside"
-                                android:layout_weight="30"
-                                android:src="@drawable/flecha_azul"/>
-                        </LinearLayout>
-                    </LinearLayout>
-                </solidappservice.cm.com.presenteapp.tools.RearrangingGridLayout>
-            </LinearLayout>
-        </ScrollView>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:layout_weight="1"
+                android:text="Solicitar Centros Vacacionales"
+                android:textSize="17sp"
+                android:fontFamily="@font/roboto_light"/>
+
+            <ImageView
+                android:layout_weight="5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/btn_arrow_right"
+                android:layout_marginTop="15dp"
+                android:contentDescription="@string/app_name"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="0.2dp"
+            android:id="@+id/separator_item5"
+            android:visibility="visible"
+            android:background="#cccccc"/>
+    </LinearLayout>
 </LinearLayout>

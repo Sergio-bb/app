@@ -26,7 +26,7 @@
                 android:padding="6dp"
                 android:text="Encuéntranos aquí"
                 android:textStyle="bold"
-                android:textSize="16sp"
+                android:textSize="17sp"
                 android:fontFamily="@font/roboto_light"/>
 
             <LinearLayout
@@ -61,7 +61,7 @@
                         android:layout_weight="60"
                         android:gravity="start"
                         android:text="Title"
-                        android:textSize="16sp"
+                        android:textSize="17sp"
                         android:fontFamily="@font/roboto_light"/>
 
                     <TextView
@@ -92,7 +92,7 @@
                 android:gravity="start"
                 android:padding="10dp"
                 android:text="Descripción"
-                android:textSize="16sp"
+                android:textSize="17sp"
                 android:layout_below="@id/separator_item1"
                 android:fontFamily="@font/roboto_light"/>
 
@@ -100,14 +100,12 @@
                 android:id="@+id/btnComoLlegar"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
-                android:paddingHorizontal="30dp"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="Como llegar"
-                android:textSize="16sp"
+                android:textSize="17sp"
                 android:textStyle="bold"
                 android:layout_gravity="center"
-                android:background="@drawable/backgroun_button_rounded"
-                android:backgroundTint="@color/yellow"
+                android:background="@drawable/btn_yellow_internal"
                 android:fontFamily="@font/roboto"
                 android:layout_margin="16dp"
                 android:layout_below="@id/lblDescripcion"/>
