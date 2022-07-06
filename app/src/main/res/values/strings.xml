@@ -1,0 +1,270 @@
+<resources>
+    <string name="app_name">Presente</string>
+    <string name="cerrar_sesion"><b>Cerrar sesión</b></string>
+
+
+    <array name="mes_solicitud_producto">
+        <item>Enero</item>
+        <item>Febrero</item>
+        <item>Marzo</item>
+        <item>Abril</item>
+        <item>Mayo</item>
+        <item>Junio</item>
+        <item>Julio</item>
+        <item>Agosto</item>
+        <item>Septiembre</item>
+        <item>Octubre</item>
+        <item>Noviembre</item>
+        <item>Diciembre</item>
+    </array>
+
+    <string name="app_version">2022.06.21 V4.0.2</string>
+    <string name="app_splash">Preparando la aplicación&#8230;</string>
+
+    <!--Menu principal-->
+    <string name="encuentra_servicios"><b>Hola #usuario#,</b> encuentra servicios en:</string>
+    <string name="te_interesa"><b>Te puede</b> interesar:</string>
+    <string name="ultima_fecha_ingreso"><b>Última fecha ingreso:</b></string>
+    <string name="menu_finanzass"><b>Mis finanzas</b></string>
+    <string name="menu_centros_vacacionales"><b>Centros Vacacionales</b></string>
+    <string name="menu_convenios"><b>Convenios</b></string>
+    <string name="opciones_que_te"><b>Opciones</b> que te pueden ser útiles:</string>
+
+
+    <!--Terminos y condiciones-->
+    <string name="title_terminos_uso"><b>TÉRMINOS DE USO</b></string>
+    <string name="terminos_uso"><b>Fondo de Empleados Almacenes Éxito-Presente APP</b>, es un servicio establecido por
+        FONDO DE EMPLEADOS ALMACENES ÉXITO-PRESENTE para facilitar a sus asociados el acceso a sus productos y servicios. \n\nA través de
+        <b>Fondo de Empleados Almacenes Exito-Presente APP</b> se suministra información sobre el portafolio de los Productos y
+        Servicios. En cumplimiento de las normas legales para el uso de aplicaciones móviles,  FONDO DE EMPLEADOS ALMACENES
+        ÉXITO PRESENTE establece a continuación las condiciones para el uso de la aplicación <b>Fondo de Empleados Almacenes Exito-Presente APP</b>.
+        Por favor léalas cuidadosamente. \n\nSi usted no acepta los Términos y Condiciones establecidos aquí, no podrá acceder ni utilizar los
+        servicios de la aplicación <b>Fondo de Empleados Almacenes Exito-Presente APP</b>. \n\nAl hacer click en el ícono <b>“ACEPTAR”</b>,
+        usted habrá manifestado su aceptación a este Aviso Legal y por lo tanto a los Términos y Condiciones de uso acá establecidos.
+        Con la aceptación de las condiciones de uso de la aplicación <b>Fondo de Empleados Almacenes Exito-Presente APP</b>, el usuario se
+        obliga a usar su contenido conforme la normatividad que rige la materia y los términos y condiciones que aquí se contemplan,
+        siempre en observancia de la Ley, la moral, la confidencialidad y las buenas costumbres; así mismo, se compromete a no destinar su
+        uso a fines ilícitos o inmorales, o en detrimento de los intereses de terceros o del FONDO DE EMPLEADOS ALMACENES EXITO-PRESENTE.
+        \n\nACERCA DEL CONTENIDO  FONDO DE EMPLEADOS ALMACENES EXITO-PRESENTE se reserva la facultad de modificar el contenido y/o el
+        servicio de la aplicación en cualquier momento que lo crea pertinente <b>FONDO DE EMPLEADOS ALMACENES EXITO-PRESENTE APP</b> por sí
+        mismo o mediante un tercero autorizado, sin notificar previamente al usuario o al prestador. \n\nFONDO DE EMPLEADOS ALMACENES
+        EXITO-PRESENTE no es ni será responsable de cualquier pérdida o daño causado por o al usuario o prestador, derivados del uso de
+        la actual aplicación. \n\nEl usuario declara conocer con la aceptación de las condiciones de uso de la aplicación <b>FONDO DE
+        EMPLEADOS ALMACENES EXITO-PRESENTE APP</b>, que cualquier contenido que se publique en esta aplicación, es suministrado por
+        personal adscrito a FONDO DE EMPLEADOS ALMACENES EXITO-PRESENTE, y por lo tanto  FONDO DE EMPLEADOS ALMACENES EXITO-PRESENTE
+        se exime de cualquier responsabilidad relacionada con su interpretación, aplicación o uso. \n\nEstá prohibida la transmisión,
+        transferencia, reforma, publicación, reproducción, distribución, venta, arrendamiento o comercialización de dicha información sin
+        autorización. \n\nACERCA DEL SERVICIO FONDO DE EMPLEADOS ALMACENES EXITO-PRESENTE  no garantiza el acceso permanente e ininterrumpido
+        a la aplicación <b>FONDO DE EMPLEADOS ALMACENES EXITO-PRESENTE APP</b>, cuando el usuario acceda será su responsabilidad, tomar las
+        medidas pertinentes para evitar y/o corregir los virus u otros agentes nocivos existentes. FONDO DE EMPLEADOS ALMACENES EXITO-PRESENTE ha
+        implementado los procedimientos electrónicos y administrativos para proteger y ayudar a prevenir el acceso no autorizado, evitar la pérdida,
+        mal uso, alteración, acceso no autorizado y hurto de los datos personales. \n\nA través de <b>FONDO DE EMPLEADOS ALMACENES EXITO-PRESENTE APP</b>,
+        el usuario podrá acceder a los siguientes servicios: \n\n(i) Consulta de saldos, \n(ii) Estado de sus productos actuales;
+        \n(iii) Últimos movimientos realizados en sus productos a través de los canales autorizados por FONDO DE EMPLEADOS ALMACENES
+        EXITO-PRESENTE, \n(iv) Mensajes de Notificación \n(v) Ubicación de oficinas, cajeros, almacenes y centros vacacionales
+        \n(vi) Apertura de ahorros \n(vii) Abonos a créditos \n(viii) Solicitar centros vacacionales \n(ix) Activación y bloqueo de Tarjeta
+        \n(x) Adquisición de servicios y responseConvenios, así como el pago recurrente o débito automático \n(xi) cualquier otros servicios que FONDO DE EMPLEADOS ALMACENES EXITO-PRESENTE en el futuro decida ofrecer. \n\nEl usuario será el
+        único responsable del uso de la información contenida en la aplicación <b>FONDO DE EMPLEADOS ALMACENES EXITO-PRESENTE APP</b>.
+    </string>
+
+    <string name="transferencias">Transferencias</string>
+    <string name="title_activity_activity_directorio">ActivityDirectorio</string>
+    <string name="title_activity_actualizacion_Datos">ActivityActualizacionDatos</string>
+
+    <string name="cuenta_origen">Cuenta de origen</string>
+    <string name="cuenta_destino">Cuenta de destino</string>
+    <string name="valor_transferencia">Valor a transferir</string>
+    <string name="btn_realizar_transferencia">Realizar transferencia</string>
+    <string name="lblInscribirNuevaCuenta">Inscribir nueva cuenta destino</string>
+    <string name="lblBorrarCuentaInscrita">Borrar cuenta destino inscrita</string>
+
+    <string name="error_cuenta_origen">Para realizar la transacción debes seleccionar la cuenta de origen y destino</string>
+    <string name="error_valor_transfer">Ingresa el valor a transferir</string>
+    <string name="error_valor_min_transfer">Puedes transferir mínimo $5.000</string>
+    <string name="alerta_valor_disponible">Valor disponible a transferir hoy es </string>
+
+    <!--Borrar cuentas-->
+    <string name="error_cuenta_borrar">Debe seleccionar la/las cuentas a borrar</string>
+    <string name="error_cuentas_no_encontradas">No se encontraron cuentas inscritas</string>
+
+    <string name="digite_cedula_destinatario">Digita la cédula del destinatario</string>
+    <string name="salir">Salir</string>
+    <string name="salir_del_tutorial"><u>Salir del tutorial</u></string>
+    <string name="filtrar_por_tipo">Tipo:</string>
+    <string name="filtrar_por_ciudad">Ciudad:</string>
+    <string name="filtrar_por_almacen">Almacen:</string>
+    <string name="encuentranos_aqui">Encuéntranos aquí</string>
+    <string name="buzon_de_mensajes">Buzón de mensajes</string>
+    <string name="responseConvenios">Convenios</string>
+    <string name="aceptar">Aceptar</string>
+
+    <!-- Tarjeta Presente -->
+    <string name="dependenciadiferente">Si ésta <b>no</b> es tu dependencia, edita la información de envío antes de continuar</string>
+
+    <!--Adelanto Nomina-->
+    <string name="segun_terminos">Este valor se calcula según los términos y condiciones del
+    producto. Consúltalos <a href="https://www.presente.com.co/wp-content/uploads/2020/08/Terminos-y-condiciones-adelanto-de-nomina.pdf">aquí</a>.</string>
+
+    <string name="acepto_que_se">Acepto que se lleve a cabo el movimiento financiero “Adelanto de
+    Nomina” y entiendo sus condiciones de uso. Autorizo a debitar de
+    mi cuenta de ahorros Nómina de PRESENTE, en la quincena
+    inmediatamente posterior al desembolso de Adelanto de Nómina
+    sin previo aviso, todas las sumas que por tal concepto se
+    encuentren pendientes con PRESENTE.</string>
+
+    <array name="lista_tenencuenta">
+        <item>El valor solicitado será abonado a tu bolsillo de Nómina.</item>
+        <item>El monto total será debitado de forma automática en tu próxima quincena (Ver
+            condiciones)
+        </item>
+        <item>En tu estado de cuenta este movimiento se visualizará</item>
+        <item>No se verá afectada tu capacidad de pago</item>
+        <item>Cupo sujeto a cambios de acuerdo con las condiciones delproducto</item>
+    </array>
+
+
+    <!--Actualizaciçon Datos-->
+    <!--Inicio-->
+    <string name="ahora_tu_informacion"><b>Ahora tu información la podrás</b></string>
+    <string name="actualizar_en_cualquier">actualizar en cualquier momento desde nuestra app.</string>
+    <string name="porque_es_importante"><b>¿Por qué es importante esta actualización?</b></string>
+    <string name="te_permite_estar">Te permite estar al tanto de cualquier servicio que solicitas en PRESENTE, como: notificaciones de reserva, solicitudes de crédito, etc.</string>
+    <string name="podremos_estar_en">Podremos estar en contacto para notificarte cualquier novedad con tus productos.</string>
+    <string name="enterate_de_primera">Entérate de primera mano de las noticias, actividades y beneficios que tenemos para ti.</string>
+    <!--Editar-->
+    <string name="usuario">Usuario</string>
+    <string name="una_comunicacion_directa">Una comunicación directa y clara, es nuestro objetivo. Por eso te pedimos actualizar la siguiente información para mantenernos en contacto.</string>
+    <string name="a_continuacion_encuentra">A continuación encuentra los campos necesarios para completar la actualización de datos, todos son obligatorios para finalizar</string>
+    <string name="nombre_completo"><font fgcolor="#ffb600">*</font>Nombre completo:</string>
+    <string name="celular"><font fgcolor="#ffb600">*</font>Celular:</string>
+    <string name="correo_electronico"><font fgcolor="#ffb600">*</font>Correo electrónico:</string>
+    <string name="el_correo_electronico">El correo electrónico, <b>lo usamos para enviarte notificaciones de tus productos, novedades y noticias</b> de PRESENTE.</string>
+    <string name="falta_poco"><b>Falta poco...</b></string>
+    <string name="pais"><font fgcolor="#ffb600">*</font>País:</string>
+    <string name="departamento"><font fgcolor="#ffb600">*</font>Departamento:</string>
+    <string name="ciudad"><font fgcolor="#ffb600">*</font>Ciudad:</string>
+    <string name="barrio"><font fgcolor="#ffb600">*</font>Barrio:</string>
+    <string name="direccion"><font fgcolor="#ffb600">*</font>Dirección:</string>
+    <string name="tipo_via"><font fgcolor="#ffb600">*</font>Tipo de vía:</string>
+    <string name="numero_via"><font fgcolor="#ffb600">*</font>Número vía:</string>
+    <string name="letra_via">Letra:</string>
+    <string name="complemento_via">Complemento:</string>
+    <string name="numero_via2"><font fgcolor="#ffb600">*</font>Número vía:</string>
+    <string name="letra_via2">Letra:</string>
+    <string name="complemento_via2">Complemento:</string>
+    <string name="numero_complemento"><font fgcolor="#ffb600">*</font>Número vía:</string>
+    <string name="selecciona_cada_uno"><b>Selecciona cada uno de los elementos</b> que componen tu dirección.</string>
+    <string name="informacion_adicional">Información adicional:</string>
+    <string name="por_ejemplo">Por ejemplo: apto 34 / torre 3 / unidad 2</string>
+    <string name="has_ingresado_la"><b>Has ingresado la siguiente dirección:</b></string>
+    <string name="si_no_aplica">Si no aplica para tu dirección ingresa 0</string>
+
+    <!--Validar-->
+    <string name="confirmanos"><b>Confírmanos...</b></string>
+    <string name="te_compartimos_la">Te compartimos la información que tenemos registrada, cuéntanos si continúa igual o ha tenido algún cambio.</string>
+    <string name="es_correcta_esta"><b>¿Es correcta </b>esta información?</string>
+    <string name="nombre_validar"><b>Nombre:</b></string>
+    <string name="direccion_validar"><b>Dirección:</b></string>
+    <string name="departamento_validar"><b>Departamento:</b></string>
+    <string name="ciudad_validar"><b>Ciudad:</b></string>
+    <string name="correo_validar"><b>Correo electrónico:</b></string>
+    <string name="celular_validar"><b>Celular:</b></string>
+
+    <!--Confirmar-->
+    <string name="informacion_completa"><b>Información completa</b></string>
+    <string name="hemos_recibido_con">Hemos recibido con éxito tu información</string>
+    <string name="antes_de_continuar"><b>Antes de continuar</b></string>
+    <string name="por_seguridad_enviaremos">por seguridad enviaremos un código de verificación que deberás ingresar en el campo inferior</string>
+    <string name="ingresaste_mal_tu"><u><b>¿Ingresaste mal tu correo?</b> Edítalo aquí</u></string>
+    <string name="ingresa_el_codigo"><b>Ingresa el código</b> en el siguiente campo</string>
+    <string name="no_recibes_el"><u><b>¿No recibes el código?</b> Enviar de nuevo</u></string>
+    <!--Guardar-->
+    <string name="guardado_con_exito"><b>Guardado con éxito</b></string>
+    <string name="hemos_almacenado_con">Hemos almacenado tu información exitosamente</string>
+    <string name="gracias_por_tu"><b>Gracias por tu tiempo</b>\n para actualizar la información</string>
+    <string name="continua_usando_nuestra">Continúa usando nuestra app con el botón “Continuar”</string>
+
+    <!--Registrar nuevo dispositivo-->
+    <string name="este_no_es">Este no es el equipo con el que ingresas regularmente, por tu seguridad enviaremos un código de verificación.</string>
+
+
+    <!--popup informativo nequi-->
+    <string name="Bienvenido">Bienvenido a un mundo \nlleno de soluciones</string>
+    <string name="Nueva_experiencia">Entre PRESENTE y Nequi,hemos creado toda una \n nueva experiencia
+    para ti.Ahora desde nuestra app encontraras sservicios en:</string>
+    <string name="Trasfiere_entreCuentas">Transfiere entre cuentas PRESENTE \n a cuentas Nequi</string>
+    <string name="pagos_comercios">Realiza pagos en cualquier comercio \n territorio Bancolombia</string>
+    <string name="pagos_cuentaNequi">Realiza pagos de tus cuentas de servicios \n desde Nequi</string>
+    <string name="Administra_tuDinero">Administra tu dinero entre cuentas, con toda \n la seguridad de Nequi</string>
+    <string name="descarga_app">Comienza por descargarla app de Nequi \n y crea tu cuenta</string>
+    <string name="no_hemos_podido">No hemos podido procesar tu pago, por favor intenta de nuevo en unos instantes</string>
+
+    <!--menu transacciones-->
+    <string name="apertura_ahorro"><b>Apertura</b> <br></br> de ahorros</string>
+    <string name="enviar_dinero"><b>Transfiere</b> <br></br> dinero</string>
+    <string name="adelanto_nomina"><b>Adelanto de</b> <br></br> nómina</string>
+    <string name="abono_deudas"><b>Abono</b> <br></br> a tus deudas</string>
+
+    <!--Suscripcion  nequi-->
+    <string name="desde_hoy_comienza"><b>Desde hoy</b> comienza<br></br> una nueva manera de administrar tu dinero</string>
+    <string name="vincula_tu_cuenta"><b>Vincula tu cuenta PRESENTE a Nequi</b> y accede a un mundo de soluciones</string>
+    <string name="ten_en_cuenta"><b>Ten en cuenta</b></string>
+    <string name="recuerda_tener_una"><font fgcolor="#ffb600">• </font>Recuerda tener una cuenta activa en Nequi</string>
+    <string name="tu_numero_celular"><font fgcolor="#ffb600">• </font>Tú número de celular deberá coincidir con el registrado en Nequi</string>
+    <string name="podras_vincular_tu">Podrás vincular tu propia cuenta Nequi</string>
+    <string name="vamos_muy_bien"><b>¡Vamos muy bien!</b><br></br> Falta poco para finalizar el proceso de vinculación:</string>
+    <string name="a_continuacion_conoce">A continuación conoce el paso a paso para realizar el proceso de vinculación:</string>
+    <string name="recuerda_que"><b>Recuerda que:</b> <br></br> tu número de celular, debe ser el mismo que tienes registrado en Nequi</string>
+    <string name="numero_celular"><b>Número celular:</b></string>
+    <string name="este_es_el">Este es el número que tienes registrado en PRESENTE, debe coincidir con el registrado en Nequi:</string>
+    <string name="informacion_personal"><b>Información personal:</b></string>
+    <string name="verifica_que_tu">Verifica que tu información este correcta, en caso de no estarlo contacta con tu Gestor.</string>
+    <string name="nombre_completo_nequi"><b>Nombre completo:</b></string>
+    <string name="dato_cedula"><b>Número de identificación:</b></string>
+    <string name="dato_celular"><b>Número celular:</b></string>
+    <string name="ahora_continua_en"><font fgcolor="#ffb600">¡</font>Ahora continúa en Nequi<font fgcolor="#ffb600">!</font></string>
+    <string name="hemos_enviado_con">Hemos enviado con éxito tu solicitud. Es importante que <b>ingreses a Nequi</b> para finalizar el proceso de vinculación.</string>
+
+    <string name="manejo_datos">Conoce aquí nuestra política de manejo de datos</string>
+    <string name="modificar_numero">Si no lo es, <u>lo puedes modificar aquí</u></string>
+    <string name="mensaje_header_final">Para finalizar el proceso\nde vinculación...</string>
+    <string name="lo_puedes_modificar"><u>lo puedes modificar aquí</u></string>
+
+
+    <string name="al_momento_de"><b>1.</b> Al momento de ingresar a Nequi, dirígete a la opción "Notificaciones".</string>
+    <string name="revisa_tu_perfil"><b>2.</b> Autoriza la vinculación.</string>
+
+    <string name="error_cuenta_origenP">Para realizar la transacción debes seleccionar la cuenta de origen</string>
+
+    <string name="mensaje_dispersion">Desde tu cuenta de PRESENTE envía dinero a Nequi para disfrutar de un mundo de soluciones</string>
+    <string name="validar_transfer">Verifica la información <br></br> antes de realizar tu pago</string>
+    <string name="tranfer_exitosa">Se ha enviado tu dinero de manera correcta.<br></br><br></br></string>
+    <string name="tranfer_pendiente">Es posible que la transacción tarde en verse reflejada, revisa en unos minutos tu estado de cuenta antes de intentar hacerla de nuevo.</string>
+
+    <string name="mensaje_suscripcion">De manera ágil y segura, transfiere dinero de Nequi a PRESENTE</string>
+    <string name="mensaje_consulta_saldo">Para leer el saldo general de tu cuenta Nequi, es importante tener tu autorización, ¿Estás de acuerdo?</string>
+    <string name="haz_clic_aqui"><u>Haz clic aquí</u>, si deseas consultar tu saldo Nequi</string>
+    <string name="no_tenemos_tu">No tenemos tu autorización para consultar tu saldo nequi</string>
+
+    <string name="first_fragment_label">fir_fragment_label</string>
+    <string name="second_fragment_label">second_fragment_label</string>
+
+    <!--Menu lateral-->
+    <string name="informacion_personal_menu"> Mi información personal</string>
+    <string name="centro_ayuda">Ir al Centro de ayuda</string>
+    <string name="conoce_gestor">Conoce tu Gestor</string>
+    <string name="Vincular_cuenta">Vincula tu cuenta a Nequi</string>
+    <string name="seguridad">Seguridad</string>
+    <string name="vincular_cuenta">Vincular tu cuenta a Nequi</string>
+    <string name="open">open</string>
+    <string name="close">close</string>
+
+    <!-- Pago QR -->
+    <string name="informacion_pago">Información de tu pago</string>
+    <string name="verificar_campos">Verifica los campos antes de realizar el pago</string>
+    <string name="en_este_momento">En este momento no podemos leer tu codigo, inténtalo más tarde</string>
+    <string name="no_identificamos">No identificamos el código que intentas escanear</string>
+    <string name="verificar_pago">Verifica la información\nantes de realizar tus pagos</string>
+    <string name="mas_opciones_para_ti">¡Mas opciones para ti!</string>
+
+</resources>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="12dp"
+    android:background="#fff">
+
+
+    <LinearLayout
+        android:id="@+id/layout_call"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_weight="2"
+            android:id="@+id/txtTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_gravity="center_vertical"
+            android:fontFamily="@font/roboto_light"/>
+
+        <TextView
+            android:layout_weight="2"
+            android:id="@+id/txtMensaje"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textSize="15sp"
+            android:layout_gravity="center_vertical"
+            android:fontFamily="@font/roboto_light"/>
+
+        <ImageView
+            android:id="@+id/image_mensaje_leido"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/ic_directorio"
+            android:layout_gravity="start"
+            android:layout_weight="3"/>
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/separator_item"
+        android:layout_width="match_parent"
+        android:layout_height="0.2dp"
+        android:background="#cccccc"
+        android:visibility="gone" />
+
+</LinearLayout>

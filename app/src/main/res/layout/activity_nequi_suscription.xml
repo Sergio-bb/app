@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/header_Suscripcion"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#00ffffff"
+        android:orientation="horizontal"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="6dp">
+
+        <ImageView
+            android:id="@+id/header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/app_name"
+            android:gravity="start"
+            android:background="@android:color/transparent"
+            android:src="@drawable/icon_presente_nequi" />
+
+        <TextView
+            android:id="@+id/btn_volver"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@color/white"
+            android:layout_alignParentRight="true"
+            android:text="Volver al inicio"
+            android:textColor="#333"
+            android:textSize="16sp"
+            android:fontFamily="@font/roboto_light"/>
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/layout_circular_progress_bar"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+            <ProgressBar
+                android:id="@+id/circular_progress_bar"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:indeterminateTint="#707070"
+                android:visibility="visible"/>
+            <ImageView
+                android:id="@+id/imageReferesh"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/icon_refresh"
+                android:visibility="gone"/>
+            <TextView
+                android:id="@+id/text_circular_progress_Bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:gravity="center"
+                android:text="Un momento..."
+                android:textSize="12sp"
+                android:fontFamily="@font/roboto_light"
+                android:visibility="visible"/>
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/containerSuscriptionNequi"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/footer_suscription"
+            android:paddingBottom="20dp"
+            android:background="#fff"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/footer_suscription"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/footer_nequi"
+            android:background="#00ffffff"/>
+    </RelativeLayout>
+
+</LinearLayout>

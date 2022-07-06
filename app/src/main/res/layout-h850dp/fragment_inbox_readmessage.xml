@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff">
+
+    <TextView
+        android:id="@+id/lblHolaUsuario"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="6dp"
+        android:background="@color/gris"
+        android:text="Buzón de mensajes"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:fontFamily="@font/roboto_light"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="100"
+        android:padding="12dp">
+
+        <ImageView
+            android:id="@+id/image_mensaje_leido"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="15"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/icon_open_message"
+            android:scaleType="centerInside"
+            android:layout_gravity="start"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="85"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:id="@+id/txtPara"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                android:textSize="13sp"
+                android:fontFamily="@font/roboto_light"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="0.2dp"
+        android:id="@+id/separator_item3"
+        android:visibility="visible"
+        android:background="#cccccc"/>
+
+    <WebView
+        android:id="@+id/webView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:padding="16dp"/>
+
+</LinearLayout>

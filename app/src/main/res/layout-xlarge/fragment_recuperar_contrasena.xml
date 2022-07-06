@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="100"
+    android:orientation="vertical"
+    android:background="#fff">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5"
+        android:padding="2dp"
+        android:background="@color/gris"
+        android:gravity="center"
+        android:text="Recuperar contraseña"
+        android:textSize="19sp" />
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="95"
+        android:fillViewport="true"
+        android:background="#fff">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:paddingHorizontal="15dp"
+            android:paddingTop="25dp"
+            android:paddingBottom="10dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#fff"
+                android:gravity="start"
+                android:padding="10dp"
+                android:text="Ingresa el número de tu documento y recibe en tu correo electrónico registrado en PRESENTE la nueva contraseña"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/txtNumCedula"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/backgroun_border_radius"
+                android:hint="Número de documento"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:padding="12dp"
+                android:textColor="#666"
+                android:inputType="number"
+                android:maxLength="10"/>
+
+            <Button
+                android:id="@+id/btnRecuperar"
+                android:layout_width="wrap_content"
+                android:layout_height="37dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="40dp"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Enviar solicitud"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:paddingHorizontal="25dp"
+                android:background="@drawable/backgroun_button_rounded"
+                android:backgroundTint="@color/yellow"
+                android:fontFamily="@font/roboto_light"/>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#ffffff"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:background="#53A653"
+            android:paddingTop="20dp"
+            >
+            <ImageView
+                android:id="@+id/imageViewInfodeTuPagoExitoso"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center"
+                android:src="@drawable/check_factura"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/textViewEnviaDineroTextTitle1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Pago exitoso"
+                    android:textSize="24sp"
+                    android:textColor="#ffffff"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/roboto_light"/>
+            </LinearLayout>
+            <TextView
+                android:id="@+id/textViewEnviaDineroTextTitle3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="#ffffff"
+                android:text="Conoce el resumen de tu transacción:"
+                android:textSize="13sp"
+                android:textStyle=""
+                android:fontFamily="@font/roboto_light"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="bottom"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical">
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="#428442"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:background="#F5F5F5"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:background="#f2f2f2"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="340dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    >
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                    >
+                        <TextView
+                            android:id="@+id/textViewComprobante1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left"
+                            android:paddingLeft="5dp"
+                            android:text="Comprobante: "
+                            android:textSize="17sp"
+                            android:textStyle="bold"
+                            android:fontFamily="@font/roboto_light"/>
+                        <TextView
+                            android:id="@+id/textViewComprobant3e1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left"
+                            android:paddingLeft="5dp"
+                            android:text="000005678"
+                            android:textSize="15sp"
+                            android:textStyle="normal" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:padding="5dp"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        >
+                        <View
+                            android:layout_width="2dp"
+                            android:layout_height="30dp"
+                            android:background="#4A4A49" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        >
+                        <TextView
+                            android:id="@+id/textViewComprobante3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left"
+                            android:paddingLeft="5dp"
+                            android:text="Comprobante: "
+                            android:textSize="17sp"
+                            android:textStyle="bold"
+                            android:fontFamily="@font/roboto_light"/>
+
+                        <TextView
+                            android:id="@+id/textViewComprobantew3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left"
+                            android:paddingLeft="5dp"
+                            android:text="29-09-21 - 2:43 p.m."
+                            android:textSize="15sp"
+                            android:textStyle="normal"
+                            android:fontFamily="@font/roboto_light"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="340dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:background="#ffffff"
+                    android:padding="10dp"
+                    >
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_margin="10dp"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        >
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            >
+
+                            <ImageView
+                                android:id="@+id/imageViewCheckmark1"
+                                android:layout_width="26dp"
+                                android:layout_height="match_parent"
+                                android:src="@drawable/check_mark"
+                                android:layout_gravity="center_vertical"
+                                />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <TextView
+                                android:id="@+id/textViewCuentaDestinoText"
+                                android:layout_width="150dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="left"
+                                android:paddingLeft="5dp"
+                                android:text="Cuenta destino: "
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                android:fontFamily="@font/roboto_light"/>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="left"
+                                android:orientation="vertical">
+                                <TextView
+                                    android:id="@+id/textViewCuentaDestinoValor"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="left"
+                                    android:paddingLeft="5dp"
+                                    android:text="Restaurante Pinos"
+                                    android:textSize="18sp"
+                                    android:fontFamily="@font/roboto_light">
+                                </TextView>
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_margin="10dp"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        >
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            >
+
+                            <ImageView
+                                android:id="@+id/imageViewValoradfTransferirIcon2"
+                                android:layout_width="26dp"
+                                android:layout_height="match_parent"
+                                android:src="@drawable/check_mark"
+                               android:layout_gravity="center_vertical"
+                                />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textViewValorPagado"
+                                android:layout_width="150dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="left"
+                                android:paddingLeft="5dp"
+                                android:text="Valor pagado:"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                android:fontFamily="@font/roboto_light"/>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="left"
+                                android:orientation="vertical">
+                                <TextView
+                                    android:id="@+id/textViewValorPagadoValor"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="left"
+                                    android:paddingLeft="5dp"
+                                    android:text="$230.000"
+                                    android:textSize="18sp"
+                                    android:fontFamily="@font/roboto_light">
+                                </TextView>
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_margin="10dp"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        >
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            >
+
+                            <ImageView
+                                android:id="@+id/imageViewValoradfTransferirIcon"
+                                android:layout_width="26dp"
+                                android:layout_height="match_parent"
+                                android:src="@drawable/check_mark"
+                                android:layout_gravity="center_vertical"
+                                />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <TextView
+                                android:id="@+id/textViewValorPagadotext"
+                                android:layout_width="150dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="left"
+                                android:paddingLeft="5dp"
+                                android:text="Valor pagado:"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                android:fontFamily="@font/roboto_light"/>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="left"
+                                android:orientation="vertical">
+                                <TextView
+                                    android:id="@+id/textViewValorPagadoValorasd"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="left"
+                                    android:paddingLeft="5dp"
+                                    android:text="$230.000"
+                                    android:textSize="18sp"
+                                    android:fontFamily="@font/roboto_light">
+                                </TextView>
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_margin="10dp"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:background="@drawable/bg_white_border_grey"
+                        >
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+                            <ImageView
+                                android:id="@+id/imageViewValoradfTransferirIconca"
+                                android:layout_width="30dp"
+                                android:layout_height="match_parent"
+                                android:src="@drawable/icon_compartir"
+                                android:layout_gravity="center_vertical"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <TextView
+                                android:id="@+id/textViewValorPagadotextca"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="left"
+                                android:paddingLeft="5dp"
+                                android:text="Comparte esta información"
+                                android:textSize="18sp"
+                                android:textStyle="normal"
+                                android:fontFamily="@font/roboto_light"/>
+                        </LinearLayout>
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp">
+                <ImageView
+                    android:id="@+id/imageViewRealizaOtroPago"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    app:srcCompat="@drawable/btn_realiza_otro_pago"
+                    android:layout_gravity="center"/>
+                <ImageView
+                    android:id="@+id/imageViewConsultaTusSaldos"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    app:srcCompat="@drawable/btn_consulta_tus_saldos"
+                    android:layout_gravity="center"/>
+                <ImageView
+                    android:id="@+id/imageViewIrAlInicio"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    app:srcCompat="@drawable/btn_ir_al_inicio"
+                    android:layout_gravity="center"/>
+
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

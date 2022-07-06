@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="solidappservice.cm.com.presenteapp">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.huawei.appmarket.service.commondata.permission.GET_COMMON_DATA"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permissionv.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.FLASHLIGHT"/>
+
+    <uses-sdk tools:overrideLibrary="com.google.zxing.client.android" />
+
+    <application
+        android:name=".entities.base.GlobalState"
+        android:allowBackup="false"
+        tools:replace="android:allowBackup"
+        android:hardwareAccelerated="true"
+        android:icon="@mipmap/icon_presente"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+
+        <activity
+            android:name=".front.splash.ActivitySplash.ActivitySplashView"
+            android:label="PRESENTE"
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".front.base.main.ActivityMainView"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"/>
+        <activity
+            android:name=".front.solicitudahorros.ActivityProductRequestDate.ActivityProductRequestDateView"
+            android:label="Fecha finalización ahorro"
+            android:theme="@style/DialogTheme"/>
+        <activity
+            android:name=".front.terminosycondiciones.ActivityTermsAndConditions.ActivityTermsAndConditionsView"
+            android:label="PRESENTE"
+            android:theme="@style/DialogTranslucentTheme"/>
+        <activity
+            android:name=".front.login.ActivityValidateCode.ActivityValidateCodeView"
+            android:label="PRESENTE"
+            android:theme="@style/DialogTranslucentTheme"/>
+        <activity
+            android:name=".front.tabs.ActivityTabs.ActivityTabsView"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"/>
+        <activity
+            android:name=".front.bottomnavigationbar.ActivityGeoreferencing.ActivityLocationsGms.ActivityLocationsGmsView"
+            android:label="Mapa"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"/>
+        <activity
+            android:name=".front.bottomnavigationbar.ActivityGeoreferencing.ActivityLocationsHms.ActivityLocationsHmsView"
+            android:label="Mapa"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"/>
+        <activity
+            android:name=".front.bottomnavigationbar.ActivityGeoreferencing.ActivityPointsAttention.ActivityPointsAttentionView"
+            android:label="Punto atencion"
+            android:theme="@style/DialogTheme"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name=".front.bottomnavigationbar.ActivityPortfolio.ActivityPortfolioProducts.ActivityPortfolioProductsView"
+            android:label="Punto atencion"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"/>
+        <activity
+            android:name=".front.bottomnavigationbar.ActivityPortfolio.ActivityPortfolioProductsExpanded.ActivityPortfolioProductsExpandedView"
+            android:label="Detalle"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"/>
+        <activity
+            android:name=".front.bottomnavigationbar.ActivityPortfolio.ActivityPortfolioProductsDetail.ActivityPortfolioProductsDetailView"
+            android:label="Detalle portafolio"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"/>
+        <activity
+            android:name=".front.bottomnavigationbar.ActivityFrequentQuestions.ActivityFrequentQuestionsView"
+            android:label="Punto atencion"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"/>
+        <activity
+            android:name=".front.bottomnavigationbar.ActivityServices.ActivityServicesView"
+            android:label="Servicios"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"/>
+        <activity
+            android:name=".front.tutorial.ActivityTutorial.ActivityTutorialView"
+            android:label="PRESENTE"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"/>
+        <activity
+            android:name=".front.convenios.ActivityAgreements.ActivityAgreementsView"
+            android:label="CONVENIOS"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"/>
+        <activity android:name=".front.actualizaciondatos.ActivityUpdatePersonalData.ActivityUpdatePersonalDataView"
+            android:label="title_activity_actualizacion_Datos"
+            android:windowSoftInputMode="adjustPan|stateHidden"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"/>
+        <activity
+            android:name=".front.nequi.suscription.ActivitySuscription.ActivitySuscriptionView"
+            android:label="SUSCRIPCION"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"/>
+        <activity
+            android:name=".front.nequi.qr.ActivityCameraQR.ActivityQRCameraView"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"/>
+        <activity
+            android:name=".front.nequi.qr.ActivityQRDetail.ActivityQRDetailView"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"/>
+        <activity
+            android:name=".front.nequi.transfieredinero.ActivityDialogNequiBalance.ActivityDialogNequiBalanceView"
+            android:label="@string/app_name"
+            android:theme="@style/DialogTranslucentTheme"/>
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyCoII0rCq6Pfpz2ikyx3gSG6yZCS5mufcw" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <activity
+            android:name=".front.bottomnavigationbar.ActivityDirectory.ActivityDirectoryView"
+            android:label="@string/title_activity_activity_directorio"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"/>
+        <activity
+            android:name=".front.convenios.ActivityHtmlViewer.ActivityHtmlView"
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"/>
+        <activity
+            android:name=".front.convenios.FragmentBuyAgreementsProducts.ActivityConfirmBuyAgreementsProducts.ActivityConfirmBuyAgreementsProductsView"
+            android:label="@string/title_activity_activity_directorio"
+            android:theme="@style/DialogTheme"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".front.convenios.FragmentMainMenuAgreements.ActivitySelectCity.ActivitySelectCityView"
+            android:label="@string/app_name"
+            android:theme="@style/DialogTranslucentTheme"/>
+
+
+
+        <!--Notificacion Push con Firebase-->
+        <service android:name=".fcm.FCMReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <!--Notificacion Push con Huawei-->
+        <service
+            android:name=".fcm.FCMReceiverHMS"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.huawei.push.action.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
+        <meta-data
+            android:name="push_kit_auto_init_enabled"
+            android:value="true" />
+
+
+        <!-- Set custom default icon. This is used when no icon is set for incoming notification messages.
+     See README(https://goo.gl/l4GJaQ) for more. -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ico_notificaciones_push" />
+        <!-- Set color used with incoming notification messages. This is used when no color is set for the incoming
+             notification message. See README(https://goo.gl/6BKBk7) for more.-->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/white" />
+
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
+
+
+    </application>
+
+</manifest>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff">
+
+    <TextView
+        android:id="@+id/lblNombreProducto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="6dp"
+        android:background="@color/gris"
+        android:text="Activar Tarjeta"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:fontFamily="@font/roboto_light"/>
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:weightSum="100"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="8"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="84"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Número tarjeta"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="@font/roboto_light"/>
+
+                <Spinner
+                    android:id="@+id/spinnerProducto"
+                    android:layout_width="match_parent"
+                    android:layout_height="38dp"
+                    android:background="@drawable/background_spinner" />
+
+                <Button
+                    android:id="@+id/btnActivarTarjeta"
+                    android:layout_width="wrap_content"
+                    android:layout_height="37dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="25dp"
+                    android:paddingHorizontal="25dp"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="Enviar solicitud"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:background="@drawable/backgroun_button_rounded"
+                    android:backgroundTint="@color/yellow"
+                    android:fontFamily="@font/roboto_light"/>
+
+            </LinearLayout>
+            <View
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="8"/>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

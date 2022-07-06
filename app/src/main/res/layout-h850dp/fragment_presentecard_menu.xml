@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#fff">
+
+    <TextView
+        android:id="@+id/lblTarjeta"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/gris"
+        android:gravity="center"
+        android:padding="6dp"
+        android:text="Tarjeta PRESENTE"
+        android:textSize="16sp"
+        android:fontFamily="@font/roboto_light"/>
+
+    <LinearLayout
+        android:id="@+id/layout_circular_progress_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+        <ProgressBar
+            android:id="@+id/circular_progress_bar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:indeterminateTint="#707070"
+            android:visibility="visible"/>
+        <ImageView
+            android:id="@+id/imageReferesh"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@drawable/icon_refresh"
+            android:visibility="gone"/>
+        <TextView
+            android:id="@+id/text_circular_progress_Bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:text="Intentar de nuevo"
+            android:textSize="12sp"
+            android:fontFamily="@font/roboto_light"
+            android:visibility="visible"/>
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/contentMenuPresenteCard"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:scrollbars="none"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/layoutMovimientos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Productos y movimientos"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/roboto_light"/>
+
+                    <TextView
+                        android:id="@+id/txtCantProducts"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Producto(s) #"
+                        android:textSize="15sp"
+                        android:fontFamily="@font/roboto_light"/>
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/btnMovimientos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="25dp"
+                    android:layout_weight="5"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/btn_arrow_right" />
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/separator_item4"
+                android:layout_width="fill_parent"
+                android:layout_height="0.2dp"
+                android:background="#cccccc"
+                android:visibility="visible" />
+
+            <LinearLayout
+                android:id="@+id/layoutActivar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Seguridad"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/roboto_light"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Activa o cancela tu Tarjeta PRESENTE"
+                        android:textSize="15sp"
+                        android:fontFamily="@font/roboto_light"/>
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/btnActivarTarjeta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="25dp"
+                    android:layout_weight="5"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/btn_arrow_right" />
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/separator_item1"
+                android:layout_width="fill_parent"
+                android:layout_height="0.2dp"
+                android:background="#cccccc"
+                android:layout_marginBottom="1dp"
+                android:visibility="visible" />
+
+            //Nueva reponte tu tarjeta
+            <LinearLayout
+                android:id="@+id/layoutReposicion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Reposición de Tarjeta"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/roboto_light"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Solicita una nueva Tarjeta PRESENTE"
+                        android:textSize="15sp"
+                        android:fontFamily="@font/roboto_light"/>
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/btnReponerTarjeta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="25dp"
+                    android:layout_weight="5"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/btn_arrow_right" />
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/separator_item7"
+                android:layout_width="fill_parent"
+                android:layout_height="0.2dp"
+                android:background="#cccccc"
+                android:layout_marginBottom="1dp"
+                android:visibility="visible" />
+
+
+        </LinearLayout>
+
+    </ScrollView>
+</LinearLayout>

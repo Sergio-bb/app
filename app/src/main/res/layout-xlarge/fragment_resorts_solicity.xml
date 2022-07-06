@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="100"
+    android:background="#fff">
+
+    <TextView
+        android:id="@+id/lblNombreProducto"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5"
+        android:padding="2dp"
+        android:background="@color/gris"
+        android:text="Solicitar Centros Vacacionales"
+        android:gravity="center"
+        android:textSize="19sp"/>
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="95"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Destino"
+                android:textSize="16sp"
+                android:textColor="#000"
+                android:fontFamily="@font/roboto_light"/>
+
+            <Spinner
+                android:id="@+id/spinner_cv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="0.2dp"
+                android:id="@+id/separator_item3"
+                android:visibility="visible"
+                android:background="#cccccc"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tipo de unidad vacacional"
+                android:textSize="16sp"
+                android:textColor="#000"
+                android:fontFamily="@font/roboto_light"/>
+
+            <Spinner
+                android:id="@+id/spinner_cv_perfil"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="0.2dp"
+                android:id="@+id/separator_item1"
+                android:visibility="visible"
+                android:background="#cccccc"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Fecha de llegada"
+                android:textSize="16sp"
+                android:textColor="#000"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:id="@+id/lblFechaDesde"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#666"
+                android:hint="Fecha desde"
+                android:padding="10dp"
+                android:enabled="true"
+                android:background="@drawable/backgroun_border_radius"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Días de permanencia"
+                android:textSize="16sp"
+                android:textColor="#000"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/roboto_light"/>
+
+            <EditText
+                android:id="@+id/txtPermanencia"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#666"
+                android:padding="10dp"
+                android:hint="#"
+                android:enabled="true"
+                android:inputType="number"
+                android:maxLength="3"
+                android:background="@drawable/backgroun_border_radius"
+                android:fontFamily="@font/roboto_light"/>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="0.2dp"
+                android:id="@+id/separator_item2"
+                android:visibility="visible"
+                android:background="#cccccc"
+                android:layout_marginTop="10dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Número de personas"
+                android:textSize="16sp"
+                android:textColor="#000"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="10">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Adultos"
+                    android:textSize="12sp"
+                    android:padding="7dp"
+                    android:layout_weight="2"
+                    android:textColor="#000"
+                    android:gravity="end"
+                    android:fontFamily="@font/roboto_light"/>
+
+                <EditText
+                    android:id="@+id/txtCantAdultos"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="#666"
+                    android:hint="#"
+                    android:inputType="number"
+                    android:padding="10dp"
+                    android:gravity="start"
+                    android:maxLength="3"
+                    android:layout_weight="2"
+                    android:background="@drawable/backgroun_border_radius"
+                    android:fontFamily="@font/roboto_light"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Menores de 6 años"
+                    android:textSize="12sp"
+                    android:textColor="#000"
+                    android:padding="7dp"
+                    android:layout_weight="4"
+                    android:gravity="end"
+                    android:fontFamily="@font/roboto_light"/>
+
+                <EditText
+                    android:id="@+id/txtCantKids"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="#666"
+                    android:hint="#"
+                    android:inputType="number"
+                    android:padding="10dp"
+                    android:gravity="start"
+                    android:maxLength="3"
+                    android:layout_weight="2"
+                    android:background="@drawable/backgroun_border_radius"
+                    android:fontFamily="@font/roboto_light"/>
+
+            </TableRow>
+
+            <CheckBox
+                android:id="@+id/rbAsociadoViaja"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="¿El asociado viaja?"
+                android:layout_margin="10dp"
+                android:visibility="gone"/>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="0.2dp"
+                android:id="@+id/separator_item4"
+                android:visibility="visible"
+                android:background="#cccccc"
+                android:layout_marginTop="10dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Email de contacto"
+                android:textSize="16sp"
+                android:textColor="#000"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/roboto_light"/>
+
+            <EditText
+                android:id="@+id/txtEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#666"
+                android:hint="Ingresa tu correo electrónico"
+                android:padding="10dp"
+                android:textSize="14sp"
+                android:inputType="textEmailAddress"
+                android:background="@drawable/backgroun_border_radius"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Observaciones"
+                android:textSize="16sp"
+                android:textColor="#000"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/roboto_light"/>
+
+            <EditText
+                android:id="@+id/txtObservaciones"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#666"
+                android:lines="4"
+                android:minLines="1"
+                android:maxLines="7"
+                android:hint="Opcional"
+                android:textSize="16sp"
+                android:padding="10dp"
+                android:scrollbars="vertical"
+                android:inputType="textMultiLine"
+                android:background="@drawable/backgroun_border_radius"
+                android:fontFamily="@font/roboto_light"/>
+
+            <Button
+                android:id="@+id/btnAceptar"
+                android:layout_width="wrap_content"
+                android:layout_height="37dp"
+                android:layout_gravity="center"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Enviar solicitud"
+                android:enabled="false"
+                android:textStyle="bold"
+                android:background="@drawable/backgroun_button_rounded"
+                android:backgroundTint="@color/yellow"
+                android:layout_marginTop="10dp"
+                android:paddingHorizontal="30dp"
+                android:fontFamily="@font/roboto"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

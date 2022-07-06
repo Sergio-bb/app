@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:background="@android:color/transparent">
+
+        <LinearLayout
+            android:id="@+id/calendarLayaout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="9dp"
+            android:background="@drawable/backgroun_border_radius_shadow">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Año"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:fontFamily="@font/roboto_light"/>
+
+            <Spinner
+                android:id="@+id/spinnerAnio"
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:background="@drawable/background_spinner"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Mes"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:fontFamily="@font/roboto_light"/>
+
+            <Spinner
+                android:id="@+id/spinnerMes"
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:background="@drawable/background_spinner"
+                android:entries="@array/mes_solicitud_producto"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Día"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:fontFamily="@font/roboto_light"/>
+
+            <Spinner
+                android:id="@+id/spinnerDia"
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:background="@drawable/background_spinner"
+                android:textSize="16sp"/>
+
+            <Button
+                android:id="@+id/btnAceptar"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="5dp"
+                android:paddingHorizontal="35dp"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Aceptar"
+                android:textStyle="bold"
+                android:background="@drawable/backgroun_button_rounded"
+                android:backgroundTint="@color/yellow"
+                android:fontFamily="@font/roboto"/>
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <ImageButton
+        android:id="@+id/button_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icon_close"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:background="@android:color/transparent"/>
+
+</RelativeLayout>

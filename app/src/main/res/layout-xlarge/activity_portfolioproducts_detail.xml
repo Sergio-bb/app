@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff">
+
+    <RelativeLayout
+        android:id="@+id/header_app"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_centerInParent="true"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/logo_login" />
+
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/btn_back"
+            android:background="#fff"
+            android:layout_margin="5dp"
+            android:padding="10dp"
+            android:visibility="visible"
+            android:contentDescription="@string/app_name"/>
+
+        <TextView
+            android:id="@+id/btnSalir"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Salir"
+            android:textColor="#333"
+            android:background="@null"
+            android:textSize="19sp"
+            android:paddingTop="19dp"
+            android:paddingRight="15dp"
+            android:paddingEnd="15dp"
+            android:paddingLeft="0dp"
+            android:paddingStart="0dp"
+            android:visibility="gone"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:fontFamily="@font/roboto_light"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/lblHolaUsuario"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="6dp"
+        android:layout_below="@+id/header_app"
+        android:background="@color/gris"
+        android:gravity="center"
+        android:text="Productos y Servicios"
+        android:textSize="16sp"
+        android:fontFamily="@font/roboto_light"/>
+
+
+    <WebView
+        android:id="@+id/wvDetallePortafolio"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"/>
+
+</LinearLayout>

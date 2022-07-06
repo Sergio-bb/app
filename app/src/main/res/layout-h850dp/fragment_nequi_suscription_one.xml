@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginVertical="15dp"
+                android:paddingHorizontal="60dp">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="70"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:text="@string/a_continuacion_conoce"
+                    android:fontFamily="@font/roboto_light"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center"
+                android:layout_marginVertical="15dp">
+                <TextView
+                    android:layout_width="260dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/backgroun_border_radius_grisoscuro"
+                    android:padding="8dp"
+                    android:gravity="center"
+                    android:text="@string/recuerda_que"
+                    android:textSize="15sp"
+                    android:fontFamily="@font/roboto_light" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="100"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="20"
+                    android:orientation="vertical">
+                   <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                       android:gravity="top|left"
+                        android:src="@drawable/primer_paso" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="70"
+                    android:paddingTop="20dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="bottom"
+                        android:text="@string/numero_celular"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/roboto_light"/>
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="left|center_vertical"
+                        android:textSize="15sp"
+                        android:text="@string/este_es_el"
+                        android:fontFamily="@font/roboto_light"/>
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="bottom"
+                        android:orientation="horizontal">
+
+                        <ProgressBar
+                            android:id="@+id/circular_progress_bar"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:indeterminateTint="#707070"
+                            android:scaleType="centerInside"
+                            android:visibility="gone"/>
+
+                        <EditText
+                            android:id="@+id/et_celularSusc"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:enabled="false"
+                            android:fontFamily="@font/roboto_light"
+                            android:textColor="#4A4A49"
+                            android:text="123456"
+                            android:textSize="26sp"
+                            android:visibility="visible"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="13sp"
+                            android:text="Si no lo es, "
+                            android:fontFamily="@font/roboto_light"/>
+                        <TextView
+                            android:id="@+id/modificarNumeroCelular"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="15sp"
+                            android:text="@string/lo_puedes_modificar"
+                            android:fontFamily="@font/roboto_light"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="top|center_horizontal"
+                android:paddingVertical="40dp"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/btnSiguiente"
+                    android:layout_width="150dp"
+                    android:layout_height="35dp"
+                    android:enabled="false"
+                    android:text="Siguiente"
+                    android:textSize="16sp"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:fontFamily="@font/roboto_light"
+                    android:background="@drawable/backgroun_button_rounded"
+                    android:backgroundTint="@color/yellow"/>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
+

@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="100"
+    android:background="@drawable/background_act_datos_confirmar">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="83"
+        android:weightSum="100"
+        android:gravity="center"
+        android:paddingLeft="40sp"
+        android:paddingRight="40sp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="75"
+            android:gravity="center"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="62dp"
+                android:layout_gravity="right"
+                android:src="@drawable/icon_like" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="25"
+            android:gravity="center"
+            android:paddingLeft="10sp"
+            android:paddingRight="10sp"
+            android:orientation="vertical">
+
+            <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/informacion_completa"
+            android:textSize="20sp"
+            android:fontFamily="@font/roboto_light"
+            android:textColor="@color/white"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/hemos_recibido_con"
+                android:textSize="16sp"
+                android:fontFamily="@font/roboto_light"
+                android:textColor="@color/white"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/scrollview_confirmar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="17"
+        android:fillViewport="true">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:paddingTop="50sp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="@string/antes_de_continuar"
+                    android:fontFamily="@font/roboto_light"
+                    android:textColor="#4A4A49"
+                    android:textSize="20sp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="@string/por_seguridad_enviaremos"
+                    android:fontFamily="@font/roboto_light"
+                    android:textColor="#4A4A49"
+                    android:textSize="16sp"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="8dp"/>
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <ProgressBar
+                        android:id="@+id/circular_progress_bar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:indeterminateTint="#707070"
+                        android:visibility="gone"/>
+                    <TextView
+                        android:id="@+id/text_circular_progress_Bar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:gravity="center"
+                        android:text="Enviando código..."
+                        android:fontFamily="@font/roboto_light"
+                        android:visibility="gone"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/box_tipos_envio_codigo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+                    <LinearLayout
+                        android:id="@+id/btn_enviar_correo"
+                        android:layout_width="180dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:orientation="horizontal"
+                        android:layout_marginVertical="8dp"
+                        android:background="@drawable/background_tipos_envio_codigo">
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="4"
+                            android:paddingVertical="7dp"
+                            android:paddingHorizontal="7dp"
+                            android:src="@drawable/icon_correo"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_gravity="center"
+                            android:text="Correo registrado"
+                            android:paddingVertical="10dp"
+                            android:fontFamily="@font/roboto_light"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/btn_enviar_celular"
+                        android:layout_width="180dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:orientation="horizontal"
+                        android:layout_marginVertical="8dp"
+                        android:background="@drawable/background_tipos_envio_codigo">
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="4"
+                            android:paddingVertical="3dp"
+                            android:paddingHorizontal="7dp"
+                            android:src="@drawable/icon_phone"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_gravity="center"
+                            android:paddingVertical="10dp"
+                            android:text="SMS a este número"
+                            android:fontFamily="@font/roboto_light"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="@string/ingresa_el_codigo"
+                    android:fontFamily="@font/roboto_light"
+                    android:textColor="#4A4A49"
+                    android:textSize="16sp"/>
+                <TextView
+                    android:id="@+id/tiempo_expiracion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text=""
+                    android:fontFamily="@font/roboto_light"
+                    android:textColor="#4A4A49"
+                    android:textSize="13sp"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/et_codigo1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:maxLength="1"
+                        android:inputType="phone"
+                        android:digits="1234567890"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:background="@drawable/background_codigo_verificacion"
+                        android:textColor="#4A4A49"
+                        android:textSize="50sp"
+                        android:fontFamily="@font/roboto_light"
+                        android:layout_marginLeft="5sp"
+                        android:layout_marginRight="5sp"
+                        android:paddingTop="10sp"
+                        android:paddingBottom="10sp"/>
+                    <EditText
+                        android:id="@+id/et_codigo2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:maxLength="1"
+                        android:inputType="phone"
+                        android:digits="1234567890"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:background="@drawable/background_codigo_verificacion"
+                        android:textColor="#4A4A49"
+                        android:textSize="50sp"
+                        android:fontFamily="@font/roboto_light"
+                        android:layout_marginLeft="5sp"
+                        android:layout_marginRight="5sp"
+                        android:paddingTop="10sp"
+                        android:paddingBottom="10sp"/>
+                    <EditText
+                        android:id="@+id/et_codigo3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:maxLength="1"
+                        android:inputType="phone"
+                        android:digits="1234567890"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:background="@drawable/background_codigo_verificacion"
+                        android:textColor="#4A4A49"
+                        android:textSize="50sp"
+                        android:fontFamily="@font/roboto_light"
+                        android:layout_marginLeft="5sp"
+                        android:layout_marginRight="5sp"
+                        android:paddingTop="10sp"
+                        android:paddingBottom="10sp"/>
+                    <EditText
+                        android:id="@+id/et_codigo4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:maxLength="1"
+                        android:inputType="phone"
+                        android:digits="1234567890"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:background="@drawable/background_codigo_verificacion"
+                        android:textColor="#4A4A49"
+                        android:textSize="50sp"
+                        android:fontFamily="@font/roboto_light"
+                        android:layout_marginLeft="5sp"
+                        android:layout_marginRight="5sp"
+                        android:paddingTop="10sp"
+                        android:paddingBottom="10sp"/>
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/btn_reenviar_codigo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textSize="13sp"
+                    android:text="@string/no_recibes_el"
+                    android:textColor="#4A4A49"
+                    android:fontFamily="@font/roboto_light"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingVertical="30dp">
+                <Button
+                    android:id="@+id/btn_validar_codigo"
+                    android:layout_width="173dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/backgroun_button_rounded"
+                    android:backgroundTint="#1bc54b"
+                    android:text="Validar código"
+                    android:fontFamily="@font/roboto_light"
+                    android:textSize="16sp"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="#000" />
+            </LinearLayout>
+            <View
+                android:id="@+id/view_final_confirmar"
+                android:layout_width="match_parent"
+                android:layout_height="3dp"/>
+        </LinearLayout>
+    </ScrollView>
+
+    <!--                <EditText-->
+    <!--                    android:id="@+id/et_act_datos_correo"-->
+    <!--                    android:layout_width="match_parent"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:layout_gravity="center"-->
+    <!--                    android:gravity="center"-->
+    <!--                    android:text="correo@correo.com"-->
+    <!--                    android:fontFamily="@font/roboto_light"-->
+    <!--                    android:background="#E6E6E6"-->
+    <!--                    android:textColor="#4A4A49"-->
+    <!--                    android:enabled="false"-->
+    <!--                    android:paddingVertical="5dp"-->
+    <!--                    android:textSize="16sp"-->
+    <!--                    android:inputType="textEmailAddress"/>-->
+    <!--                <Button-->
+    <!--                    android:id="@+id/btn_reenviarCorreo"-->
+    <!--                    android:layout_width="120dp"-->
+    <!--                    android:layout_height="25dp"-->
+    <!--                    android:layout_gravity="center"-->
+    <!--                    android:background="@drawable/btn_green"-->
+    <!--                    android:text="Enviar código"-->
+    <!--                    android:textAppearance="?android:attr/textAppearanceSmall"-->
+    <!--                    android:textColor="#000"-->
+    <!--                    android:visibility="gone"/>-->
+    <!--                <TextView-->
+    <!--                    android:id="@+id/btn_editarCorreo"-->
+    <!--                    android:layout_width="wrap_content"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:layout_gravity="center"-->
+    <!--                    android:gravity="center"-->
+    <!--                    android:text="@string/ingresaste_mal_tu"-->
+    <!--                    android:fontFamily="@font/roboto_light"-->
+    <!--                    android:textColor="#4A4A49"-->
+    <!--                    android:textSize="15sp"/>-->
+
+</LinearLayout>
+

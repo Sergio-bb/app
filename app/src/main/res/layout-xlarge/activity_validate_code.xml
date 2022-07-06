@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_main"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent">
+
+    <RelativeLayout
+        android:id="@+id/layout_internal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:background="@android:color/transparent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:orientation="vertical"
+            android:layout_centerVertical="true"
+            android:background="@drawable/backgroun_border_radius">
+
+            <TextView
+                android:id="@+id/lblMessagePopUp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="10dp"
+                android:gravity="center"
+                android:text="@string/antes_de_continuar"
+                android:textColor="#000"
+                android:textSize="20dp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginBottom="15dp"
+                android:layout_marginHorizontal="40dp"
+                android:background="@drawable/separator_yellow"/>
+
+            <LinearLayout
+                android:id="@+id/box_tipo_codigo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
+                    android:fontFamily="@font/roboto"
+                    android:gravity="center"
+                    android:text="@string/este_no_es"
+                    android:textColor="#000"
+                    android:textSize="17dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10dp"
+                    android:orientation="vertical">
+                    <ProgressBar
+                        android:id="@+id/circular_progress_bar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:indeterminateTint="#707070"
+                        android:visibility="gone"/>
+                    <TextView
+                        android:id="@+id/text_circular_progress_Bar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:gravity="center"
+                        android:text="Enviando código..."
+                        android:fontFamily="@font/roboto_light"
+                        android:visibility="gone"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/box_tipos_envio_codigo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingBottom="10dp"
+                    android:visibility="visible">
+                    <LinearLayout
+                        android:id="@+id/btn_enviar_correo"
+                        android:layout_width="180dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:orientation="horizontal"
+                        android:layout_marginVertical="8dp"
+                        android:background="@drawable/background_tipos_envio_codigo">
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="4"
+                            android:paddingVertical="7dp"
+                            android:paddingHorizontal="7dp"
+                            android:src="@drawable/icon_correo"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_gravity="center"
+                            android:text="Correo registrado"
+                            android:paddingVertical="10dp"
+                            android:fontFamily="@font/roboto_light"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/btn_enviar_celular"
+                        android:layout_width="180dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:orientation="horizontal"
+                        android:layout_marginVertical="8dp"
+                        android:background="@drawable/background_tipos_envio_codigo">
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="4"
+                            android:paddingVertical="3dp"
+                            android:paddingHorizontal="7dp"
+                            android:src="@drawable/icon_phone"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_gravity="center"
+                            android:paddingVertical="10dp"
+                            android:text="SMS a este número"
+                            android:fontFamily="@font/roboto_light"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/box_campos_codigo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tv_tiempoexpiracion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
+                    android:fontFamily="@font/roboto"
+                    android:gravity="center"
+                    android:text="Tu código caducará en:"
+                    android:textColor="#000"
+                    android:textSize="14dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/et_codigo1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:maxLength="1"
+                        android:inputType="phone"
+                        android:digits="1234567890"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:background="@drawable/backgroun_border_radius"
+                        android:textColor="#4A4A49"
+                        android:textSize="50sp"
+                        android:layout_marginLeft="5sp"
+                        android:layout_marginRight="5sp"
+                        android:paddingTop="10sp"
+                        android:paddingBottom="10sp"/>
+                    <EditText
+                        android:id="@+id/et_codigo2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:maxLength="1"
+                        android:inputType="phone"
+                        android:digits="1234567890"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:background="@drawable/backgroun_border_radius"
+                        android:textColor="#4A4A49"
+                        android:textSize="50sp"
+                        android:layout_marginLeft="5sp"
+                        android:layout_marginRight="5sp"
+                        android:paddingTop="10sp"
+                        android:paddingBottom="10sp"/>
+                    <EditText
+                        android:id="@+id/et_codigo3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:maxLength="1"
+                        android:inputType="phone"
+                        android:digits="1234567890"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:background="@drawable/backgroun_border_radius"
+                        android:textColor="#4A4A49"
+                        android:textSize="50sp"
+                        android:layout_marginLeft="5sp"
+                        android:layout_marginRight="5sp"
+                        android:paddingTop="10sp"
+                        android:paddingBottom="10sp"/>
+                    <EditText
+                        android:id="@+id/et_codigo4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:maxLength="1"
+                        android:inputType="phone"
+                        android:digits="1234567890"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:background="@drawable/backgroun_border_radius"
+                        android:textColor="#4A4A49"
+                        android:textSize="50sp"
+                        android:layout_marginLeft="5sp"
+                        android:layout_marginRight="5sp"
+                        android:paddingTop="10sp"/>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_mensajeCodigo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textSize="12sp"
+                    android:text=""
+                    android:textColor="#4A4A49"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:paddingBottom="10dp"/>
+
+                <TextView
+                    android:id="@+id/btnEnviarCod_actDatos_confirmar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textSize="14sp"
+                    android:text="@string/no_recibes_el"
+                    android:textColor="#4A4A49"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:paddingBottom="20dp"/>
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <ImageButton
+        android:id="@+id/button_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icon_close"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:background="@android:color/transparent"/>
+
+</RelativeLayout>

@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#fff">
+
+    <TextView
+        android:id="@+id/titleSection"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/gris"
+        android:gravity="center"
+        android:padding="6dp"
+        android:text="Adelanto de nómina"
+        android:textSize="16sp"
+        android:fontFamily="@font/roboto_light"/>
+
+    <LinearLayout
+        android:id="@+id/contentCircularProgressBar"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+        <ProgressBar
+            android:id="@+id/circularProgressBar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:indeterminateTint="#707070"
+            android:visibility="visible"/>
+        <ImageView
+            android:id="@+id/imageReferesh"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@drawable/icon_refresh"
+            android:visibility="gone"/>
+        <TextView
+            android:id="@+id/tvCircularProgressBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:text="Intentar de nuevo"
+            android:textSize="12sp"
+            android:fontFamily="@font/roboto_light"
+            android:visibility="visible"/>
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/contentAdelantoNomina"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:scrollbars="none"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:weightSum="100"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="8"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="84"
+                android:paddingBottom="30dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="100"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/background_adelanto"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="30"
+                        android:padding="15dp"
+                        android:src="@drawable/logo_adelanto"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitCenter"/>
+
+                    <LinearLayout
+                        android:id="@+id/Tabla"
+                        android:layout_width="0dp"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="70"
+                        android:weightSum="100"
+                        android:padding="5dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="60"
+                            android:text="Puedes adelantar hasta un máximo de:"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:gravity="start|center_vertical"
+                            android:fontFamily="@font/roboto_light"/>
+
+                        <ProgressBar
+                            android:id="@+id/circular_progress_bar_topes"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="40"
+                            android:indeterminateTint="#707070"
+                            android:visibility="visible"/>
+
+                        <TextView
+                            android:id="@+id/lblMonto_maximo"
+                            android:layout_width="fill_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="40"
+                            android:textSize="22sp"
+                            android:textStyle="bold"
+                            android:gravity="start|center_vertical"
+                            android:fontFamily="@font/roboto_light"
+                            android:visibility="gone"/>
+                    </LinearLayout>
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/lblTerminos"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="12sp"
+                    android:text="@string/segun_terminos"
+                    android:fontFamily="@font/roboto_light"
+                    android:linksClickable="true"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:gravity="center"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:text="¿Cuánto deseas adelantar?"
+                    android:fontFamily="@font/roboto_light"/>
+
+                <TextView
+                    android:id="@+id/tvValoresTopes"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:gravity="center"
+                    android:textSize="14sp"
+                    android:textStyle="normal"
+                    android:text=""
+                    android:fontFamily="@font/roboto_light"/>
+
+                <com.santalu.maskedittext.MaskEditText
+                    android:id="@+id/etMontoASolicitar"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/backgroun_border_radius"
+                    android:ems="10"
+                    android:padding="10dp"
+                    android:hint="Ingresa aquí el valor a solicitar"
+                    android:inputType="number|numberDecimal"
+                    android:textColorHint="#ccc"
+                    android:fontFamily="@font/roboto_light"/>
+
+                <Button
+                    android:id="@+id/btnSolicitar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="15dp"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="Solicítalo ya >>"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:paddingHorizontal="28dp"
+                    android:background="@drawable/backgroun_button_rounded"
+                    android:backgroundTint="@color/yellow"
+                    android:fontFamily="@font/roboto_light"/>
+
+                <LinearLayout
+                    android:id="@+id/llMovimientosAnteriores"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="100"
+                    android:layout_marginTop="20dp"
+                    android:paddingVertical="10dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="25"
+                        android:gravity="right|center_vertical">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/historial" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="75"
+                        android:layout_gravity="end|center_vertical"
+                        android:paddingLeft="10dp"
+                        android:textSize="12sp"
+                        android:text="Consulta tus solicitudes anteriores"
+                        android:fontFamily="@font/roboto_light"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_marginTop="8dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/contentCircularProgressBarMovements"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+                        <ProgressBar
+                            android:id="@+id/circular_progress_bar_movements"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:indeterminateTint="#707070"
+                            android:visibility="visible"/>
+                        <ImageView
+                            android:id="@+id/imageReferesh_movements"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:src="@drawable/icon_refresh"
+                            android:visibility="gone"/>
+                        <TextView
+                            android:id="@+id/text_circular_progress_Bar_movements"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:gravity="center"
+                            android:text="Intentar de nuevo"
+                            android:textSize="12sp"
+                            android:fontFamily="@font/roboto_light"
+                            android:visibility="visible"/>
+                    </LinearLayout>
+
+                    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                        android:id="@+id/pullToRefreshMovements"
+                        android:layout_width="match_parent"
+                        android:layout_height="fill_parent"
+                        android:visibility="gone">
+                        <ListView
+                            android:id="@+id/list_movimientosan"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:scrollbars="none"/>
+                    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+            <View
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="8"/>
+        </LinearLayout>
+    </ScrollView>
+
+
+
+</LinearLayout>

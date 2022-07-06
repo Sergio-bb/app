@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#fff">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/lblHolaUsuario"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:padding="6dp"
+            android:background="@color/gris"
+            android:gravity="center"
+            android:text="Hola usuario"
+            android:textSize="19sp" />
+
+        <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="85"
+            android:background="#fff"
+            android:orientation="vertical"
+            android:fillViewport="true"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_marginTop="16dp">
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp"
+                        android:paddingTop="20dp">
+
+                        <Button
+                            android:id="@+id/btnEstadoCuenta"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/button_menu_ppal"
+                            android:drawableEnd="@drawable/icon_plus"
+                            android:drawableLeft="@drawable/ic_tabbar_account"
+                            android:drawableRight="@drawable/icon_plus"
+                            android:drawableStart="@drawable/ic_tabbar_account"
+                            android:text="Estado de cuenta" />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp"
+                        android:paddingTop="20dp">
+
+                        <Button
+                            android:id="@+id/btnTransacciones"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/button_menu_ppal"
+                            android:drawableEnd="@drawable/icon_plus"
+                            android:drawableLeft="@drawable/ic_tabbar_transactions"
+                            android:drawableRight="@drawable/icon_plus"
+                            android:drawableStart="@drawable/ic_tabbar_transactions"
+                            android:text="Transacciones" />
+                    </TableRow>
+
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp"
+                        android:paddingTop="20dp">
+
+                        <Button
+                            android:id="@+id/btnTarjetaPte"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/button_menu_ppal"
+                            android:drawableEnd="@drawable/icon_plus"
+                            android:drawableLeft="@drawable/ic_tabbar_card"
+                            android:drawableRight="@drawable/icon_plus"
+                            android:drawableStart="@drawable/ic_tabbar_card"
+                            android:text="Tarjeta PRESENTE" />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:id="@+id/row_cant_messages"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp"
+                        android:paddingTop="20dp"
+                        android:visibility="gone">
+
+                        <Button
+                            android:id="@+id/btnMisMensajes"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/button_menu_ppal"
+                            android:drawableEnd="@drawable/icon_plus"
+                            android:drawableLeft="@drawable/ic_tabbar_messages"
+                            android:drawableRight="@drawable/icon_plus"
+                            android:drawableStart="@drawable/ic_tabbar_messages"
+                            android:text="Mis mensajes" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp"
+                        android:paddingTop="20dp"
+                        android:visibility="gone">
+
+                        <Button
+                            android:id="@+id/btnConvenios"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/button_menu_ppal"
+                            android:drawableEnd="@drawable/icon_plus"
+                            android:drawableLeft="@drawable/ic_tabbar_messages"
+                            android:drawableRight="@drawable/icon_plus"
+                            android:drawableStart="@drawable/ic_tabbar_messages"
+                            android:text="Convenios" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp"
+                        android:paddingTop="20dp">
+
+                        <Button
+                            android:id="@+id/btnGeoReferenciacion"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:background="@drawable/button_menu_ppal"
+                            android:drawableEnd="@drawable/icon_plus"
+                            android:drawableLeft="@drawable/ic_tabbar_map"
+                            android:drawableRight="@drawable/icon_plus"
+                            android:drawableStart="@drawable/ic_tabbar_map"
+                            android:text="Encuéntranos aquí"
+                            android:visibility="gone" />
+
+                    </TableRow>
+
+                    <!--<TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp"
+                        android:paddingTop="20dp">
+
+                        <Button
+                            android:id="@+id/btnElecciones"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:background="@drawable/btn_login"
+                            android:text="Elección delegados"
+                            android:visibility="gone" />
+
+                    </TableRow>-->
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+<!--    <LinearLayout-->
+<!--        android:layout_width="fill_parent"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_weight="10"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        android:layout_marginTop="0dp"-->
+<!--        android:background="@color/yellow"-->
+<!--        android:baselineAligned="false"-->
+<!--        android:orientation="horizontal">-->
+
+<!--        <LinearLayout-->
+<!--            android:layout_width="fill_parent"-->
+<!--            android:layout_height="fill_parent"-->
+<!--            android:weightSum="100"-->
+<!--            android:gravity="center"-->
+<!--            android:orientation="horizontal">-->
+
+<!--            <View-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="fill_parent"-->
+<!--                android:layout_weight="10"/>-->
+
+<!--            <LinearLayout-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="fill_parent"-->
+<!--                android:layout_weight="20"-->
+<!--                android:weightSum="100"-->
+<!--                android:gravity="center"-->
+<!--                android:orientation="vertical">-->
+
+<!--                <ImageButton-->
+<!--                    android:id="@+id/btnPortafolio"-->
+<!--                    android:layout_width="fill_parent"-->
+<!--                    android:layout_height="0dp"-->
+<!--                    android:layout_weight="70"-->
+<!--                    android:gravity="top|center|center_horizontal"-->
+<!--                    android:background="@android:color/transparent"-->
+<!--                    android:scaleType="fitCenter"-->
+<!--                    android:src="@drawable/ic_portafolio" />-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/tv_productos"-->
+<!--                    android:layout_width="fill_parent"-->
+<!--                    android:layout_height="0dp"-->
+<!--                    android:layout_weight="30"-->
+<!--                    android:gravity="top|center|center_horizontal"-->
+<!--                    android:layout_below="@+id/btnPortafolio"-->
+<!--                    android:background="@android:color/transparent"-->
+<!--                    android:text="Productos"-->
+<!--                    android:textSize="12sp" />-->
+
+<!--            </LinearLayout>-->
+
+<!--            <LinearLayout-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="fill_parent"-->
+<!--                android:layout_weight="20"-->
+<!--                android:weightSum="100"-->
+<!--                android:gravity="center"-->
+<!--                android:orientation="vertical">-->
+
+<!--                <ImageButton-->
+<!--                    android:id="@+id/btnDirectorio"-->
+<!--                    android:layout_width="fill_parent"-->
+<!--                    android:layout_height="0dp"-->
+<!--                    android:layout_weight="70"-->
+<!--                    android:layout_toRightOf="@+id/btnPreguntasFrecuentes"-->
+<!--                    android:background="@android:color/transparent"-->
+<!--                    android:scaleType="fitCenter"-->
+<!--                    android:src="@drawable/ic_directorio"-->
+<!--                    android:visibility="visible" />-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/tv_directorio"-->
+<!--                    android:layout_width="fill_parent"-->
+<!--                    android:layout_height="0dp"-->
+<!--                    android:layout_weight="30"-->
+<!--                    android:gravity="top|center|center_horizontal"-->
+<!--                    android:layout_below="@+id/btnDirectorio"-->
+<!--                    android:layout_toRightOf="@+id/tv_ayuda"-->
+<!--                    android:background="@android:color/transparent"-->
+<!--                    android:text="Directorio"-->
+<!--                    android:textSize="12sp"-->
+<!--                    android:visibility="visible" />-->
+
+<!--            </LinearLayout>-->
+
+<!--            <LinearLayout-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="fill_parent"-->
+<!--                android:layout_weight="20"-->
+<!--                android:weightSum="100"-->
+<!--                android:gravity="center"-->
+<!--                android:orientation="vertical">-->
+
+<!--                <ImageButton-->
+<!--                    android:id="@+id/btnEncuentranos"-->
+<!--                    android:layout_width="fill_parent"-->
+<!--                    android:layout_height="0dp"-->
+<!--                    android:layout_weight="70"-->
+<!--                    android:layout_toRightOf="@+id/btnDirectorio"-->
+<!--                    android:background="@android:color/transparent"-->
+<!--                    android:scaleType="fitCenter"-->
+<!--                    android:src="@drawable/ic_encuentranos"-->
+<!--                    android:visibility="visible" />-->
+
+<!--                <TextView-->
+<!--                    android:layout_width="fill_parent"-->
+<!--                    android:layout_height="0dp"-->
+<!--                    android:layout_weight="30"-->
+<!--                    android:gravity="top|center|center_horizontal"-->
+<!--                    android:layout_below="@+id/btnEncuentranos"-->
+<!--                    android:layout_toRightOf="@+id/tv_directorio"-->
+<!--                    android:background="@android:color/transparent"-->
+<!--                    android:text="Encuéntranos"-->
+<!--                    android:textSize="12sp"-->
+<!--                    android:visibility="visible" />-->
+
+<!--            </LinearLayout>-->
+
+<!--            <LinearLayout-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="fill_parent"-->
+<!--                android:layout_weight="20"-->
+<!--                android:weightSum="100"-->
+<!--                android:gravity="center"-->
+<!--                android:orientation="vertical">-->
+
+<!--                <ImageButton-->
+<!--                    android:id="@+id/btnPreguntasFrecuentes"-->
+<!--                    android:layout_width="fill_parent"-->
+<!--                    android:layout_height="0dp"-->
+<!--                    android:layout_weight="70"-->
+<!--                    android:layout_toRightOf="@+id/btnPortafolio"-->
+<!--                    android:background="@android:color/transparent"-->
+<!--                    android:scaleType="fitCenter"-->
+<!--                    android:src="@drawable/ic_mas"-->
+<!--                    android:visibility="visible" />-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/tv_ayuda"-->
+<!--                    android:layout_width="fill_parent"-->
+<!--                    android:layout_height="0dp"-->
+<!--                    android:layout_weight="30"-->
+<!--                    android:gravity="top|center|center_horizontal"-->
+<!--                    android:layout_below="@+id/btnPreguntasFrecuentes"-->
+<!--                    android:layout_toRightOf="@+id/tv_productos"-->
+<!--                    android:background="@android:color/transparent"-->
+<!--                    android:text="Más"-->
+<!--                    android:textSize="12sp"-->
+<!--                    android:visibility="visible" />-->
+
+<!--            </LinearLayout>-->
+
+<!--            <View-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="fill_parent"-->
+<!--                android:layout_weight="10"/>-->
+<!--        </LinearLayout>-->
+
+<!--    </LinearLayout>-->
+</LinearLayout>

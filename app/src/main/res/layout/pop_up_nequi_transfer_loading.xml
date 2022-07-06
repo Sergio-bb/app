@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/backgroun_border_radius">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="15dp"
+        android:paddingHorizontal="40dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_transfer"
+            android:layout_gravity="center"
+            android:layout_marginTop="26dp"
+            android:layout_marginBottom="10dp"/>
+
+        <TextView
+            android:id="@+id/titleLoading"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Estamos enviando tu dinero a Nequi"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/roboto_light"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="10dp"
+            android:paddingHorizontal="80dp"
+            android:gravity="center"
+            android:orientation="vertical">
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:background="#CCCCCC"/>
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/circular_progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminateTint="#707070"
+            android:scaleType="centerInside"
+            android:visibility="visible"/>
+
+        <TextView
+            android:id="@+id/textLoading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:paddingTop="7dp"
+            android:paddingBottom="20dp"
+            android:text="En unos instantes podrás consultar tu nuevo saldo"
+            android:textSize="14sp"
+            android:fontFamily="@font/roboto_light"/>
+
+
+
+    </LinearLayout>
+</RelativeLayout>

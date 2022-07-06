@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:background="@android:color/transparent">
+
+        <LinearLayout
+            android:id="@+id/layout_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/backgroun_border_radius_semitransparent"
+            android:orientation="vertical"
+            android:paddingHorizontal="40dp"
+            android:paddingTop="35dp"
+            android:paddingBottom="30dp">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/icon_scannerqr_error" />
+
+            <TextView
+                android:id="@+id/tv_txtone"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:fontFamily="@font/roboto_light"
+                android:text="Algo salió mal"
+                android:textSize="18sp"
+                android:layout_marginVertical="10dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_tranferExitosa"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:gravity="left"
+                android:text="@string/no_identificamos"
+                android:textSize="16sp"
+                android:fontFamily="@font/roboto_light"/>
+
+            <Button
+                android:id="@+id/btnVolverAIntentar"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_marginTop="10dp"
+                android:paddingHorizontal="10dp"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/background_border_radius_darkgray"
+                android:text="Volver a intentar"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#fff"
+                android:textSize="16sp">
+
+            </Button>
+
+        </LinearLayout>
+    </RelativeLayout>
+    <ImageButton
+        android:id="@+id/button_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icon_close"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:background="@android:color/transparent"/>
+</RelativeLayout>

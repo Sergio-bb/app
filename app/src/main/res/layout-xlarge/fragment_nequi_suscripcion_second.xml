@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="100"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:layout_marginVertical="15dp"
+                    android:paddingHorizontal="60dp"
+                    android:text="@string/vamos_muy_bien"
+                    android:fontFamily="@font/roboto_light"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="100"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginVertical="15dp">
+                <TextView
+                    android:layout_width="260dp"
+                    android:layout_height="fill_parent"
+                    android:background="@drawable/backgroun_border_radius_grisoscuro"
+                    android:padding="8dp"
+                    android:gravity="center"
+                    android:text="@string/recuerda_que"
+                    android:textSize="15sp"
+                    android:fontFamily="@font/roboto_light" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="100"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="20"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="top|left"
+                        android:src="@drawable/segundo_paso" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="70"
+                    android:weightSum="100"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:text="@string/informacion_personal"
+                        android:fontFamily="@font/roboto_light" />
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp"
+                        android:text="@string/verifica_que_tu"
+                        android:fontFamily="@font/roboto_light" />
+
+                    <ProgressBar
+                        android:id="@+id/circular_progress_bar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="20dp"
+                        android:paddingTop="20dp"
+                        android:indeterminateTint="#707070"
+                        android:scaleType="centerInside"
+                        android:visibility="gone"/>
+
+                    <LinearLayout
+                        android:id="@+id/layout_personaldata"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="10dp"
+                        android:orientation="vertical"
+                        android:visibility="visible">
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:weightSum="100"
+                            android:orientation="vertical"
+                            android:paddingVertical="2dp">
+                            <LinearLayout
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:weightSum="100"
+                                android:orientation="horizontal">
+                                <ImageView
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="5"
+                                    android:scaleType="centerInside"
+                                    android:src="@drawable/item_transfer" />
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="95"
+                                    android:text="@string/nombre_completo_nequi"
+                                    android:textSize="16sp"
+                                    android:fontFamily="@font/roboto_light"/>
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/tv_datos_nombre"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Usuario"
+                                android:textSize="15sp"
+                                android:fontFamily="@font/roboto_light"
+                                android:layout_gravity="left"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <LinearLayout
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:weightSum="100"
+                                android:orientation="horizontal">
+                                <ImageView
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="5"
+                                    android:scaleType="centerInside"
+                                    android:src="@drawable/item_transfer" />
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="95"
+                                    android:text="@string/dato_cedula"
+                                    android:textSize="16sp"
+                                    android:fontFamily="@font/roboto_light"/>
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/tv_datos_Cedula"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:text="1000000000"
+                                android:textSize="15sp"
+                                android:fontFamily="@font/roboto_light"/>
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+
+                            <LinearLayout
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:weightSum="100"
+                                android:orientation="horizontal">
+                                <ImageView
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="5"
+                                    android:scaleType="centerInside"
+                                    android:src="@drawable/item_transfer" />
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="95"
+                                    android:text="@string/dato_celular"
+                                    android:textSize="16sp"
+                                    android:fontFamily="@font/roboto_light"/>
+                            </LinearLayout>
+                            <TextView
+                                android:id="@+id/tv_datos_contacto"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:text="3000000000"
+                                android:textSize="15sp"
+                                android:fontFamily="@font/roboto_light"
+                                android:layout_gravity="left"/>
+
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingVertical="30dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/layout_circular_progress_bar_suspcripcion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+                    <ProgressBar
+                        android:id="@+id/circular_progress_bar_suspcripcion"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:indeterminateTint="#707070"/>
+                    <TextView
+                        android:id="@+id/text_circular_progress_Bar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:gravity="center"
+                        android:text="Enviando suscripción..."
+                        android:fontFamily="@font/roboto_light"/>
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/buttonEnviarSuscripcion"
+                    android:layout_width="150dp"
+                    android:layout_height="35dp"
+                    android:text="Enviar"
+                    android:textSize="16sp"
+                    android:enabled="false"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="#4A4A49"
+                    android:background="@drawable/backgroun_button_rounded"
+                    android:backgroundTint="@color/yellow"
+                    android:fontFamily="@font/roboto_light"
+                    android:visibility="visible"/>
+
+                <Button
+                    android:id="@+id/btnAtras"
+                    android:layout_width="150dp"
+                    android:layout_height="35dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/backgroun_button_rounded"
+                    android:backgroundTint="@color/grey_button"
+                    android:text="Atras"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="#4A4A49"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/roboto_light"/>
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/layout_circular_progress_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+        <ProgressBar
+            android:id="@+id/circular_progress_bar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:indeterminateTint="#707070"
+            android:visibility="visible"/>
+        <ImageView
+            android:id="@+id/imageReferesh"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@drawable/icon_refresh"
+            android:visibility="gone"/>
+        <TextView
+            android:id="@+id/text_circular_progress_Bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:text="Intentar de nuevo"
+            android:textSize="12sp"
+            android:fontFamily="@font/roboto_light"
+            android:visibility="visible"/>
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/contentNequiDispersiones"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:fillViewport="true"
+        android:scrollbars="none"
+        android:windowSoftInputMode="adjustPan"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="25dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="25dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="10"
+                        android:padding="3dp"
+                        android:src="@drawable/icon_enviadinero" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="90"
+                        android:gravity="center_vertical"
+                        android:text="Envía dinero a Nequi"
+                        android:textSize="19sp"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/roboto_light"/>
+                </LinearLayout>
+
+
+
+
+                    <TextView
+                        android:id="@+id/textView4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_light"
+                        android:gravity="top"
+                        android:paddingHorizontal="25dp"
+                        android:text="@string/mensaje_dispersion"
+                        android:textSize="15sp" />
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="100"
+                    android:gravity="center"
+                    android:paddingVertical="5dp"
+                    android:paddingHorizontal="25dp"
+                    android:orientation="horizontal">
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="40"
+                        android:background="#CCCCCC" />
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="60"/>
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="100"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="5"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/rectangulo_lateral" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="95"
+                    android:paddingLeft="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:text="Antes de transferir, ten en cuenta:"
+                        android:textSize="15sp"
+                        android:fontFamily="@font/roboto_light"/>
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:weightSum="100"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="5"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/item_transfer"/>
+
+                        <TextView
+                            android:id="@+id/txt_minimo"
+                            android:layout_width="0dp"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="95"
+                            android:gravity="center_vertical"
+                            android:text="Mínimo : "
+                            android:textSize="13sp"
+                            android:fontFamily="@font/roboto_light"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:weightSum="100"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="5"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/item_transfer"/>
+
+                        <TextView
+                            android:id="@+id/txt_maximo"
+                            android:layout_width="0dp"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="95"
+                            android:gravity="center_vertical"
+                            android:text="Máximo : "
+                            android:textSize="13sp"
+                            android:fontFamily="@font/roboto_light"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:weightSum="100"
+                        android:orientation="horizontal">
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="5"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/item_transfer"/>
+                        <TextView
+                            android:id="@+id/txt_costo"
+                            android:layout_width="0dp"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="95"
+                            android:gravity="center_vertical"
+                            android:text="Costo : "
+                            android:textSize="13sp"
+                            android:fontFamily="@font/roboto_light"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="100"
+                android:layout_marginTop="10dp"
+                android:paddingHorizontal="30dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="80dp"
+                    android:layout_weight="15"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/icon_valor_a_pagar" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="85"
+                    android:weightSum="100"
+                    android:layout_gravity="center_vertical"
+                    android:paddingHorizontal="5dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Cuenta de origen"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/roboto_light"/>
+
+                    <Spinner
+                        android:id="@+id/sp_dispersion_cuentaOrigen"
+                        android:layout_width="fill_parent"
+                        android:layout_height="39dp"
+                       android:paddingHorizontal="5dp"
+
+                        android:background="@drawable/background_spinner"
+                        android:fontFamily="@font/roboto_light"
+                        android:textSize="15sp" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="100"
+                android:gravity="center"
+                android:paddingHorizontal="30dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="80dp"
+                    android:layout_weight="15"
+                    android:scaleType="centerInside"
+                    android:layout_gravity="top"
+                    android:src="@drawable/icon_valor_transfer" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="85"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="5dp"
+                    android:weightSum="100">
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_light"
+                        android:gravity="bottom"
+                        android:text="Valor a transferir: "
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <com.santalu.maskedittext.MaskEditText
+                        android:id="@+id/txtValorTransferencia"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:enabled="true"
+                        android:inputType="number|numberDecimal"
+                        android:maxLength="11"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/roboto_light"/>
+
+                    <!--                    <TextView-->
+                    <!--                        android:id="@+id/text_error"-->
+                    <!--                        android:layout_width="fill_parent"-->
+                    <!--                        android:layout_height="0dp"-->
+                    <!--                        android:layout_weight="25"-->
+                    <!--                        android:gravity="top"-->
+                    <!--                        android:text=""-->
+                    <!--                        android:textColor="@android:color/holo_red_light"-->
+                    <!--                        android:textSize="12sp"-->
+                    <!--                        android:fontFamily="@font/roboto_light"/>-->
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="top|center_horizontal"
+                android:paddingTop="20dp"
+                android:paddingBottom="100dp"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/btnContinuar"
+                    android:layout_width="150dp"
+                    android:layout_height="35dp"
+                    android:text="Siguiente"
+                    android:textColor="#ffff"
+                    android:fontFamily="@font/roboto_light"
+                    android:background="@drawable/backgroun_button_rounded"
+                    android:backgroundTint="#1bc54b"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textSize="16sp"/>
+
+                <Button
+                    android:id="@+id/buttonCancelar"
+                    android:layout_width="150dp"
+                    android:layout_height="35dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/backgroun_button_rounded"
+                    android:backgroundTint="@color/grey_button"
+                    android:text="Cancelar"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="#4A4A49"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/roboto_light"/>
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

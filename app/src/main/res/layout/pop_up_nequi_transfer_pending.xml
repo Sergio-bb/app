@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:background="@android:color/transparent">
+
+        <LinearLayout
+            android:id="@+id/layout_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="30dp"
+            android:paddingTop="15dp"
+            android:paddingHorizontal="20dp"
+            android:background="@drawable/backgroun_border_radius"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imageViewValidaMovimientoIcon"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:src="@drawable/error_qr"
+                android:layout_gravity="center"
+                android:layout_marginTop="26dp"
+                android:layout_marginBottom="10dp"/>
+
+            <TextView
+                android:id="@+id/textViewValoraTransferirTextTitle"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/roboto_light"
+                android:text="Pago pendiente"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                    android:id="@+id/tv_tranferExitosa"
+                    android:layout_width="fill_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/tranfer_pendiente"
+                    android:textSize="15sp"
+                    android:fontFamily="@font/roboto_light"/>
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <ImageButton
+        android:id="@+id/button_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icon_close"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:background="@android:color/transparent"/>
+
+</RelativeLayout>

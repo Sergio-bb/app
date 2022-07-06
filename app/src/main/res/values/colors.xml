@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="holo_blue_dark">#ff0099cc</color>
+    <color name="yellow">#FFEA00</color>
+    <color name="gris">#EAEAEA</color>
+    <color name="grisoscuro">#CECDCF</color>
+    <color name="dark">#CC555555</color>
+    <color name="white">#FFF</color>
+    <color name="orange">#FD8A21</color>
+    <color name="grey_button">#E9E8E8</color>
+    <color name="green">#1bc44b</color>
+    <color name="transparent_dark">#FFFFFCFC</color>
+
+</resources>

@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/layout_circular_progress_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+        <ProgressBar
+            android:id="@+id/circular_progress_bar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:indeterminateTint="#707070"
+            android:visibility="visible"/>
+        <ImageView
+            android:id="@+id/imageReferesh"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@drawable/icon_refresh"
+            android:visibility="gone"/>
+        <TextView
+            android:id="@+id/text_circular_progress_Bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:text="Intentar de nuevo"
+            android:textSize="12sp"
+            android:fontFamily="@font/roboto_light"
+            android:visibility="visible"/>
+    </LinearLayout>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/pullToRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:visibility="visible">
+        <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:fillViewport="true"
+            android:clickable="true"
+            android:scrollbars="none"
+            android:windowSoftInputMode="adjustPan">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="25dp"
+                    android:visibility="visible">
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:weightSum="100"
+                        android:paddingHorizontal="25dp"
+                        android:orientation="horizontal">
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="10"
+                            android:padding="3dp"
+                            android:src="@drawable/icon_enviadinero" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="90"
+                            android:text="Transfiere dinero"
+                            android:gravity="center_vertical"
+                            android:textSize="19sp"
+                            android:textStyle="bold"
+                            android:fontFamily="@font/roboto_light"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:weightSum="100"
+                        android:gravity="center"
+                        android:paddingVertical="5dp"
+                        android:paddingHorizontal="25dp"
+                        android:orientation="horizontal">
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_weight="40"
+                            android:background="#CCCCCC" />
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="60"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="25dp"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="top"
+                            android:text="Podrás enviar dinero entre cuentas PRESENTE y externas"
+                            android:textSize="16sp"
+                            android:fontFamily="@font/roboto_light"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="15dp"
+                    android:visibility="visible">
+
+                    <LinearLayout
+                        android:id="@+id/layoutTransferenciasPresente"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingTop="15dp"
+                        android:background="@drawable/transferencia_mas">
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:weightSum="100"
+                            android:paddingHorizontal="10dp"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="15"
+                                android:src="@drawable/transfer_presente" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="85"
+                                android:paddingLeft="10dp"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="bottom"
+                                    android:text="Transfiere"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    android:fontFamily="@font/roboto_light"/>
+
+                                <TextView
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="top"
+                                    android:text="Entre cuentas PRESENTE"
+                                    android:textSize="16sp"
+                                    android:fontFamily="@font/roboto_light"/>
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+            <!--            <View-->
+            <!--                android:id="@+id/replaceTransferenciasPresente"-->
+            <!--                android:layout_width="fill_parent"-->
+            <!--                android:layout_height="0dp"-->
+            <!--                android:layout_weight="8"-->
+            <!--                android:visibility="visible"/>-->
+
+                        <LinearLayout
+                            android:id="@+id/containerTransferPresente"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="10dp"
+                            android:orientation="horizontal"
+                            android:visibility="gone">
+
+                            <LinearLayout
+                                android:id="@+id/btnInscribirCuenta"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginHorizontal="15dp"
+                                android:orientation="vertical">
+                                <ImageView
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="wrap_content"
+                                    android:scaleType="centerInside"
+                                    android:src="@drawable/icon_inscribircuenta"/>
+                                <TextView
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="top|center_horizontal"
+                                    android:text="Inscribe cuenta"
+                                    android:textSize="10sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/btnEliminarCuenta"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginHorizontal="15dp"
+                                android:orientation="vertical">
+                                <ImageView
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="wrap_content"
+                                    android:scaleType="centerInside"
+                                    android:src="@drawable/icon_eliminarcuenta" />
+                                <TextView
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="top|center_horizontal"
+                                    android:text="Eliminar cuenta"
+                                    android:textSize="10sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/btnEnviarDinero"
+                                android:layout_width="wrap_content"
+                                android:layout_height="fill_parent"
+                                android:layout_marginHorizontal="15dp"
+                                android:orientation="vertical">
+                                <ImageView
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="wrap_content"
+                                    android:scaleType="centerInside"
+                                    android:src="@drawable/icon_enviardinero"  />
+                                <TextView
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="top|center_horizontal"
+                                    android:text="Transferir"
+                                    android:textSize="10sp" />
+                            </LinearLayout>
+
+                        </LinearLayout>
+                        <Button
+                            android:id="@+id/buttonTransferenciasPresente"
+                            android:layout_width="match_parent"
+                            android:layout_height="30dp"
+                            android:gravity="bottom"
+                            android:layout_alignParentBottom="true"
+                            android:layout_alignParentRight="true"
+                            android:background="@android:color/transparent"/>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="20dp"/>
+
+                    <LinearLayout
+                        android:id="@+id/layoutTransferenciasNequi"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="10dp"
+                        android:orientation="vertical"
+                        android:background="@drawable/transferencia_mas"
+                        android:visibility="visible">
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingHorizontal="10dp"
+                            android:weightSum="100"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="15"
+                                android:src="@drawable/transfer_nequi" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="85"
+                                android:weightSum="100"
+                                android:paddingLeft="10dp"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="bottom"
+                                    android:text="Transfiere entre"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    android:fontFamily="@font/roboto_light"/>
+
+                                <TextView
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="top"
+                                    android:text="tu cuenta PRESENTE - Nequi"
+                                    android:textSize="16sp"
+                                    android:fontFamily="@font/roboto_light"/>
+                            </LinearLayout>
+                        </LinearLayout>
+
+            <!--            <View-->
+            <!--                android:id="@+id/replaceTransferenciasNequi"-->
+            <!--                android:layout_width="fill_parent"-->
+            <!--                android:layout_height="fill_parent"-->
+            <!--                android:layout_weight="26"-->
+            <!--                android:visibility="visible"/>-->
+
+                        <LinearLayout
+                            android:id="@+id/containerSuscriptionNequi"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="10dp"
+                            android:weightSum="100"
+                            android:background="@drawable/btn_lateral"
+                            android:orientation="horizontal"
+                            android:visibility="gone">
+                            <ImageView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:scaleType="centerInside"
+                                android:layout_gravity="center_vertical"
+                                android:layout_weight="25"
+                                android:paddingLeft="20dp"
+                                android:src="@drawable/icon_nequi"/>
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="75"
+                                android:layout_gravity="center_vertical"
+                                android:text="Vincula tu cuenta Nequi"
+                                android:textSize="13sp"
+                                android:paddingHorizontal="20dp"
+                                android:fontFamily="@font/roboto_light"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/containerTransferNequi"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="15dp"
+                            android:orientation="horizontal"
+                            android:visibility="gone">
+
+                            <LinearLayout
+                                android:id="@+id/btnEnviarANequi"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginHorizontal="15dp"
+                                android:orientation="vertical">
+                                <ImageView
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="wrap_content"
+                                    android:scaleType="centerInside"
+                                    android:src="@drawable/enviar_nequi" />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="top|center_horizontal"
+                                    android:text="Enviar dinero a Nequi"
+                                    android:textSize="10sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/btnTraerDeNequi"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginHorizontal="15dp"
+                                android:orientation="vertical">
+                                <ImageView
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="wrap_content"
+                                    android:scaleType="centerInside"
+                                    android:src="@drawable/traer_nequi"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="top|center_horizontal"
+                                    android:text="Traer dinero de Nequi"
+                                    android:textSize="9dp" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <Button
+                            android:id="@+id/buttonTransferenciasNequi"
+                            android:layout_width="fill_parent"
+                            android:layout_height="30dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentBottom="true"
+                            android:background="@android:color/transparent"
+                            android:gravity="bottom" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</LinearLayout>

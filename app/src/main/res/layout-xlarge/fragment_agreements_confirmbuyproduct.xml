@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:background="@android:color/transparent">
+
+        <LinearLayout
+            android:id="@+id/layout_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:orientation="vertical"
+            android:layout_centerVertical="true"
+            android:background="@drawable/backgroun_border_radius_shadow">
+
+            <TextView
+                android:text="Resumen de tu transacción"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:padding="8dp"
+                android:gravity="center"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:text="Convenio:"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:gravity="start"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:id="@+id/tv_producto_nombre"
+                android:text="Body Tech"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textStyle="normal"
+                android:layout_marginBottom="8dp"
+                android:gravity="start"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:text="Producto:"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:gravity="start"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:id="@+id/tv_beneficio"
+                android:text="Plan anual - Gold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textStyle="normal"
+                android:layout_marginBottom="8dp"
+                android:gravity="start"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:text="Valor:"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:gravity="start"
+                android:visibility="visible"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:id="@+id/tv_valor"
+                android:text="$100.000"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textStyle="normal"
+                android:layout_marginBottom="8dp"
+                android:gravity="start"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:text="Forma de pago:"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:gravity="start"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:id="@+id/tv_forma_pago"
+                android:text="Bolsillo Nómina"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textStyle="normal"
+                android:layout_marginBottom="8dp"
+                android:gravity="start"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:text="Correo electrónico:"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:gravity="start"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:id="@+id/tv_email"
+                android:text="ejemplo@ejemplo.com"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textStyle="normal"
+                android:layout_marginBottom="8dp"
+                android:gravity="start"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:id="@+id/lblCelular"
+                android:text="Celular:"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:gravity="start"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:id="@+id/tv_celular"
+                android:text="3123245678"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textStyle="normal"
+                android:layout_marginBottom="8dp"
+                android:gravity="start"
+                android:fontFamily="@font/roboto_light"/>
+
+            <LinearLayout
+                android:layout_marginVertical="16dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp">
+
+                <Button
+                    android:id="@+id/btnAtras"
+                    android:layout_width="wrap_content"
+                    android:layout_height="37dp"
+                    android:text="Atrás"
+                    android:background="@drawable/backgroun_button_rounded"
+                    android:backgroundTint="@color/grey_button"
+                    android:textColor="@color/dark"
+                    android:layout_weight="1"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/roboto"
+                    android:layout_marginRight="4dp"/>
+
+                <Button
+                    android:id="@+id/btnConfirmar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="37dp"
+                    android:text="Comprar"
+                    android:background="@drawable/backgroun_button_rounded"
+                    android:backgroundTint="#fd8a21"
+                    android:textColor="@color/white"
+                    android:layout_weight="1"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/roboto"
+                    android:layout_marginLeft="4dp"/>
+
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <ImageButton
+        android:id="@+id/button_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icon_close"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:background="@android:color/transparent"/>
+</RelativeLayout>

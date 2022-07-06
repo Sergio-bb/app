@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="9dp"
+    android:paddingLeft="9dp"
+    android:paddingRight="9dp"
+    android:paddingBottom="12dp">
+
+    <TableRow
+        android:gravity="start"
+        android:paddingTop="2dp">
+
+        <TextView
+            android:id="@+id/lblFecha"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginEnd="8dip"
+            android:layout_marginRight="8dip"
+            android:layout_span="2"
+            android:clickable="false"
+            android:text="@string/app_name"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/roboto_light"/>
+    </TableRow>
+
+    <TableRow
+        android:layout_height="wrap_content"
+        android:gravity="start">
+
+        <TextView
+            android:id="@+id/lblTipodoc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dip"
+            android:layout_marginRight="8dip"
+            android:layout_weight="1"
+            android:clickable="false"
+            android:text="@string/app_name"
+            android:textSize="15sp"
+            android:textStyle="normal"
+            android:fontFamily="@font/roboto_light"/>
+
+        <TextView
+            android:id="@+id/lblValor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dip"
+            android:layout_marginRight="8dip"
+            android:clickable="false"
+            android:text="@string/app_name"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:fontFamily="@font/roboto_light"/>
+    </TableRow>
+
+</TableLayout>

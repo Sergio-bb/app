@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "338437954604",
+    "firebase_url": "https://presente-app-77dbd.firebaseio.com",
+    "project_id": "presente-app-77dbd",
+    "storage_bucket": "presente-app-77dbd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:338437954604:android:f3316e2f51e6b600",
+        "android_client_info": {
+          "package_name": "solidappservice.cm.com.presenteapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "338437954604-qupga0plln846dsl1j1m7j9cgour4ldd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "solidappservice.cm.com.presenteapp",
+            "certificate_hash": "f722136a9b20c0e2caf2c7da4a67ced40654b080"
+          }
+        },
+        {
+          "client_id": "338437954604-egbri77alk4mal388ti4aa4inc18iugq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD77gcLQXcTm24KOVmNzsZkTajaqz6yi_Y"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "338437954604-egbri77alk4mal388ti4aa4inc18iugq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

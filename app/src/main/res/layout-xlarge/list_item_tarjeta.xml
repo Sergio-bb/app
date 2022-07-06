@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="12dp"
+        android:layout_marginTop="9dp"
+        android:layout_marginLeft="9dp"
+        android:layout_marginRight="9dp"
+        android:layout_weight="1">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_span="2"
+                android:id="@+id/lblNombreProducto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:fontFamily="@font/roboto_light"/>
+
+        </TableRow>
+
+
+        <!--<TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_span="2"
+                android:id="@+id/lblNumeroProducto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                android:textSize="14sp"
+                android:visibility="visible"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:id="@+id/lblNumValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:gravity="end"/>
+
+        </TableRow>-->
+
+        <TableRow>
+            <TextView
+                android:id="@+id/lblCuota"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Cupo:"
+                android:textSize="15sp"
+                android:layout_weight="1"
+                android:fontFamily="@font/roboto_light"/>
+
+            <TextView
+                android:id="@+id/lblCuotaValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:gravity="end"
+                android:fontFamily="@font/roboto_light"/>
+
+        </TableRow>
+    </TableLayout>
+
+    <ImageView
+        android:layout_weight="9"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/btn_arrow_right"
+        android:layout_marginTop="17dp"
+        android:contentDescription="@string/app_name"/>
+
+</LinearLayout>

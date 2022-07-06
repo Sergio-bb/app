@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/layout_circular_progress_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+        <ProgressBar
+            android:id="@+id/circular_progress_bar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:indeterminateTint="#707070"
+            android:visibility="visible"/>
+        <ImageView
+            android:id="@+id/imageReferesh"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@drawable/icon_refresh"
+            android:visibility="gone"/>
+        <TextView
+            android:id="@+id/text_circular_progress_Bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:text="Intentar de nuevo"
+            android:textSize="12sp"
+            android:fontFamily="@font/roboto_light"
+            android:visibility="visible"/>
+    </LinearLayout>
+
+
+    <ScrollView
+        android:id="@+id/contentNequiQR"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:fillViewport="true"
+        android:scrollbars="none"
+        android:windowSoftInputMode="adjustPan"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:background="#ffffff">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingVertical="30dp"
+                    android:paddingHorizontal="25dp"
+                    android:background="#f9f9f9">
+
+                    <ImageView
+                        android:id="@+id/imageViewInfodeTuPago"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/info_detu_pago" />
+
+                    <TextView
+                        android:id="@+id/tv_infoPago"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/informacion_pago"
+                        android:textStyle="bold"
+                        android:textSize="21sp"
+                        android:fontFamily="@font/roboto_light"/>
+
+                    <TextView
+                        android:id="@+id/tv_verificar_campos"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/verificar_campos"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/roboto_light"/>
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="#4A4A49" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="100"
+                    android:layout_marginTop="10dp"
+                    android:paddingHorizontal="30dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="80dp"
+                        android:layout_weight="15"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/icon_cuenta_destino" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="85"
+                        android:layout_gravity="center_vertical"
+                        android:weightSum="100"
+                        android:paddingHorizontal="5dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="bottom"
+                            android:text="Cuenta destino"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:fontFamily="@font/roboto_light"/>
+
+                        <TextView
+                            android:id="@+id/nombreComercio"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="10"
+                            android:gravity="bottom"
+                            android:text="Comercio"
+                            android:textSize="16sp"
+                            android:fontFamily="@font/roboto_light"/>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="100"
+                    android:gravity="center"
+                    android:paddingHorizontal="30dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="80dp"
+                        android:layout_weight="15"
+                        android:scaleType="centerInside"
+                        android:layout_gravity="top"
+                        android:src="@drawable/icon_valor_a_pagar" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="85"
+                        android:weightSum="100"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="5dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="bottom"
+                            android:text="Valor a pagar: "
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:fontFamily="@font/roboto_light"/>
+
+                        <com.santalu.maskedittext.MaskEditText
+                            android:id="@+id/etx_valor_pagoQr"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="bottom"
+                            android:ems="10"
+                            android:enabled="true"
+                            android:inputType="number|numberDecimal"
+                            android:maxLength="11"
+                            android:textSize="16sp"
+                            android:fontFamily="@font/roboto_light"/>
+
+                        <!--                    <TextView-->
+                        <!--                        android:id="@+id/text_error"-->
+                        <!--                        android:layout_width="fill_parent"-->
+                        <!--                        android:layout_height="0dp"-->
+                        <!--                        android:layout_weight="25"-->
+                        <!--                        android:gravity="top"-->
+                        <!--                        android:text=""-->
+                        <!--                        android:textColor="@android:color/holo_red_light"-->
+                        <!--                        android:textSize="12sp"-->
+                        <!--                        android:fontFamily="@font/roboto_light"/>-->
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="100"
+                    android:paddingHorizontal="30dp"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="80dp"
+                        android:layout_weight="15"
+                        android:layout_gravity="top"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/icon_valor_transfer" />
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="85"
+                        android:layout_gravity="center_vertical"
+                        android:paddingHorizontal="5dp"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="bottom"
+                            android:text="Cuenta a debitar:"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:fontFamily="@font/roboto_light"/>
+                        <Spinner
+                            android:id="@+id/spinnercuentaOrigen"
+                            android:background="@drawable/background_spinner"
+                            android:layout_width="match_parent"
+                            android:layout_height="38dp"/>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="top|center_horizontal"
+                    android:paddingTop="60dp"
+                    android:paddingBottom="20dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textViewCostoDeLaTransaccion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Costo de la transacción: $0"
+                        android:textSize="13sp"
+                        android:textStyle=""
+                        android:fontFamily="@font/roboto_light"/>
+
+                    <Button
+                        android:id="@+id/btnContinuar"
+                        android:layout_width="150dp"
+                        android:layout_height="35dp"
+                        android:layout_marginTop="10dp"
+                        android:text="Continuar"
+                        android:textSize="18dp"
+                        android:textColor="#ffff"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:fontFamily="@font/roboto_light"
+                        android:background="@drawable/btn_green"/>
+                    <Button
+                        android:id="@+id/buttonCancelar"
+                        android:layout_width="150dp"
+                        android:layout_height="35dp"
+                        android:layout_marginTop="20dp"
+                        android:background="@color/cardview_shadow_end_color"
+                        android:text="Cancelar"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="#4A4A49"
+                        android:textSize="18dp"
+                        android:fontFamily="@font/roboto_light"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

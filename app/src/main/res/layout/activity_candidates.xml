@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/header_app"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#F5E61F"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/app_name"
+            android:gravity="start"
+            android:src="@drawable/logo_internal" />
+
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="#fff"
+            android:contentDescription="@string/app_name"
+            android:padding="10dp"
+            android:src="@drawable/btn_back" />
+
+        <TextView
+            android:id="@+id/btnSalir"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:background="@null"
+            android:paddingEnd="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="19dp"
+            android:text="@string/salir"
+            android:textColor="#333"
+            android:textSize="19sp"
+            android:fontFamily="@font/roboto_light"/>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/lblHolaUsuario"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="6dp"
+        android:background="@color/gris"
+        android:text="Candidatos"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:fontFamily="@font/roboto_light"/>
+
+    <ListView
+        android:id="@+id/list_candidatos"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:scrollbars="none"/>
+
+</LinearLayout>

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <TextView
+            android:id="@+id/tv_nombre_convenio"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="6dp"
+            android:background="@color/gris"
+            android:gravity="center"
+            android:text="@string/responseConvenios"
+            android:textSize="16sp"
+            android:fontFamily="@font/roboto_light"/>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:weightSum="100"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="8"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="84"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical"
+                >
+
+                <TextView
+                    android:id="@+id/tv_product_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Body Tech"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:fontFamily="@font/roboto_light"/>
+
+                <TextView
+                    android:id="@+id/tv_product_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Valor $0"
+                    android:textSize="16sp"
+                    android:gravity="center"
+                    android:background="@color/gris"
+                    android:padding="4dp"
+                    android:fontFamily="@font/roboto_light"/>
+
+                <TextView
+                    android:layout_marginTop="8dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Forma de pago"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:padding="4dp"
+                    android:gravity="center"
+                    android:fontFamily="@font/roboto_light"/>
+
+                <Spinner
+                    android:id="@+id/spinner_forma_pago"
+                    android:layout_marginTop="4dp"
+                    android:background="@drawable/background_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="38dp"/>
+
+                <View
+                    android:id="@+id/separadora"
+                    android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:background="#8B8B8B"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center"/>
+
+                <TextView
+                    android:layout_marginTop="8dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Información de contacto"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:background="@drawable/btn_yellow_internal"
+                    android:layout_marginHorizontal="30dp"
+                    android:gravity="center"
+                    android:fontFamily="@font/roboto_light"/>
+
+                <EditText
+                    android:id="@+id/et_correo_electronico"
+                    android:layout_marginTop="8dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/backgroun_border_radius"
+                    android:textSize="16sp"
+                    android:padding="10dp"
+                    android:gravity="center"
+                    android:inputType="textEmailAddress"
+                    android:hint="Ingresa tu correo"
+                    android:fontFamily="@font/roboto_light"/>
+
+                <EditText
+                    android:id="@+id/et_numer_celular"
+                    android:layout_marginTop="8dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/backgroun_border_radius"
+                    android:padding="10dp"
+                    android:textSize="16sp"
+                    android:gravity="center"
+                    android:inputType="phone"
+                    android:maxLength="10"
+                    android:hint="Ingresa tu número celular"
+                    android:fontFamily="@font/roboto_light"/>
+
+                <TextView
+                    android:id="@+id/tv_title_condiciones_y_restriciones"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Términos y condiciones"
+                    android:textSize="14sp"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:textColor="@color/orange"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/roboto_light"/>
+
+                <TextView
+                    android:id="@+id/tv_legal"
+                    android:layout_marginTop="8dp"
+                    android:textSize="12sp"
+                    android:layout_gravity="center_vertical|end"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Acepto la compra y/o prestación de servicio del presente convenio, sus requisitos y condiciones de uso, así como el pago mediante Bolsillo de Disponible para la cancelación del mismo. Así mismo, manifiesto que conozco y acepto las políticas y reglamentos que tiene PRESENTE para sus asociados en materia de beneficios y responseConvenios."
+                    android:singleLine = "false"
+                    android:justificationMode="inter_word"
+                    android:fontFamily="@font/roboto_light"/>
+
+                <CheckBox
+                    android:id="@+id/chk_acepto_terminos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Acepto"
+                    android:fontFamily="@font/roboto_light"/>
+
+                <Button
+                    android:id="@+id/btnComprar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="37dp"
+                    android:layout_gravity="center"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="Comprar"
+                    android:textSize="16sp"
+                    android:enabled="false"
+                    android:textStyle="bold"
+                    android:background="@drawable/background_button_rounded_gry_ligth"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/roboto"
+                    android:gravity="center"
+                    android:textColor="@color/white"/>
+
+            </LinearLayout>
+            <View
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="8"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

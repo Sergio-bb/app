@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/layout_circular_progress_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+        <ProgressBar
+            android:id="@+id/circular_progress_bar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:indeterminateTint="#707070"
+            android:visibility="visible"/>
+        <ImageView
+            android:id="@+id/imageReferesh"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@drawable/icon_refresh"
+            android:visibility="gone"/>
+        <TextView
+            android:id="@+id/text_circular_progress_Bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:text="Intentar de nuevo"
+            android:textSize="12sp"
+            android:fontFamily="@font/roboto_light"
+            android:visibility="visible"/>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/sectionValidateData"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/background_act_datos_validar"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/button_close"
+            android:layout_width="160px"
+            android:layout_height="120px"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/isotipo_presente"
+            android:background="@android:color/transparent"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:weightSum="100"
+            android:background="@android:color/transparent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="27"
+                android:gravity="center"
+                android:paddingLeft="40sp"
+                android:paddingRight="40sp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/confirmanos"
+                    android:textSize="20sp"
+                    android:fontFamily="@font/roboto_light"
+                    android:textColor="@color/white"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/te_compartimos_la"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/roboto_light"
+                    android:textColor="@color/white"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="31"
+                android:weightSum="100"
+                android:gravity="center"
+                android:background="@android:color/transparent"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="39"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="22"
+                    android:src="@drawable/icon_informacion"
+                    android:paddingVertical="2dp">
+                </ImageView>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="39"/>
+
+            </LinearLayout>
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="11"
+                android:fillViewport="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10pt"
+                    android:paddingBottom="25pt"
+                    android:paddingHorizontal="40dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/nombre_validar"
+                        android:textColor="#4A4A49"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/roboto_light"
+                        android:layout_gravity="center"/>
+                    <TextView
+                        android:id="@+id/tv_act_datos_nombre"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Usuario"
+                        android:textColor="#4A4A49"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/roboto_light"
+                        android:layout_gravity="center"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="15dp"/>
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/direccion_validar"
+                        android:textColor="#4A4A49"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/roboto_light"
+                        android:layout_gravity="center"
+                        android:textAlignment="center"/>
+                    <TextView
+                        android:id="@+id/tv_act_datos_direccion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Cra 50 # 20 - 30"
+                        android:textColor="#4A4A49"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/roboto_light"
+                        android:layout_gravity="center"
+                        android:textAlignment="center"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="15dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/departamento_validar"
+                        android:textColor="#4A4A49"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/roboto_light"
+                        android:layout_gravity="center"/>
+                    <TextView
+                        android:id="@+id/tv_act_datos_departamento"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Antioquia"
+                        android:textColor="#4A4A49"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/roboto_light"
+                        android:layout_gravity="center"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="15dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/ciudad_validar"
+                        android:textColor="#4A4A49"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/roboto_light"
+                        android:layout_gravity="center"/>
+                    <TextView
+                        android:id="@+id/tv_act_datos_ciudad"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bello"
+                        android:textColor="#4A4A49"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/roboto_light"
+                        android:layout_gravity="center"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="15dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/correo_validar"
+                        android:textColor="#4A4A49"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/roboto_light"
+                        android:layout_gravity="center"/>
+                    <TextView
+                        android:id="@+id/tv_act_datos_coreo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="correo@correo.com"
+                        android:textColor="#4A4A49"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/roboto_light"
+                        android:layout_gravity="center"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="15dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/celular_validar"
+                        android:textColor="#4A4A49"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/roboto_light"
+                        android:layout_gravity="center"/>
+                    <TextView
+                        android:id="@+id/tv_act_datos_contacto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="3000000000"
+                        android:textColor="#4A4A49"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/roboto_light"
+                        android:layout_gravity="center"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="15dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/es_correcta_esta"
+                        android:textColor="#4A4A49"
+                        android:textSize="18sp"
+                        android:fontFamily="@font/roboto_light"
+                        android:layout_gravity="center"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="15dp"/>
+
+
+                    <Button
+                        android:id="@+id/btnContinuar_actDatos_validar"
+                        android:layout_width="173dp"
+                        android:layout_height="36dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/btn_green"
+                        android:text="Sí, continuar"
+                        android:textSize="16sp"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="#000" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="15dp"/>
+
+                    <Button
+                        android:id="@+id/btnEditar_actDatos_validar"
+                        android:layout_width="173dp"
+                        android:layout_height="36dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/btn_yellow_internal"
+                        android:text="Editar"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="#000"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+            </ScrollView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="31"
+                android:weightSum="100"
+                android:gravity="center"
+                android:orientation="horizontal">
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="39"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="22"
+                    android:src="@drawable/icon_seguridad_informacion"
+                    android:paddingVertical="2dp">
+                </ImageView>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="39"/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>

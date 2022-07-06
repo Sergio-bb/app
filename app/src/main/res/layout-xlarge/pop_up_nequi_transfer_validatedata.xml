@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@android:color/transparent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@android:color/transparent">
+
+        <LinearLayout
+            android:id="@+id/layout_tranfer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="15dp"
+            android:paddingHorizontal="25dp"
+            android:background="@drawable/background_border"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:src="@drawable/icon_enviadinero" />
+
+            <TextView
+                android:id="@+id/textViewValoraTransferirTextTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/validar_transfer"
+                android:textAlignment="center"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:fontFamily="@font/roboto_light"/>
+
+            <LinearLayout
+                android:layout_width="220dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="#CCCCCC" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textViewCuentaOrigenText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:text="Cuenta de origen: "
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/roboto_light"/>
+
+                <TextView
+                    android:id="@+id/tV_CuentaOrigen"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:paddingLeft="2dp"
+                    android:text="Disponible"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/roboto_light"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textViewValorTransferirText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:text="Valor a transferir: "
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/roboto_light"/>
+
+                <TextView
+                    android:id="@+id/tV_TransferirValor"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:paddingLeft="2dp"
+                    android:text="$230.214"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/roboto_light"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_CuentaDestino"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:text="Cuenta destino: "
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/roboto_light"/>
+
+                <TextView
+                    android:id="@+id/tV_CuentaDestino"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:paddingLeft="2dp"
+                    android:text="Nequi - PRESENTE"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/roboto_light"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_Costo"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:text="Costo transación: "
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/roboto_light"/>
+
+                <TextView
+                    android:id="@+id/tV_CostoTransaccion"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:paddingLeft="2dp"
+                    android:text=""
+                    android:textSize="16sp"
+                    android:fontFamily="@font/roboto_light"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="60dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="25dp"
+            android:padding="10dp"
+            android:orientation="vertical"
+            android:background="@drawable/backgroun_border_radius">
+
+            <TextView
+                android:id="@+id/textViewEsCorrectoText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="¿Es correcta la información?"
+                android:textAlignment="center"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:fontFamily="@font/roboto_light"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="15dp"/>
+
+            <Button
+                android:id="@+id/buttonContinuar"
+                android:layout_width="150dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:background="@drawable/backgroun_button_rounded"
+                android:backgroundTint="@color/green"
+                android:text="Sí, continuar"
+                android:textAllCaps="false"
+                android:textColor="#ffffff"
+                android:textSize="16sp"
+                android:fontFamily="@font/roboto_light" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="15dp"/>
+
+            <Button
+                android:id="@+id/buttonCancelar"
+                android:layout_width="150dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:background="@drawable/backgroun_button_rounded"
+                android:backgroundTint="@color/grey_button"
+                android:text="Cancelar"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#4A4A49"
+                android:textSize="18dp"
+                android:fontFamily="@font/roboto_light"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="15dp"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

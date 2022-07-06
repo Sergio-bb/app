@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/img_slideshow_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#fff"
+        android:orientation="vertical">
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:foregroundGravity="center_horizontal"
+            android:minHeight="70dp" />
+
+
+        <solidappservice.cm.com.presenteapp.tools.CirclePageIndicator
+            android:id="@+id/indicator"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="20"
+            android:background="#fff"
+            android:padding="10dip" />
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_alignParentBottom="true"
+        android:id="@+id/lblSalirTutorial"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/salir_del_tutorial"
+        android:padding="5dp"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        android:textColor="#000"
+        android:layout_marginBottom="25dp"
+        android:fontFamily="@font/roboto_light"/>
+
+</RelativeLayout>

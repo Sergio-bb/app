@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="100"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal|bottom"
+                android:layout_marginVertical="15dp"
+                android:orientation="vertical">
+                <ImageView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/felicitaciones_suscripcion"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="19sp"
+                    android:textStyle="bold"
+                    android:text="@string/ahora_continua_en"
+                    android:fontFamily="@font/roboto_light" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="60dp"
+                android:layout_marginVertical="15dp"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:textSize="16sp"
+                    android:text="@string/hemos_enviado_con"
+                    android:fontFamily="@font/roboto_light" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="60dp"
+                android:layout_marginVertical="15dp"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/al_momento_de"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/roboto_light"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="3dp"
+                    android:text="@string/revisa_tu_perfil"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/roboto_light"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="100"
+                android:gravity="center"
+                android:layout_marginVertical="15dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="8dp"
+                    android:gravity="center"
+                    android:background="@drawable/backgroun_border_radius_grisoscuro">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Importante"
+                        android:textStyle="bold"
+                        android:textSize="15sp"
+                        android:fontFamily="@font/roboto_light" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Cuentas con "
+                            android:textSize="15sp"
+                            android:fontFamily="@font/roboto_light" />
+                        <TextView
+                            android:id="@+id/counter_timer"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="00:00"
+                            android:textStyle="bold"
+                            android:textSize="15sp"
+                            android:fontFamily="@font/roboto_light" />
+                    </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="para ingresar a Nequi y finalizar \n el proceso"
+                        android:textSize="15sp"
+                        android:fontFamily="@font/roboto_light" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingVertical="40dp"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/btnIrANequi"
+                    android:layout_width="150dp"
+                    android:layout_height="35dp"
+                    android:text="Ir a Nequi"
+                    android:textSize="16sp"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="#4A4A49"
+                    android:background="@drawable/backgroun_button_rounded"
+                    android:backgroundTint="@color/yellow"
+                    android:fontFamily="@font/roboto_light"
+                    android:visibility="visible"/>
+
+                <Button
+                    android:id="@+id/buttonCerrar"
+                    android:layout_width="150dp"
+                    android:layout_height="35dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/backgroun_button_rounded"
+                    android:backgroundTint="@color/grey_button"
+                    android:text="Cerrar"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="#4A4A49"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/roboto_light"/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

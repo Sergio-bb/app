@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:background="@android:color/transparent">
+
+        <LinearLayout
+            android:id="@+id/layout_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:orientation="vertical"
+            android:layout_centerVertical="true"
+            android:background="@drawable/backgroun_border_radius_shadow">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="100"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="25"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_presente"
+                    android:scaleType="centerInside"/>
+
+                <TextView
+                    android:id="@+id/lbl_title_message"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="75"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="left"
+                    android:text="¿Desea salir de la aplicación?"
+                    android:textStyle="bold"
+                    android:textSize="19sp"
+                    android:fontFamily="@font/roboto_light"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="18dp"
+                android:layout_marginBottom="10dp">
+
+                <Button
+                    android:id="@+id/btnCancelar"
+                    android:layout_width="120dp"
+                    android:layout_height="35dp"
+                    android:layout_weight="1"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/backgroun_border_radius_grisoscuro"
+                    android:text="Cancelar"
+                    android:textSize="16sp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:fontFamily="@font/roboto_light"/>
+
+                <Button
+                    android:id="@+id/btnAceptar"
+                    android:layout_width="120dp"
+                    android:layout_height="35dp"
+                    android:layout_weight="1"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/backgroun_border_radius_yellow"
+                    android:text="Aceptar"
+                    android:textSize="16sp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:fontFamily="@font/roboto_light"/>
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <ImageButton
+        android:id="@+id/buttonClose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icon_close"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:background="@android:color/transparent"/>
+
+</RelativeLayout>

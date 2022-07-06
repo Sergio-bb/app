@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Gradle: com.aldoapps:autoformatedittext:0.9.3@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/16883c15d5a898760ce7dee0af42ba61/jetified-autoformatedittext-0.9.3/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/16883c15d5a898760ce7dee0af42ba61/jetified-autoformatedittext-0.9.3/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/16883c15d5a898760ce7dee0af42ba61/jetified-autoformatedittext-0.9.3/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.aldoapps/autoformatedittext/0.9.3/f45846566830c628d43b0f6aed70e6a58bcc9b3/autoformatedittext-0.9.3-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.aldoapps/autoformatedittext/0.9.3/a2c5c423dc3bec264f90200e9a33d781d2621cf2/autoformatedittext-0.9.3-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

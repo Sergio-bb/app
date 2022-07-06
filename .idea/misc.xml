@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Repo/app-presente/app/src/main/res/layout-h850dp/activity_agreements.xml" value="0.26171875" />
+        <entry key="..\:/Repo/app-presente/app/src/main/res/layout-h850dp/activity_nequi_suscription.xml" value="0.26171875" />
+        <entry key="..\:/Repo/app-presente/app/src/main/res/layout-h850dp/fragment_home.xml" value="0.142578125" />
+        <entry key="..\:/Repo/app-presente/app/src/main/res/layout-h850dp/fragment_nequi_menu_sendmoney.xml" value="0.26171875" />
+        <entry key="..\:/Repo/app-presente/app/src/main/res/layout-h850dp/fragment_nequi_sendmoney_dispersiones.xml" value="0.127734375" />
+        <entry key="..\:/Repo/app-presente/app/src/main/res/layout-h850dp/fragment_nequi_suscripcion_second.xml" value="0.5011219147344802" />
+        <entry key="..\:/Repo/app-presente/app/src/main/res/layout-h850dp/fragment_nequi_suscription_one.xml" value="0.26171875" />
+        <entry key="..\:/Repo/app-presente/app/src/main/res/layout-h850dp/fragment_nequi_suscription_start.xml" value="0.26171875" />
+        <entry key="..\:/Repo/app-presente/app/src/main/res/layout-h850dp/fragment_transfers_registeraccount.xml" value="0.26171875" />
+        <entry key="..\:/Repo/app-presente/app/src/main/res/layout-xlarge/activity_agreements.xml" value="0.5609375" />
+        <entry key="..\:/Repo/app-presente/app/src/main/res/layout-xlarge/activity_nequi_suscription.xml" value="0.5609375" />
+        <entry key="..\:/Repo/app-presente/app/src/main/res/layout-xlarge/fragment_home.xml" value="0.4397590361445783" />
+        <entry key="..\:/Repo/app-presente/app/src/main/res/layout-xlarge/fragment_nequi_menu_sendmoney.xml" value="0.5609375" />
+        <entry key="..\:/Repo/app-presente/app/src/main/res/layout-xlarge/fragment_nequi_suscripcion_second.xml" value="0.5609375" />
+        <entry key="..\:/Repo/app-presente/app/src/main/res/layout-xlarge/fragment_nequi_suscription_one.xml" value="0.5609375" />
+        <entry key="..\:/Repo/app-presente/app/src/main/res/layout-xlarge/fragment_nequi_suscription_start.xml" value="0.5609375" />
+        <entry key="..\:/Repo/app-presente/app/src/main/res/layout-xlarge/fragment_transfers_registeraccount.xml" value="0.1" />
+        <entry key="..\:/Repo/app-presente/app/src/main/res/layout/activity_agreements.xml" value="0.19010416666666666" />
+        <entry key="..\:/Repo/app-presente/app/src/main/res/layout/activity_main.xml" value="0.19010416666666666" />
+        <entry key="..\:/Repo/app-presente/app/src/main/res/layout/activity_nequi_qr_detail.xml" value="0.19010416666666666" />
+        <entry key="..\:/Repo/app-presente/app/src/main/res/layout/activity_nequi_suscription.xml" value="0.3489583333333333" />
+        <entry key="..\:/Repo/app-presente/app/src/main/res/layout/activity_tabs.xml" value="0.19010416666666666" />
+        <entry key="..\:/Repo/app-presente/app/src/main/res/layout/fragment_agreements_buyproduct.xml" value="0.19010416666666666" />
+        <entry key="..\:/Repo/app-presente/app/src/main/res/layout/fragment_home.xml" value="0.3489583333333333" />
+        <entry key="..\:/Repo/app-presente/app/src/main/res/layout/fragment_login.xml" value="0.19010416666666666" />
+        <entry key="..\:/Repo/app-presente/app/src/main/res/layout/fragment_nequi_menu_sendmoney.xml" value="0.5" />
+        <entry key="..\:/Repo/app-presente/app/src/main/res/layout/fragment_nequi_suscripcion_second.xml" value="0.3489583333333333" />
+        <entry key="..\:/Repo/app-presente/app/src/main/res/layout/fragment_nequi_suscription_one.xml" value="0.3489583333333333" />
+        <entry key="..\:/Repo/app-presente/app/src/main/res/layout/fragment_nequi_suscription_start.xml" value="0.3489583333333333" />
+        <entry key="..\:/Repo/app-presente/app/src/main/res/layout/fragment_transactionmenu.xml" value="0.3489583333333333" />
+        <entry key="..\:/Repo/app-presente/app/src/main/res/layout/fragment_transfers_menu.xml" value="0.3489583333333333" />
+        <entry key="..\:/Repo/app-presente/app/src/main/res/layout/fragment_transfers_registeraccount.xml" value="0.3489583333333333" />
+        <entry key="..\:/Repo/app-presente/app/src/main/res/layout/pop_up_error.xml" value="0.3489583333333333" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK" />
+</project>

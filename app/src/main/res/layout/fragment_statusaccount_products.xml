@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff">
+
+    <TextView
+        android:id="@+id/lblNombreProducto"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="6dp"
+        android:background="@color/gris"
+        android:text="Nombre del producto"
+        android:gravity="center"
+        android:textSize="17sp"
+        android:fontFamily="@font/roboto_light"/>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/pullToRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent">
+        <ListView
+            android:id="@+id/contenedorProductos"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:childDivider="@android:color/black"
+            android:groupIndicator="@android:color/transparent"
+            android:scrollbars="none"/>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+</LinearLayout>

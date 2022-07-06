@@ -1,0 +1,118 @@
+package solidappservice.cm.com.presenteapp.front.tarjetapresente.FragmentPresenteCardMenu;
+
+import androidx.annotation.NonNull;
+
+import java.util.List;
+
+import retrofit2.Response;
+import solidappservice.cm.com.presenteapp.entities.parametrosgenerales.ResponseParametrosAPP;
+import solidappservice.cm.com.presenteapp.entities.tarjetapresente.response.ResponseTarjeta;
+import solidappservice.cm.com.presenteapp.entities.base.BaseRequest;
+import solidappservice.cm.com.presenteapp.entities.base.BaseResponse;
+import solidappservice.cm.com.presenteapp.tools.security.Encripcion;
+
+/**
+ * CREADO POR MIGUEL DAVID CABEZAS EL 30/08/2021.
+ */
+public class FragmentPresenteCardMenuPresenter implements FragmentPresenteCardMenuContract.Presenter,
+        FragmentPresenteCardMenuContract.APIListener{
+
+    FragmentPresenteCardMenuView view;
+    FragmentPresenteCardMenuModel model;
+
+    public FragmentPresenteCardMenuPresenter(@NonNull FragmentPresenteCardMenuView view, @NonNull FragmentPresenteCardMenuModel model) {
+        this.view = view;
+        this.model = model;
+    }
+
+    @Override
+    public void fetchButtonStateReplacementCard() {
+        view.hideSectionMenuPresenteCards();
+        view.showCircularProgressBar("Un momento...");
+        model.getButtonStateReplacementCard(this);
+    }
+    @Override
+    public <T> void onSuccessButtonStateReplacementCard(Response<BaseResponse<T>> response) {
+        try{
+            ResponseParametrosAPP stateReposicionTarjeta= (ResponseParametrosAPP) response.body().getResultado();
+            if(stateReposicionTarjeta != null && stateReposicionTarjeta.getEstado() != null && stateReposicionTarjeta.getEstado().equals("Y")){
+                view.showButtonReplacementCard();
+            }else{
+                view.hideButtonReplacementCard();
+            }
+            view.fetchPresenteCards();
+        }catch (Exception ex){
+            view.hideButtonReplacementCard();
+            view.fetchPresenteCards();
+        }
+    }
+    @Override
+    public <T> void onErrorButtonStateReplacementCard(Response<BaseResponse<T>> response) {
+        view.hideButtonReplacementCard();
+        view.fetchPresenteCards();
+    }
+
+    @Override
+    public void fetchPresenteCards(BaseRequest baseRequest) {
+        view.hideSectionMenuPresenteCards();
+        view.showCircularProgressBar("Un momento...");
+        model.getPresenteCards(baseRequest, this);
+    }
+
+    @Override
+    public <T> void onSuccess(Response<BaseResponse<T>> response) {
+        try{
+            List<ResponseTarjeta> tarjetas = (List<ResponseTarjeta>) response.body().getResultado();
+            if(tarjetas != null){
+                Encripcion encripcion = new Encripcion();
+                for (ResponseTarjeta tarjeta : tarjetas) {
+                    tarjeta.setA_numcta(encripcion.desencriptar(tarjeta.getA_numcta().trim()));
+                    tarjeta.setA_obliga(encripcion.desencriptar(tarjeta.getA_obliga().trim()));
+                    tarjeta.setA_tipodr(tarjeta.getA_tipodr().trim());
+                    tarjeta.setF_movim(tarjeta.getF_movim().trim());
+                    tarjeta.setI_estado(tarjeta.getI_estado().trim());
+                    tarjeta.setK_numpla(encripcion.desencriptar(tarjeta.getK_numpla().trim()));
+                    tarjeta.setK_mnumpl(encripcion.desencriptar(tarjeta.getK_mnumpl().trim()));
+                    tarjeta.setN_percol(tarjeta.getN_percol().trim());
+                    tarjeta.setV_cupo(tarjeta.getV_cupo());
+                }
+            }
+            view.hideCircularProgressBar();
+            view.showSectionMenuPresenteCards();
+            view.showNumberPresenteCards(tarjetas);
+        }catch(Exception ex){
+            view.hideCircularProgressBar();
+            view.showDataFetchError("Lo sentimos", "");
+            view.showErrorWithRefresh();
+        }
+    }
+
+    @Override
+    public <T> void onExpiredToken(Response<BaseResponse<T>> response) {
+        view.hideCircularProgressBar();
+        view.showExpiredToken(response.body().getErrorToken());
+    }
+
+    @Override
+    public <T> void onError(Response<BaseResponse<T>> response) {
+        view.hideCircularProgressBar();
+        if(response != null){
+            view.showDataFetchError("Lo sentimos", response.body().getMensajeErrorUsuario());
+        }else{
+            view.showDataFetchError("Lo sentimos", "");
+        }
+        view.showErrorWithRefresh();
+    }
+
+    @Override
+    public void onFailure(Throwable t, boolean isErrorTimeOut) {
+        view.hideCircularProgressBar();
+        if(isErrorTimeOut){
+            view.showErrorTimeOut();
+        }else{
+            view.showDataFetchError("Lo sentimos", "");
+        }
+        view.showErrorWithRefresh();
+    }
+
+}
